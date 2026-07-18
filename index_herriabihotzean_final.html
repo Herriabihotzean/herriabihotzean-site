@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herria Bihotzean</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:Georgia,"Times New Roman",serif;color:white;background-image:linear-gradient(rgba(0,0,0,.52),rgba(0,0,0,.70)),url("fond-herriabihotzean.jpg");background-position:center;background-size:cover;background-attachment:fixed;background-repeat:no-repeat}
+a{color:inherit}.page{width:min(1100px,calc(100% - 28px));margin:0 auto}
+.entete{min-height:60vh;display:flex;align-items:center;justify-content:center;padding:70px 18px 38px;text-align:center}
+.bloc-titre{width:min(820px,100%);padding:clamp(30px,6vw,58px);border:1px solid rgba(255,255,255,.48);border-radius:5px;background:rgba(0,0,0,.34);box-shadow:0 16px 50px rgba(0,0,0,.35);backdrop-filter:blur(3px)}
+h1{margin:0;font-size:clamp(2.3rem,8vw,5rem);line-height:1.05;letter-spacing:.07em;text-transform:uppercase}
+.blasons{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;margin-top:30px}
+.blasons img{display:block;width:120px;height:120px;object-fit:contain}
+.mission{width:min(850px,100%);margin:0 auto 38px;padding:26px 30px;border-radius:8px;background:rgba(0,0,0,.58);font-size:clamp(1.03rem,2.5vw,1.24rem);line-height:1.7;text-align:center}
+.mission p{margin:0}.mission p+p{margin-top:22px}.texte-basque{font-style:italic}
+.navigation{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;width:min(900px,100%);margin:0 auto 52px}
+.carte{display:flex;align-items:center;justify-content:center;min-height:96px;padding:18px 20px;border:1px solid rgba(255,255,255,.60);border-radius:8px;background:rgba(20,55,32,.86);color:white;font-size:clamp(1.05rem,2.5vw,1.28rem);font-weight:bold;line-height:1.25;text-align:center;text-decoration:none;box-shadow:0 7px 22px rgba(0,0,0,.26);transition:transform .16s,background-color .16s,color .16s}
+.carte:hover,.carte:focus-visible{transform:translateY(-3px);background:white;color:rgb(20,55,32);outline:none}
+.contact{width:min(900px,100%);margin:0 auto 42px;text-align:center}.contact a{font-weight:bold;text-decoration:underline;text-underline-offset:4px}.contact a:hover,.contact a:focus-visible{opacity:.8}
+footer{padding:24px 14px 32px;border-top:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.58);text-align:center}footer p{margin:5px 0}.mention{font-size:.9rem;opacity:.85}
+@media(max-width:700px){body{background-attachment:scroll}.entete{min-height:52vh;padding:40px 10px 28px}.bloc-titre{padding:34px 18px}.blasons{gap:18px}.blasons img{width:82px;height:82px}.mission{padding:22px 18px}.navigation{grid-template-columns:1fr;gap:12px}.carte{min-height:76px}}
+</style>
+</head>
+<body>
+<header class="entete"><div class="bloc-titre"><h1>Herria Bihotzean</h1><div class="blasons" aria-label="Blasons du Labourd, de la Navarre et de la Soule"><img src="blason-labourd.svg" alt="Blason du Labourd"><img src="blason-navarre.svg" alt="Blason de la Navarre"><img src="blason-soule.svg" alt="Blason de la Soule"></div></div></header>
+<main class="page">
+<section class="mission"><p class="texte-basque">Ongi etorri zarela herriabihotzean.fr webgunean ! Webgune hau, Eskual Herria maite dutenentzat eta gure herri ederrako jakintza sakondu nahi dutenentzat xedatua izan da.</p><p>Bienvenue sur le site herriabihotzean.fr, destiné à tous ceux qui aiment le Pays Basque et souhaitent perfectionner leur connaissance de notre belle petite patrie.</p></section>
+<nav class="navigation" aria-label="Rubriques principales">
+<a class="carte" href="histoire-des-basques.html">Histoire des Basques</a>
+<a class="carte" href="langue-basque.html">Langue basque</a>
+<a class="carte" href="litterature.html">Littérature</a>
+<a class="carte" href="prieres-cantiques.html">Prières et cantiques</a>
+<a class="carte" href="musique.html">Musique</a>
+<a class="carte" href="danse.html">Danse</a>
+<a class="carte" href="symboles.html">Symboles</a>
+<a class="carte" href="boutique.html">Boutique</a>
+</nav>
+<div class="contact"><a href="contact.html">Nous contacter</a></div>
+</main>
+<footer><p>© Herria Bihotzean</p><p class="mention">Langue, histoire, littérature et traditions</p></footer>
+</body>
+</html>
