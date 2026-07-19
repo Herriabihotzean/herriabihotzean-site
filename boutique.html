@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boutique — Herria Bihotzean</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Georgia,"Times New Roman",serif;
+    color:white;
+    background-image:
+        linear-gradient(rgba(0,0,0,.52),rgba(0,0,0,.70)),
+        url("fond-herriabihotzean.jpg");
+    background-position:center;
+    background-size:cover;
+    background-attachment:fixed;
+    background-repeat:no-repeat;
+}
+a{color:inherit}
+.page{width:min(1000px,calc(100% - 28px));margin:0 auto}
+.entete{padding:46px 16px 26px;text-align:center}
+.bloc-titre{
+    width:min(820px,100%);
+    margin:0 auto;
+    padding:30px 24px;
+    border:1px solid rgba(255,255,255,.48);
+    border-radius:8px;
+    background:rgba(0,0,0,.34);
+    box-shadow:0 14px 40px rgba(0,0,0,.35)
+}
+h1{margin:0;font-size:clamp(2rem,6vw,3.8rem);letter-spacing:.05em;text-transform:uppercase}
+.blasons{display:flex;justify-content:center;align-items:center;gap:28px;flex-wrap:wrap;margin-top:24px}
+.blasons img{width:92px;height:92px;object-fit:contain}
+main{padding-bottom:40px}
+.intro,.contenu{
+    margin:0 auto 24px;
+    padding:24px;
+    border-radius:8px;
+    background:rgba(0,0,0,.58);
+    line-height:1.65
+}
+.intro{text-align:center}
+.liens{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+    margin:0 auto 28px
+}
+.carte{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:82px;
+    padding:16px;
+    border:1px solid rgba(255,255,255,.60);
+    border-radius:8px;
+    background:rgba(20,55,32,.88);
+    text-align:center;
+    text-decoration:none;
+    font-weight:bold;
+    transition:.16s
+}
+.carte:hover,.carte:focus-visible{
+    background:white;
+    color:rgb(20,55,32);
+    transform:translateY(-2px);
+    outline:none
+}
+.sous-section{
+    margin:22px 0 10px;
+    font-size:1.35rem;
+    text-align:center
+}
+.retour{text-align:center;margin:30px 0}
+.retour a{
+    display:inline-block;
+    padding:11px 18px;
+    border:1px solid white;
+    border-radius:7px;
+    background:rgba(0,0,0,.32);
+    text-decoration:none;
+    font-weight:bold
+}
+.retour a:hover{background:white;color:#222}
+footer{
+    padding:22px 14px 28px;
+    border-top:1px solid rgba(255,255,255,.25);
+    background:rgba(0,0,0,.58);
+    text-align:center
+}
+@media(max-width:700px){
+    body{background-attachment:scroll}
+    .entete{padding:28px 8px 18px}
+    .bloc-titre{padding:24px 14px}
+    .blasons{gap:14px}
+    .blasons img{width:72px;height:72px}
+    .liens{grid-template-columns:1fr}
+}
+</style>
+
+</head>
+<body>
+<header class="entete">
+  <div class="bloc-titre">
+    <h1>Boutique</h1>
+    <div class="blasons" aria-label="Blasons du Labourd, de la Navarre et de la Soule">
+      <img src="blason-labourd.svg" alt="Blason du Labourd">
+      <img src="blason-navarre.svg" alt="Blason de la Navarre">
+      <img src="blason-soule.svg" alt="Blason de la Soule">
+    </div>
+  </div>
+</header>
+<main class="page">
+  <section class="intro">La boutique permet d’accéder aux livres, drapeaux et autres objets proposés par Herria Bihotzean.</section>
+  <h2 class="sous-section">Drapeaux</h2>
+<nav class="liens">
+<a class="carte" href="drapeau-navarre.html">Navarre</a>
+<a class="carte" href="drapeau-labourd.html">Labourd</a>
+<a class="carte" href="drapeau-soule.html">Soule</a>
+<a class="carte" href="drapeau-bearn.html">Béarn</a>
+</nav>
+<h2 class="sous-section">Livres</h2>
+<nav class="liens">
+<a class="carte" href="livres-langue-basque.html">Livres de langue basque</a>
+<a class="carte" href="recueils-prieres.html">Recueils de prières</a>
+</nav>
+<h2 class="sous-section">Autres</h2>
+<section class="contenu"><p>Vêtements, objets et autres articles à venir.</p></section>
+  <div class="retour"><a href="index.html">← Retour à l’accueil</a></div>
+</main>
+<footer>© Herria Bihotzean</footer>
+</body>
+</html>
