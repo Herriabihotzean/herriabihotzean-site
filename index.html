@@ -1,10 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Herria Bihotzean</title>
-
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -112,7 +112,6 @@ footer{
     .liens{column-count:1}
 }
 </style>
-
 <style>
 .entete{min-height:60vh;display:flex;align-items:center;justify-content:center;padding-top:70px}
 .bloc-titre h1{font-size:clamp(2.3rem,8vw,5rem)}
@@ -122,37 +121,35 @@ footer{
 .contact{text-align:center;margin:0 auto 42px}.contact a{font-weight:bold;text-decoration:underline;text-underline-offset:4px}
 @media(max-width:700px){.entete{min-height:52vh;padding-top:40px}.blasons img{width:82px;height:82px}}
 </style>
-</head>
+<link href="langues.css" rel="stylesheet"/></head>
 <body>
 <header class="entete">
-  <div class="bloc-titre">
-    <h1>Herria Bihotzean</h1>
-    <div class="blasons" aria-label="Blasons du Labourd, de la Navarre et de la Soule">
-      <img src="blason-labourd.svg" alt="Blason du Labourd">
-      <img src="blason-navarre.svg" alt="Blason de la Navarre">
-      <img src="blason-soule.svg" alt="Blason de la Soule">
-    </div>
-  </div>
+<div class="bloc-titre">
+<h1>Herria Bihotzean</h1>
+<div aria-label="Blasons du Labourd, de la Navarre et de la Soule" class="blasons">
+<img alt="Blason du Labourd" src="blason-labourd.svg"/>
+<img alt="Blason de la Navarre" src="blason-navarre.svg"/>
+<img alt="Blason de la Soule" src="blason-soule.svg"/>
+</div>
+</div>
 </header>
 <main class="page">
-  <section class="mission">
-    <p>Ongi etorri zarela herriabihotzean.fr webgunean ! Webgune hau, Eskual Herria maite dutenentzat eta gure herri ederrako jakintza sakondu nahi dutenentzat xedatua izan da.</p>
-    <p class="texte-francais">Bienvenue sur le site herriabihotzean.fr, destiné à tous ceux qui aiment le Pays Basque et souhaitent perfectionner leur connaissance de notre belle petite patrie.</p>
-  </section>
-
-  <nav class="liens" aria-label="Rubriques principales">
-    <a class="carte" href="histoire-des-basques.html">Histoire des Basques</a>
-    <a class="carte" href="langue-basque.html">Langue basque</a>
-    <a class="carte" href="litterature.html">Littérature</a>
-    <a class="carte" href="prieres-cantiques.html">Prières et cantiques</a>
-    <a class="carte" href="musique.html">Musique</a>
-    <a class="carte" href="danse.html">Danse</a>
-    <a class="carte" href="symboles.html">Symboles</a>
-    <a class="carte" href="boutique.html">Boutique</a>
-  </nav>
-
-  <div class="contact"><a href="contact.html">Nous contacter</a></div>
+<section class="mission">
+<p>Ongi etorri zarela herriabihotzean.fr webgunean ! Webgune hau, Eskual Herria maite dutenentzat eta gure herri ederrako jakintza sakondu nahi dutenentzat xedatua izan da.</p>
+<p class="texte-francais">Bienvenue sur le site herriabihotzean.fr, destiné à tous ceux qui aiment le Pays Basque et souhaitent perfectionner leur connaissance de notre belle petite patrie.</p>
+</section>
+<nav aria-label="Rubriques principales" class="liens">
+<a class="carte" href="https://herriabihotzean.github.io/histoire-des-basques/">Histoire des Basques</a>
+<a class="carte" href="langue-basque.html">Langue basque</a>
+<a class="carte" href="litterature.html">Littérature</a>
+<a class="carte" href="prieres-cantiques.html">Prières et cantiques</a>
+<a class="carte" href="musique.html">Musique</a>
+<a class="carte" href="danse.html">Danse</a>
+<a class="carte" href="symboles.html">Symboles</a>
+<a class="carte" href="boutique.html">Boutique</a>
+</nav>
+<div class="contact"><a href="contact.html">Nous contacter</a></div>
 </main>
 <footer>© Herria Bihotzean</footer>
-</body>
+<script src="langues.js"></script></body>
 </html>
