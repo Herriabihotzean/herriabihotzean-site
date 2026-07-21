@@ -2,7 +2,51 @@
 const HB_KEY="herria_langue";
 const HB_DEFAULT="fr";
 const HB_HISTORY=false;
-const HB_TRANSLATIONS={"eu": {"Boutique": "Saltokia", "La boutique permet d’accéder aux livres, drapeaux et autres objets proposés par Herria Bihotzean.": "Saltokiak Herria Bihotzeanek eskaintzen dituen liburu, bandera eta bertze gaietara heltzeko bidea emaiten du.", "Drapeaux": "Banderak", "Navarre": "Nabarra", "Labourd": "Lapurdi", "Soule": "Zibero", "Béarn": "Biarno", "Livres": "Liburuak", "Livres de langue basque": "Euskarazko liburuak", "Recueils de prières": "Otoitz bildumak", "Autres": "Bertzeak", "Vêtements, objets et autres articles à venir.": "Jauntziak, gauzak eta bertze artikulu batzuek laster etorriko dira.", "Danse": "Dantza", "Cette rubrique présentera les danses traditionnelles, avec des textes, des photographies et, lorsque cela sera possible, des vidéos.": "Atal honek dantza tradizionalak aurkeztuko ditu, testu, argazki eta, ahal denean, bideoekin.", "Les premiers contenus seront ajoutés prochainement.": "Lehen edukiak laster gehituko dira.", "Histoire des Basques": "Eskualdunen istoria", "Cette rubrique accueillera un texte consacré à l’histoire des Basques, consultable et écoutable en français, en basque et en béarnais.": "Atal hunek Eskualdunen historiari buruzko testu bat bilduko du, frantsesez, eskuaraz eta biarnesez irakurri eta entzun daitekeena.", "Version française": "Frantsesezko bertsioa", "Euskaraz": "Eskuaraz", "En béarnais": "Biarnesez", "Langue basque": "Eskualdunen hizkuntza", "Cette rubrique rassemble les principaux ouvrages et méthodes destinés à l’apprentissage et au perfectionnement de la langue basque.": "Atal honek eskuara ikasteko eta hobetzeko liburu eta metodo nagusiak biltzen ditu.", "Méthode active — 1er cours": "Metodo aktiboa — lehen ikaspena", "Méthode active — 2e cours": "Metodo aktiboa — bigarren ikaspena", "Voulez-vous parler basque ?": "Euskaraz mintzatu nahi duzu?", "Manuel de la conversation": "Esku-liburua mintzatzen ikasteko", "Pièces de théâtre de l’abbé Larzabal": "Larzabal apezaren antzerkiak", "Littérature": "Literatura", "Cette rubrique présentera des œuvres de la littérature basque, avec des enregistrements audio lorsque cela sera utile.": "Atal hunek eskual literaturako obrak ager-araziko ditu, baliagarri denean soinu-grabaketekin.", "Vies de saints du père Johanateguy": "Johanateguy aitaren sainduen bizitzak", "Musique": "Musika", "Cette rubrique accueillera des enregistrements, des partitions et des présentations consacrés à la musique du Pays basque.": "Atal honek Eskual Herriko musikari buruzko grabaketak, partiturak eta aurkezpenak bilduko ditu.", "Prières et cantiques": "Othoitzak eta kantikak", "Cette rubrique rassemble les prières usuelles et les cantiques traditionnels en basque et en béarnais.": "Atal honek eskuarazko eta biarnesezko ohiko othoitzak eta kantika tradizionalak biltzen ditu.", "Basque": "Eskuara", "Prières usuelles": "Ohiko othoitzak", "Cantiques traditionnels": "Kantika tradizionalak", "Béarnais": "Biarnesa", "Symboles": "Ikurrak", "Cette rubrique sera consacrée aux emblèmes, aux blasons, aux drapeaux et aux autres symboles historiques du Pays basque.": "Atal hau Eskual Herriko ikur, armarri, bandera eta bertze sinbolo historikoei eskainia izanen da.", "Bienvenue sur le site herriabihotzean.fr, destiné à tous ceux qui aiment le Pays Basque et souhaitent perfectionner leur connaissance de notre belle petite patrie.": "Ongi etorri herriabihotzean.fr webgunean ! Webgune hau, Eskual Herria maite dutenentzat eta gure herri ederrako jakintza sakondu nahi dutenentzat xedatua izan da.", "Nous contacter": "Gurekin harremanetan jarri", "← Retour à l’accueil": "← Harrera-orrira itzuli", "© Herria Bihotzean": "© Herria Bihotzean"}};
+const HB_TRANSLATIONS={"eu":
+  {"Boutique": "Saltokia",
+   "La boutique permet d’accéder aux livres, drapeaux et autres objets proposés par Herria Bihotzean.": "Saltokiak Herria Bihotzeanek eskaintzen dituen liburu, bandera eta bertze gaietara heltzeko bidea emaiten du.",
+   "Drapeaux": "Banderak",
+   "Navarre": "Nabarra",
+   "Labourd": "Lapurdi",
+   "Soule": "Zibero", "Béarn": "Biarno",
+   "Livres": "Liburuak",
+   "Livres de langue basque":
+     "Eskuarazko liburuak",
+   "Recueils de prières": "Othoitz bildumak",
+   "Autres": "Bertzeak",
+   "Vêtements, objets et autres articles à venir.": "Jauntziak, gauzak eta bertze artikulu batzuek laster etorriko dira.",
+   "Danse": "Dantza",
+   "Cette rubrique présentera les danses traditionnelles, avec des textes, des photographies et, lorsque cela sera possible, des vidéos.": "Atal honek dantza tradizionalak aurkeztuko ditu, testu, argazki eta, ahal denean, bideoekin.",
+   "Les premiers contenus seront ajoutés prochainement.": "Lehen edukiak laster gehituko dira.",
+   "Histoire des Basques": "Eskualdunen istoria",
+   "Cette rubrique accueillera un texte consacré à l’histoire des Basques, consultable et écoutable en français, en basque et en béarnais.": "Atal hunek Eskualdunen istoriari buruzko testu bat bilduko du, frantsesez, eskuaraz eta biarnesez irakurri eta entzun daitekeena.",
+   "Version française": "Frantsesezko bertsioa",
+   "Euskaraz": "Eskuaraz",
+   "En béarnais": "Biarnesez",
+   "Langue basque": "Eskualdunen hizkuntza",
+   "Cette rubrique rassemble les principaux ouvrages et méthodes destinés à l’apprentissage et au perfectionnement de la langue basque.": "Atal honek eskuara ikasteko eta hobetzeko liburu eta metodo nagusiak biltzen ditu.",
+   "Méthode active — 1er cours": "Metodo aktiboa — lehen ikaspena",
+   "Méthode active — 2e cours": "Metodo aktiboa — bigarren ikaspena",
+   "Voulez-vous parler basque ?": "Euskaraz mintzatu nahi duzu?",
+   "Manuel de la conversation": "Esku-liburua mintzatzen ikasteko",
+   "Pièces de théâtre de l’abbé Larzabal": "Larzabal apezaren antzerkiak",
+   "Littérature": "Literatura",
+   "Cette rubrique présentera des œuvres de la littérature basque, avec des enregistrements audio lorsque cela sera utile.": "Atal hunek eskual literaturako obrak ager-araziko ditu, baliagarri denean soinu-grabaketekin.",
+   "Vies de saints du père Johanateguy": "Johanateguy aitaren sainduen bizitzak",
+   "Musique": "Musika",
+   "Cette rubrique accueillera des enregistrements, des partitions et des présentations consacrés à la musique du Pays basque.": "Atal honek Eskual Herriko musikari buruzko grabaketak, partiturak eta aurkezpenak bilduko ditu.",
+   "Prières et cantiques": "Othoitzak eta kantikak",
+   "Cette rubrique rassemble les prières usuelles et les cantiques traditionnels en basque et en béarnais.": "Atal hunek eskuarazko eta biarnesezko ohiko othoitzak eta kantika tradizionalak biltzen ditu.",
+   "Basque": "Eskuara",
+   "Prières usuelles": "Ohiko othoitzak",
+   "Cantiques traditionnels": "Kantika tradizionalak",
+   "Béarnais": "Biarnesa",
+   "Symboles": "Ikurrak",
+   "Cette rubrique sera consacrée aux emblèmes, aux blasons, aux drapeaux et aux autres symboles historiques du Pays basque.": "Atal hau Eskual Herriko ikur, armarri, bandera eta bertze sinbolo historikoei eskainia izanen da.",
+   "Bienvenue sur le site herriabihotzean.fr, destiné à tous ceux qui aiment le Pays Basque et souhaitent perfectionner leur connaissance de notre belle petite patrie.": "Ongi etorri herriabihotzean.fr webgunean ! Webgune hau, Eskual Herria maite dutenentzat eta gure herri ederrako jakintza sakondu nahi dutenentzat xedatua izan da.",
+   "Nous contacter": "Gurekin harremanetan jarri",
+   "← Retour à l’accueil": "← Harrera-orrira itzuli",
+   "© Herria Bihotzean": "© Herria Bihotzean"}};
 const HB_LABELS={"fr": {"fr": "français", "eu": "basque", "be": "béarnais"}, "eu": {"fr": "frantsesez", "eu": "eskuaraz", "be": "biarnesez"}, "be": {"fr": "francés", "eu": "bascou", "be": "biarnés"}};
 
 /* Moteur stable de sélection des langues — sans rechargement. */
