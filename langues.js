@@ -43,7 +43,7 @@ const HB_TRANSLATIONS={"eu":
    "Béarnais": "Biarnesa",
    "Symboles": "Ikurrak",
    "Cette rubrique sera consacrée aux emblèmes, aux blasons, aux drapeaux et aux autres symboles historiques du Pays basque.": "Atal hau Eskual Herriko ikur, armarri, bandera eta bertze sinbolo historikoei eskainia izanen da.",
-   "Bienvenue sur le site herriabihotzean.fr, destiné à tous ceux qui aiment le Pays Basque et souhaitent perfectionner leur connaissance de notre belle petite patrie.": "Ongi etorri herriabihotzean.fr webgunean ! Webgune hau, Eskual Herria maite dutenentzat eta gure herri ederrako jakintza sakondu nahi dutenentzat xedatua izan da.",
+   "Bienvenue sur le site herriabihotzean.fr, destiné à tous ceux qui aiment le Pays Basque et souhaitent approfondir leur connaissance de notre belle petite patrie.": "Ongi etorri herriabihotzean.fr webgunean ! Webgune hau, Eskual Herria maite dutenentzat eta gure herri ederrako jakintza sakondu nahi dutenentzat xedatua izan da.",
    "Nous contacter": "Gurekin harremanetan jarri",
    "← Retour à l’accueil": "← Harrera-horrira itzuli",
    "© Herria Bihotzean": "© Herria Bihotzean"}};
