@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html
+  lang="fr"
+  data-title-fr="Boutique — Herria Bihotzean"
+  data-title-eu="Denda — Herria Bihotzean"
+>
 <head>
   <meta charset="UTF-8">
 
@@ -17,16 +21,16 @@
 
     :root {
       --vert-fonce: #143720;
-      --vert-clair: #28583a;
       --creme: #f6f3ea;
       --blanc: #ffffff;
       --rouge: #8f1f1f;
       --or: #d7b66f;
-      --ombre: rgba(0, 0, 0, 0.32);
+      --ombre: rgba(0, 0, 0, 0.34);
     }
 
     html {
       min-height: 100%;
+      scroll-behavior: smooth;
     }
 
     body {
@@ -34,24 +38,27 @@
       min-height: 100vh;
 
       font-family:
-        "Bell MT",
         Georgia,
         "Times New Roman",
         serif;
 
       color: var(--blanc);
 
-      background:
+      background-image:
         linear-gradient(
           rgba(0, 0, 0, 0.52),
-          rgba(0, 0, 0, 0.66)
+          rgba(0, 0, 0, 0.70)
         ),
-        url("fond-herriabihotzean.jpg")
-        center center / cover fixed;
+        url("fond-herriabihotzean.jpg");
+
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
     }
 
-    button,
-    a {
+    a,
+    button {
       font: inherit;
     }
 
@@ -59,10 +66,18 @@
       color: inherit;
     }
 
-    .barre-superieure {
+    [hidden] {
+      display: none !important;
+    }
+
+    /*
+     * La barre de navigation de la boutique est distincte
+     * du sélecteur de langue créé automatiquement par langues.js.
+     */
+    .barre-boutique {
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 80;
 
       display: flex;
       align-items: center;
@@ -71,40 +86,50 @@
 
       padding: 12px 18px;
 
-      background: rgba(20, 55, 32, 0.96);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.24);
-      box-shadow: 0 3px 14px var(--ombre);
+      border-bottom:
+        1px solid rgba(255, 255, 255, 0.25);
+
+      background:
+        rgba(20, 55, 32, 0.95);
+
+      box-shadow:
+        0 3px 14px var(--ombre);
+
       backdrop-filter: blur(7px);
     }
 
     .marque {
-      text-decoration: none;
       font-weight: bold;
       letter-spacing: 0.04em;
+      text-decoration: none;
     }
 
-    .outils {
+    .navigation-boutique {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 8px;
+      gap: 9px;
       flex-wrap: wrap;
     }
 
-    .bouton-langue,
-    .bouton-panier,
-    .bouton-retour {
-      min-height: 40px;
+    .bouton-navigation,
+    .bouton-panier {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 41px;
       padding: 9px 14px;
 
-      border: 1px solid rgba(255, 255, 255, 0.55);
+      border:
+        1px solid rgba(255, 255, 255, 0.58);
+
       border-radius: 7px;
 
       background: transparent;
       color: var(--blanc);
 
       text-decoration: none;
-      cursor: pointer;
 
       transition:
         background 0.2s ease,
@@ -112,17 +137,14 @@
         transform 0.2s ease;
     }
 
-    .bouton-langue:hover,
-    .bouton-langue.actif,
+    .bouton-navigation:hover,
+    .bouton-navigation:focus-visible,
     .bouton-panier:hover,
-    .bouton-retour:hover {
+    .bouton-panier:focus-visible {
       background: var(--creme);
       color: var(--vert-fonce);
       transform: translateY(-1px);
-    }
-
-    .bouton-panier {
-      position: relative;
+      outline: none;
     }
 
     .nombre-panier {
@@ -132,7 +154,7 @@
 
       min-width: 24px;
       height: 24px;
-      margin-left: 5px;
+      margin-left: 7px;
       padding: 0 6px;
 
       border-radius: 999px;
@@ -145,55 +167,71 @@
       font-weight: bold;
     }
 
-    .conteneur {
-      width: min(1220px, 94%);
+    .page {
+      width: min(1220px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 50px 0 70px;
+      padding: 48px 0 70px;
     }
 
     .introduction {
-      max-width: 850px;
+      width: min(850px, 100%);
       margin: 0 auto 42px;
-      padding: 32px 28px;
+      padding: 30px 26px;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.42);
+
+      border-radius: 10px;
+
+      background:
+        rgba(0, 0, 0, 0.58);
+
+      box-shadow:
+        0 14px 35px var(--ombre);
 
       text-align: center;
-
-      border: 1px solid rgba(255, 255, 255, 0.42);
-      border-radius: 14px;
-
-      background: rgba(20, 55, 32, 0.78);
-      box-shadow: 0 14px 35px var(--ombre);
-      backdrop-filter: blur(5px);
     }
 
-    h1 {
+    .introduction h1 {
       margin: 0 0 14px;
-      font-size: clamp(2rem, 5vw, 3.4rem);
+
+      font-size:
+        clamp(2.2rem, 6vw, 3.8rem);
+
       font-weight: normal;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
     .introduction p {
       margin: 0;
+
       font-size: 1.08rem;
       line-height: 1.65;
     }
 
-    .etat-chargement,
-    .etat-erreur,
-    .etat-vide {
-      max-width: 760px;
+    .etat {
+      width: min(760px, 100%);
       margin: 32px auto;
-      padding: 24px;
+      padding: 25px;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.38);
+
+      border-radius: 10px;
+
+      background:
+        rgba(20, 55, 32, 0.93);
+
+      box-shadow:
+        0 8px 24px var(--ombre);
 
       text-align: center;
-
-      border-radius: 12px;
-      background: rgba(20, 55, 32, 0.9);
-      box-shadow: 0 8px 24px var(--ombre);
     }
 
     .etat-erreur {
-      background: rgba(110, 25, 25, 0.94);
+      background:
+        rgba(110, 25, 25, 0.94);
     }
 
     .roue {
@@ -201,11 +239,14 @@
       height: 42px;
       margin: 0 auto 15px;
 
-      border: 4px solid rgba(255, 255, 255, 0.28);
+      border:
+        4px solid rgba(255, 255, 255, 0.28);
+
       border-top-color: var(--blanc);
       border-radius: 50%;
 
-      animation: tourner 0.8s linear infinite;
+      animation:
+        tourner 0.8s linear infinite;
     }
 
     @keyframes tourner {
@@ -215,7 +256,7 @@
     }
 
     .categorie {
-      margin: 42px 0 54px;
+      margin: 45px 0 56px;
     }
 
     .titre-categorie {
@@ -223,13 +264,15 @@
       align-items: center;
       gap: 18px;
 
-      margin: 0 0 25px;
+      margin: 0 0 26px;
 
-      font-size: clamp(1.6rem, 3.5vw, 2.35rem);
+      font-size:
+        clamp(1.55rem, 3.5vw, 2.3rem);
+
       font-weight: normal;
+      letter-spacing: 0.07em;
       text-align: center;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
     }
 
     .titre-categorie::before,
@@ -237,7 +280,9 @@
       content: "";
       flex: 1;
       height: 1px;
-      background: rgba(255, 255, 255, 0.55);
+
+      background:
+        rgba(255, 255, 255, 0.58);
     }
 
     .sous-categorie {
@@ -248,7 +293,8 @@
       margin: 0 0 18px;
       padding-left: 12px;
 
-      border-left: 4px solid var(--or);
+      border-left:
+        4px solid var(--or);
 
       font-size: 1.35rem;
       font-weight: normal;
@@ -256,8 +302,13 @@
 
     .grille-produits {
       display: grid;
+
       grid-template-columns:
-        repeat(auto-fit, minmax(245px, 1fr));
+        repeat(
+          auto-fit,
+          minmax(245px, 1fr)
+        );
+
       gap: 25px;
     }
 
@@ -265,64 +316,76 @@
       display: flex;
       flex-direction: column;
       min-height: 100%;
-
       overflow: hidden;
 
-      border: 1px solid rgba(255, 255, 255, 0.42);
-      border-radius: 13px;
+      border:
+        1px solid rgba(255, 255, 255, 0.46);
 
-      background: rgba(20, 55, 32, 0.9);
-      box-shadow: 0 12px 30px var(--ombre);
+      border-radius: 10px;
+
+      background:
+        rgba(20, 55, 32, 0.90);
+
+      box-shadow:
+        0 12px 30px var(--ombre);
 
       transition:
-        transform 0.23s ease,
-        box-shadow 0.23s ease;
+        transform 0.22s ease,
+        box-shadow 0.22s ease;
     }
 
     .carte-produit:hover {
       transform: translateY(-5px);
-      box-shadow: 0 17px 38px rgba(0, 0, 0, 0.43);
+
+      box-shadow:
+        0 17px 38px rgba(0, 0, 0, 0.44);
     }
 
     .zone-photo {
       position: relative;
+
       width: 100%;
       aspect-ratio: 4 / 3;
 
       overflow: hidden;
+
       background:
-        linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.12),
-          rgba(0, 0, 0, 0.14)
-        );
+        rgba(255, 255, 255, 0.08);
     }
 
     .photo-produit {
+      display: block;
       width: 100%;
       height: 100%;
-      display: block;
-      object-fit: cover;
 
-      transition: transform 0.35s ease;
+      object-fit: contain;
+
+      background:
+        rgba(255, 255, 255, 0.04);
+
+      transition:
+        transform 0.35s ease;
     }
 
-    .carte-produit:hover .photo-produit {
+    .carte-produit:hover
+    .photo-produit {
       transform: scale(1.035);
     }
 
     .photo-absente {
-      width: 100%;
-      height: 100%;
-
       display: flex;
       align-items: center;
       justify-content: center;
 
+      width: 100%;
+      height: 100%;
       padding: 24px;
-      text-align: center;
+
+      color:
+        rgba(255, 255, 255, 0.76);
+
       font-style: italic;
-      color: rgba(255, 255, 255, 0.75);
+      text-align: center;
     }
 
     .badge {
@@ -330,18 +393,24 @@
       top: 12px;
       right: 12px;
 
-      max-width: calc(100% - 24px);
+      max-width:
+        calc(100% - 24px);
+
       padding: 7px 10px;
 
       border-radius: 999px;
 
-      font-family: Arial, sans-serif;
+      font-family:
+        Arial,
+        sans-serif;
+
       font-size: 0.76rem;
       font-weight: bold;
-      text-transform: uppercase;
       letter-spacing: 0.04em;
+      text-transform: uppercase;
 
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+      box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.25);
     }
 
     .badge-disponible {
@@ -356,26 +425,29 @@
 
     .contenu-carte {
       display: flex;
-      flex-direction: column;
       flex: 1;
+      flex-direction: column;
 
       padding: 21px;
     }
 
     .titre-produit {
       margin: 0 0 7px;
+
       font-size: 1.42rem;
       font-weight: normal;
-      line-height: 1.2;
+      line-height: 1.25;
     }
 
     .sous-titre-produit {
       min-height: 1.4em;
       margin: 0 0 18px;
 
-      color: rgba(255, 255, 255, 0.82);
+      color:
+        rgba(255, 255, 255, 0.82);
+
       font-style: italic;
-      line-height: 1.35;
+      line-height: 1.4;
     }
 
     .bas-carte {
@@ -383,10 +455,10 @@
     }
 
     .prix-produit {
-      margin: 0 0 13px;
+      margin: 0 0 14px;
 
       color: var(--creme);
-      font-family: Georgia, serif;
+
       font-size: 1.55rem;
       font-weight: bold;
     }
@@ -394,35 +466,41 @@
     .bouton-produit {
       display: block;
       width: 100%;
-
       padding: 13px 16px;
 
-      border: 1px solid var(--creme);
+      border:
+        1px solid var(--creme);
+
       border-radius: 8px;
 
       background: var(--creme);
       color: var(--vert-fonce);
 
+      font-weight: bold;
       text-align: center;
       text-decoration: none;
-      font-weight: bold;
 
       transition:
         background 0.2s ease,
         color 0.2s ease;
     }
 
-    .bouton-produit:hover {
+    .bouton-produit:hover,
+    .bouton-produit:focus-visible {
       background: transparent;
       color: var(--blanc);
+      outline: none;
     }
 
     footer {
-      padding: 24px 15px;
+      padding: 22px 14px 28px;
 
-      border-top: 1px solid rgba(255, 255, 255, 0.25);
+      border-top:
+        1px solid rgba(255, 255, 255, 0.25);
 
-      background: rgba(20, 55, 32, 0.94);
+      background:
+        rgba(0, 0, 0, 0.58);
+
       text-align: center;
     }
 
@@ -430,23 +508,22 @@
       margin: 0;
     }
 
-    [hidden] {
-      display: none !important;
-    }
+    @media (max-width: 700px) {
+      body {
+        background-attachment: scroll;
+      }
 
-    @media (max-width: 680px) {
-      .barre-superieure {
+      .barre-boutique {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      .outils {
+      .navigation-boutique {
         width: 100%;
         justify-content: flex-start;
       }
 
-      .conteneur {
-        width: min(94%, 560px);
+      .page {
         padding-top: 30px;
       }
 
@@ -464,51 +541,52 @@
       }
     }
   </style>
+
+  <!--
+    Ce fichier contient l’apparence exacte
+    des boutons de langue du reste du site.
+  -->
+  <link
+    rel="stylesheet"
+    href="langues.css"
+  >
 </head>
 
 <body>
-  <header class="barre-superieure">
+  <!--
+    langues.js ajoutera automatiquement ici,
+    au début du body, les boutons avec les blasons.
+  -->
+
+  <header class="barre-boutique">
     <a
       class="marque"
-      href="presentation.html"
+      href="index.html"
     >
       Herria Bihotzean
     </a>
 
     <nav
-      class="outils"
+      class="navigation-boutique"
       aria-label="Navigation de la boutique"
     >
-      <button
-        id="bouton-francais"
-        class="bouton-langue actif"
-        type="button"
-      >
-        Français
-      </button>
-
-      <button
-        id="bouton-basque"
-        class="bouton-langue"
-        type="button"
-      >
-        Eskuaraz
-      </button>
-
       <a
-        class="bouton-retour"
-        href="presentation.html"
         id="lien-retour"
+        class="bouton-navigation"
+        href="index.html"
       >
         Retour au site
       </a>
 
       <a
+        id="lien-panier"
         class="bouton-panier"
         href="panier.html"
-        id="lien-panier"
       >
-        Panier
+        <span id="texte-panier">
+          Panier
+        </span>
+
         <span
           id="nombre-panier"
           class="nombre-panier"
@@ -519,7 +597,7 @@
     </nav>
   </header>
 
-  <main class="conteneur">
+  <main class="page">
     <section class="introduction">
       <h1 id="titre-page">
         Boutique
@@ -533,7 +611,7 @@
 
     <section
       id="chargement"
-      class="etat-chargement"
+      class="etat"
       aria-live="polite"
     >
       <div
@@ -548,7 +626,7 @@
 
     <section
       id="erreur"
-      class="etat-erreur"
+      class="etat etat-erreur"
       aria-live="assertive"
       hidden
     >
@@ -561,7 +639,7 @@
 
     <section
       id="boutique-vide"
-      class="etat-vide"
+      class="etat"
       hidden
     >
       <p id="texte-boutique-vide">
@@ -577,11 +655,20 @@
 
   <footer>
     <p>
-      Herria Bihotzean
+      © Herria Bihotzean
     </p>
   </footer>
 
+  <!-- Adresse de l’API Apps Script -->
   <script src="config.js"></script>
+
+  <!--
+    Système commun de langues :
+    blasons, libellés et mémorisation.
+  -->
+  <script src="langues.js"></script>
+
+  <!-- Fonctionnement propre à la boutique -->
   <script src="boutique.js"></script>
 </body>
 </html>
