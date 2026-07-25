@@ -54,37 +54,37 @@
 
     eu: {
       titreDocument:
-        "Denda — Herria Bihotzean",
+        "Saltokia — Herria Bihotzean",
 
       titrePage:
-        "Denda",
+        "Saltokia",
 
       introduction:
         "Herria Bihotzeanek eskaintzen dituen liburuak, grabaketak eta beste baliabideak ezagutu.",
 
       chargement:
-        "Produktuak kargatzen…",
+        "Salgaiak kargatzen…",
 
       erreurTitre:
-        "Ezin izan da denda kargatu",
+        "Ezin izan da saltokirik kargatu",
 
       erreurGenerale:
-        "Errore bat gertatu da produktuak kargatzean.",
+        "Huts bat gertatu da salgaien kargatzean.",
 
       apiAbsente:
         "APIaren helbidea ez da config.js fitxategian adierazia.",
 
       boutiqueVide:
-        "Ez da produkturik eskaintzen oraingoz.",
+        "Ez da salgairik eskaintzen oraiko.",
 
       panier:
         "Saskia",
 
       retour:
-        "← Harrera orrira itzuli",
+        "← Harrera horrirat itzuli",
 
       voirProduit:
-        "Produktua ikusi",
+        "Salgaia ikusi",
 
       disponible:
         "Eskuragarri",
@@ -96,7 +96,7 @@
         "Argazkirik ez dago",
 
       sansCategorie:
-        "Beste produktuak"
+        "Bertze salgaiak"
     }
   };
 
