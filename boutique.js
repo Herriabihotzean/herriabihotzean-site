@@ -1,12 +1,16 @@
 "use strict";
 
 (function () {
-  const CLE_LANGUE = "herria-bihotzean-langue";
-  const CLE_PANIER = "herria-bihotzean-panier";
+  const CLE_PANIER =
+    "herria-bihotzean-panier";
 
   const traductions = {
     fr: {
-      titrePage: "Boutique",
+      titreDocument:
+        "Boutique — Herria Bihotzean",
+
+      titrePage:
+        "Boutique",
 
       introduction:
         "Découvrez les livres, enregistrements et autres ressources proposés par Herria Bihotzean.",
@@ -21,7 +25,7 @@
         "Une erreur s’est produite lors du chargement des produits.",
 
       apiAbsente:
-        "L’adresse de l’API n’est pas renseignée dans config.js.",
+        "L’adresse de l’API n’est pas renseignée dans le fichier config.js.",
 
       boutiqueVide:
         "Aucun produit n’est actuellement proposé.",
@@ -49,7 +53,11 @@
     },
 
     eu: {
-      titrePage: "Denda",
+      titreDocument:
+        "Denda — Herria Bihotzean",
+
+      titrePage:
+        "Denda",
 
       introduction:
         "Herria Bihotzeanek eskaintzen dituen liburuak, grabaketak eta beste baliabideak ezagutu.",
@@ -92,11 +100,7 @@
     }
   };
 
-  let langue =
-    localStorage.getItem(CLE_LANGUE) === "eu"
-      ? "eu"
-      : "fr";
-
+  let langue = "fr";
   let produits = [];
 
   const elements = {};
@@ -109,22 +113,15 @@
   function initialiser() {
     memoriserElements();
     installerEvenements();
+
+    langue = obtenirLangueCourante();
+
     appliquerLangue();
     mettreAJourNombrePanier();
     chargerProduits();
   }
 
   function memoriserElements() {
-    elements.boutonFrancais =
-      document.getElementById(
-        "bouton-francais"
-      );
-
-    elements.boutonBasque =
-      document.getElementById(
-        "bouton-basque"
-      );
-
     elements.titrePage =
       document.getElementById(
         "titre-page"
@@ -180,9 +177,9 @@
         "lien-retour"
       );
 
-    elements.lienPanier =
+    elements.textePanier =
       document.getElementById(
-        "lien-panier"
+        "texte-panier"
       );
 
     elements.nombrePanier =
@@ -192,59 +189,72 @@
   }
 
   function installerEvenements() {
-    elements.boutonFrancais.addEventListener(
-      "click",
-      function () {
-        changerLangue("fr");
+    /*
+     * Cet événement est envoyé par langues.js
+     * lorsqu’on clique sur l’un des blasons.
+     */
+    document.addEventListener(
+      "herria-language-change",
+      function (evenement) {
+        langue =
+          evenement.detail &&
+          evenement.detail.lang === "eu"
+            ? "eu"
+            : "fr";
+
+        appliquerLangue();
       }
     );
 
-    elements.boutonBasque.addEventListener(
-      "click",
-      function () {
-        changerLangue("eu");
-      }
-    );
-
+    /*
+     * Met à jour le nombre d’articles si le panier
+     * est modifié dans un autre onglet du navigateur.
+     */
     window.addEventListener(
       "storage",
       function (evenement) {
         if (
-          evenement.key === CLE_PANIER
+          evenement.key ===
+          CLE_PANIER
         ) {
           mettreAJourNombrePanier();
-        }
-
-        if (
-          evenement.key === CLE_LANGUE
-        ) {
-          langue =
-            evenement.newValue === "eu"
-              ? "eu"
-              : "fr";
-
-          appliquerLangue();
         }
       }
     );
   }
 
-  function changerLangue(nouvelleLangue) {
-    langue =
-      nouvelleLangue === "eu"
-        ? "eu"
-        : "fr";
+  function obtenirLangueCourante() {
+    /*
+     * langues.js expose normalement
+     * la fonction hbCurrentLanguage().
+     */
+    if (
+      typeof window.hbCurrentLanguage ===
+      "function"
+    ) {
+      return (
+        window.hbCurrentLanguage() === "eu"
+          ? "eu"
+          : "fr"
+      );
+    }
 
-    localStorage.setItem(
-      CLE_LANGUE,
-      langue
-    );
+    /*
+     * Solution de secours si langues.js
+     * n’a pas encore fini son initialisation.
+     */
+    const langueDocument =
+      document.documentElement.lang;
 
-    appliquerLangue();
+    return langueDocument === "eu"
+      ? "eu"
+      : "fr";
   }
 
   function appliquerLangue() {
-    const t = traductions[langue];
+    const t =
+      traductions[langue] ||
+      traductions.fr;
 
     document.documentElement.lang =
       langue === "eu"
@@ -252,8 +262,7 @@
         : "fr";
 
     document.title =
-      t.titrePage +
-      " — Herria Bihotzean";
+      t.titreDocument;
 
     elements.titrePage.textContent =
       t.titrePage;
@@ -273,39 +282,31 @@
     elements.lienRetour.textContent =
       t.retour;
 
-    elements.lienPanier.childNodes[0].nodeValue =
-      t.panier + " ";
+    elements.textePanier.textContent =
+      t.panier;
 
-    elements.boutonFrancais.classList.toggle(
-      "actif",
-      langue === "fr"
-    );
-
-    elements.boutonBasque.classList.toggle(
-      "actif",
-      langue === "eu"
-    );
-
-    elements.boutonFrancais.setAttribute(
-      "aria-pressed",
-      String(langue === "fr")
-    );
-
-    elements.boutonBasque.setAttribute(
-      "aria-pressed",
-      String(langue === "eu")
-    );
-
+    /*
+     * Les cartes étant créées par JavaScript,
+     * on les recrée lorsque la langue change.
+     */
     if (produits.length > 0) {
-      afficherCatalogue(produits);
+      afficherCatalogue(
+        produits
+      );
     }
   }
 
   function chargerProduits() {
     masquerErreur();
-    elements.chargement.hidden = false;
-    elements.boutiqueVide.hidden = true;
-    elements.catalogue.innerHTML = "";
+
+    elements.chargement.hidden =
+      false;
+
+    elements.boutiqueVide.hidden =
+      true;
+
+    elements.catalogue.innerHTML =
+      "";
 
     const apiUrl =
       window.HB_CONFIG &&
@@ -317,11 +318,18 @@
 
     if (!apiUrl) {
       afficherErreur(
-        traductions[langue].apiAbsente
+        traductions[langue]
+          .apiAbsente
       );
+
       return;
     }
 
+    /*
+     * Le serveur Apps Script renvoie du JSONP.
+     * Il faut donc créer temporairement une
+     * fonction globale portant un nom unique.
+     */
     const nomCallback =
       "recevoirProduits_" +
       Date.now() +
@@ -331,11 +339,19 @@
         .slice(2);
 
     const script =
-      document.createElement("script");
+      document.createElement(
+        "script"
+      );
+
+    let reponseRecue = false;
 
     const minuterie =
       window.setTimeout(
         function () {
+          if (reponseRecue) {
+            return;
+          }
+
           nettoyerJSONP(
             script,
             nomCallback
@@ -351,6 +367,8 @@
 
     window[nomCallback] =
       function (reponse) {
+        reponseRecue = true;
+
         window.clearTimeout(
           minuterie
         );
@@ -385,6 +403,10 @@
 
     script.onerror =
       function () {
+        if (reponseRecue) {
+          return;
+        }
+
         window.clearTimeout(
           minuterie
         );
@@ -429,7 +451,8 @@
   function traiterReponseAPI(
     reponse
   ) {
-    elements.chargement.hidden = true;
+    elements.chargement.hidden =
+      true;
 
     if (
       !reponse ||
@@ -470,7 +493,9 @@
   function afficherCatalogue(
     listeProduits
   ) {
-    elements.catalogue.innerHTML = "";
+    elements.catalogue.innerHTML =
+      "";
+
     elements.boutiqueVide.hidden =
       listeProduits.length > 0;
 
@@ -512,7 +537,9 @@
           );
 
         sousCategories.forEach(
-          function (sousCategorie) {
+          function (
+            sousCategorie
+          ) {
             const bloc =
               document.createElement(
                 "div"
@@ -548,15 +575,16 @@
             grille.className =
               "grille-produits";
 
-            sousCategorie.produits.forEach(
-              function (produit) {
-                grille.appendChild(
-                  creerCarteProduit(
-                    produit
-                  )
-                );
-              }
-            );
+            sousCategorie.produits
+              .forEach(
+                function (produit) {
+                  grille.appendChild(
+                    creerCarteProduit(
+                      produit
+                    )
+                  );
+                }
+              );
 
             bloc.appendChild(
               grille
@@ -589,9 +617,7 @@
           );
 
         const cle =
-          nom.toLocaleLowerCase(
-            "fr"
-          );
+          normaliserCle(nom);
 
         if (!groupes.has(cle)) {
           groupes.set(
@@ -629,9 +655,7 @@
           );
 
         const cle =
-          nom.toLocaleLowerCase(
-            "fr"
-          );
+          normaliserCle(nom);
 
         if (!groupes.has(cle)) {
           groupes.set(
@@ -859,11 +883,16 @@
       ancienneImage.remove();
     }
 
-    if (
+    const ancienneAbsence =
       zonePhoto.querySelector(
         ".photo-absente"
-      )
-    ) {
+      );
+
+    if (ancienneAbsence) {
+      ancienneAbsence.textContent =
+        traductions[langue]
+          .photoAbsente;
+
       return;
     }
 
@@ -888,15 +917,16 @@
   function obtenirTitreProduit(
     produit
   ) {
-    if (
-      langue === "eu" &&
+    const titreBasque =
       nettoyerTexte(
         produit.titreBasque
-      )
-    ) {
-      return nettoyerTexte(
-        produit.titreBasque
       );
+
+    if (
+      langue === "eu" &&
+      titreBasque
+    ) {
+      return titreBasque;
     }
 
     return (
@@ -912,15 +942,16 @@
   function obtenirSousTitreProduit(
     produit
   ) {
-    if (
-      langue === "eu" &&
+    const sousTitreBasque =
       nettoyerTexte(
         produit.sousTitreBasque
-      )
-    ) {
-      return nettoyerTexte(
-        produit.sousTitreBasque
       );
+
+    if (
+      langue === "eu" &&
+      sousTitreBasque
+    ) {
+      return sousTitreBasque;
     }
 
     return nettoyerTexte(
@@ -1015,9 +1046,14 @@
   function afficherErreur(
     message
   ) {
-    elements.chargement.hidden = true;
-    elements.boutiqueVide.hidden = true;
-    elements.catalogue.innerHTML = "";
+    elements.chargement.hidden =
+      true;
+
+    elements.boutiqueVide.hidden =
+      true;
+
+    elements.catalogue.innerHTML =
+      "";
 
     elements.messageErreur.textContent =
       message ||
@@ -1034,6 +1070,22 @@
 
     elements.messageErreur.textContent =
       "";
+  }
+
+  function normaliserCle(
+    valeur
+  ) {
+    return nettoyerTexte(
+      valeur
+    )
+      .normalize("NFD")
+      .replace(
+        /[\u0300-\u036f]/g,
+        ""
+      )
+      .toLocaleLowerCase(
+        "fr"
+      );
   }
 
   function nettoyerTexte(
