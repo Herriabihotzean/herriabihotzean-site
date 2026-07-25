@@ -11,7 +11,7 @@ const HB_TRANSLATIONS={"eu":
    "Soule": "Zibero", "Béarn": "Biarno",
    "Livres": "Liburuak",
    "Livres de langue basque":
-     "Eskuarazko liburuak",
+    "Eskuarazko liburuak",
    "Recueils de prières": "Othoitz bildumak",
    "Autres": "Bertzeak",
    "Vêtements, objets et autres articles à venir.": "Jauntziak, gauzak eta bertze artikulu batzuek laster etorriko dira.",
@@ -45,7 +45,7 @@ const HB_TRANSLATIONS={"eu":
    "Cette rubrique sera consacrée aux emblèmes, aux blasons, aux drapeaux et aux autres symboles historiques du Pays basque.": "Atal hau Eskual Herriko ikur, armarri, bandera eta bertze sinbolo historikoei eskainia izanen da.",
    "Bienvenue sur le site herriabihotzean.fr, destiné à tous ceux qui aiment le Pays Basque et souhaitent perfectionner leur connaissance de notre belle petite patrie.": "Ongi etorri herriabihotzean.fr webgunean ! Webgune hau, Eskual Herria maite dutenentzat eta gure herri ederrako jakintza sakondu nahi dutenentzat xedatua izan da.",
    "Nous contacter": "Gurekin harremanetan jarri",
-   "← Retour à l’accueil": "← Harrera-orrira itzuli",
+   "← Retour à l’accueil": "← Harrera-horrira itzuli",
    "© Herria Bihotzean": "© Herria Bihotzean"}};
 const HB_LABELS={"fr": {"fr": "français", "eu": "basque", "be": "béarnais"}, "eu": {"fr": "frantsesez", "eu": "eskuaraz", "be": "biarnesez"}, "be": {"fr": "francés", "eu": "bascou", "be": "biarnés"}};
 
