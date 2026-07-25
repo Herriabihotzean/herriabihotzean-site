@@ -78,28 +78,28 @@
 
     eu: {
       titreDocument:
-        "Produktua — Herria Bihotzean",
+        "Salgaia — Herria Bihotzean",
 
       titrePage:
-        "Produktua",
+        "Salgaia",
 
       chargement:
-        "Produktua kargatzen…",
+        "Salgaia kargatzen…",
 
       titreErreur:
-        "Produktua ez da aurkitu",
+        "Salgaia ez da aurkitu",
 
       erreurGenerale:
-        "Errore bat gertatu da produktua kargatzean.",
+        "Huts bat gertatu da salgaiaren kargatzean.",
 
       identifiantAbsent:
-        "Ez da produktuaren identifikatzailerik adierazi helbidean.",
+        "Ez da salgaiaren identifikatzailerik adierazi helbidean.",
 
       apiAbsente:
         "APIaren helbidea ez da config.js fitxategian adierazia.",
 
       retourBoutique:
-        "← Dendara itzuli",
+        "← Saltokia itzuli",
 
       panier:
         "Saskia",
@@ -114,7 +114,7 @@
         "Saskira gehitu",
 
       ajouterIndisponible:
-        "Produktua ez dago eskuragarri",
+        "Salgaia ez dago eskuragarri",
 
       quantite:
         "Kopurua",
@@ -138,10 +138,10 @@
         "Argazkirik ez dago",
 
       confirmation:
-        "Produktua saskira gehitu da.",
+        "Salgaia saskira gehitu da.",
 
       diminutionQuantite:
-        "Kopurua gutxitu",
+        "Kopurua gutitu",
 
       augmentationQuantite:
         "Kopurua handitu"
