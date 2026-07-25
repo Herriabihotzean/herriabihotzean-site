@@ -30,11 +30,11 @@
       boutiqueVide:
         "Aucun produit n’est actuellement proposé.",
 
-      retour:
-        "Retour au site",
-
       panier:
         "Panier",
+
+      retour:
+        "← Retour à l’accueil",
 
       voirProduit:
         "Voir le produit",
@@ -77,11 +77,11 @@
       boutiqueVide:
         "Ez da produkturik eskaintzen oraingoz.",
 
-      retour:
-        "Gunera itzuli",
-
       panier:
         "Saskia",
+
+      retour:
+        "← Harrera orrira itzuli",
 
       voirProduit:
         "Produktua ikusi",
@@ -114,7 +114,8 @@
     memoriserElements();
     installerEvenements();
 
-    langue = obtenirLangueCourante();
+    langue =
+      obtenirLangueCourante();
 
     appliquerLangue();
     mettreAJourNombrePanier();
@@ -172,11 +173,6 @@
         "catalogue"
       );
 
-    elements.lienRetour =
-      document.getElementById(
-        "lien-retour"
-      );
-
     elements.textePanier =
       document.getElementById(
         "texte-panier"
@@ -186,13 +182,14 @@
       document.getElementById(
         "nombre-panier"
       );
+
+    elements.lienRetour =
+      document.getElementById(
+        "lien-retour"
+      );
   }
 
   function installerEvenements() {
-    /*
-     * Cet événement est envoyé par langues.js
-     * lorsqu’on clique sur l’un des blasons.
-     */
     document.addEventListener(
       "herria-language-change",
       function (evenement) {
@@ -206,10 +203,6 @@
       }
     );
 
-    /*
-     * Met à jour le nombre d’articles si le panier
-     * est modifié dans un autre onglet du navigateur.
-     */
     window.addEventListener(
       "storage",
       function (evenement) {
@@ -224,10 +217,6 @@
   }
 
   function obtenirLangueCourante() {
-    /*
-     * langues.js expose normalement
-     * la fonction hbCurrentLanguage().
-     */
     if (
       typeof window.hbCurrentLanguage ===
       "function"
@@ -239,16 +228,11 @@
       );
     }
 
-    /*
-     * Solution de secours si langues.js
-     * n’a pas encore fini son initialisation.
-     */
-    const langueDocument =
-      document.documentElement.lang;
-
-    return langueDocument === "eu"
-      ? "eu"
-      : "fr";
+    return (
+      document.documentElement.lang === "eu"
+        ? "eu"
+        : "fr"
+    );
   }
 
   function appliquerLangue() {
@@ -264,31 +248,48 @@
     document.title =
       t.titreDocument;
 
-    elements.titrePage.textContent =
-      t.titrePage;
+    if (elements.titrePage) {
+      elements.titrePage.textContent =
+        t.titrePage;
+    }
 
-    elements.texteIntroduction.textContent =
-      t.introduction;
+    if (elements.texteIntroduction) {
+      elements.texteIntroduction.textContent =
+        t.introduction;
+    }
 
-    elements.texteChargement.textContent =
-      t.chargement;
+    if (elements.texteChargement) {
+      elements.texteChargement.textContent =
+        t.chargement;
+    }
 
-    elements.titreErreur.textContent =
-      t.erreurTitre;
+    if (elements.titreErreur) {
+      elements.titreErreur.textContent =
+        t.erreurTitre;
+    }
 
-    elements.texteBoutiqueVide.textContent =
-      t.boutiqueVide;
+    if (elements.texteBoutiqueVide) {
+      elements.texteBoutiqueVide.textContent =
+        t.boutiqueVide;
+    }
 
-    elements.lienRetour.textContent =
-      t.retour;
+    if (elements.textePanier) {
+      elements.textePanier.textContent =
+        t.panier;
+    }
 
-    elements.textePanier.textContent =
-      t.panier;
+    if (elements.lienRetour) {
+      elements.lienRetour.textContent =
+        t.retour;
 
-    /*
-     * Les cartes étant créées par JavaScript,
-     * on les recrée lorsque la langue change.
-     */
+      /*
+       * Le retour doit toujours pointer vers
+       * la page d’accueil du dépôt principal.
+       */
+      elements.lienRetour.href =
+        "index.html";
+    }
+
     if (produits.length > 0) {
       afficherCatalogue(
         produits
@@ -299,14 +300,20 @@
   function chargerProduits() {
     masquerErreur();
 
-    elements.chargement.hidden =
-      false;
+    if (elements.chargement) {
+      elements.chargement.hidden =
+        false;
+    }
 
-    elements.boutiqueVide.hidden =
-      true;
+    if (elements.boutiqueVide) {
+      elements.boutiqueVide.hidden =
+        true;
+    }
 
-    elements.catalogue.innerHTML =
-      "";
+    if (elements.catalogue) {
+      elements.catalogue.innerHTML =
+        "";
+    }
 
     const apiUrl =
       window.HB_CONFIG &&
@@ -325,11 +332,6 @@
       return;
     }
 
-    /*
-     * Le serveur Apps Script renvoie du JSONP.
-     * Il faut donc créer temporairement une
-     * fonction globale portant un nom unique.
-     */
     const nomCallback =
       "recevoirProduits_" +
       Date.now() +
@@ -451,8 +453,10 @@
   function traiterReponseAPI(
     reponse
   ) {
-    elements.chargement.hidden =
-      true;
+    if (elements.chargement) {
+      elements.chargement.hidden =
+        true;
+    }
 
     if (
       !reponse ||
@@ -479,8 +483,10 @@
     if (
       produits.length === 0
     ) {
-      elements.boutiqueVide.hidden =
-        false;
+      if (elements.boutiqueVide) {
+        elements.boutiqueVide.hidden =
+          false;
+      }
 
       return;
     }
@@ -493,11 +499,17 @@
   function afficherCatalogue(
     listeProduits
   ) {
+    if (!elements.catalogue) {
+      return;
+    }
+
     elements.catalogue.innerHTML =
       "";
 
-    elements.boutiqueVide.hidden =
-      listeProduits.length > 0;
+    if (elements.boutiqueVide) {
+      elements.boutiqueVide.hidden =
+        listeProduits.length > 0;
+    }
 
     const categories =
       regrouperParCategorie(
@@ -712,7 +724,8 @@
       image.className =
         "photo-produit";
 
-      image.src = photo;
+      image.src =
+        photo;
 
       image.alt =
         obtenirTitreProduit(
@@ -981,6 +994,10 @@
   }
 
   function mettreAJourNombrePanier() {
+    if (!elements.nombrePanier) {
+      return;
+    }
+
     const panier =
       lirePanier();
 
@@ -1046,30 +1063,44 @@
   function afficherErreur(
     message
   ) {
-    elements.chargement.hidden =
-      true;
+    if (elements.chargement) {
+      elements.chargement.hidden =
+        true;
+    }
 
-    elements.boutiqueVide.hidden =
-      true;
+    if (elements.boutiqueVide) {
+      elements.boutiqueVide.hidden =
+        true;
+    }
 
-    elements.catalogue.innerHTML =
-      "";
+    if (elements.catalogue) {
+      elements.catalogue.innerHTML =
+        "";
+    }
 
-    elements.messageErreur.textContent =
-      message ||
-      traductions[langue]
-        .erreurGenerale;
+    if (elements.messageErreur) {
+      elements.messageErreur.textContent =
+        message ||
+        traductions[langue]
+          .erreurGenerale;
+    }
 
-    elements.erreur.hidden =
-      false;
+    if (elements.erreur) {
+      elements.erreur.hidden =
+        false;
+    }
   }
 
   function masquerErreur() {
-    elements.erreur.hidden =
-      true;
+    if (elements.erreur) {
+      elements.erreur.hidden =
+        true;
+    }
 
-    elements.messageErreur.textContent =
-      "";
+    if (elements.messageErreur) {
+      elements.messageErreur.textContent =
+        "";
+    }
   }
 
   function normaliserCle(
