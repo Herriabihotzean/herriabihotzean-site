@@ -624,9 +624,16 @@
     listeProduits.forEach(
       function (produit) {
         const nom =
+        langue === "eu" &&
           nettoyerTexte(
-            produit.categorie
-          );
+            produit.categorieBasque
+          )
+            ? nettoyerTexte(
+                produit.categorieBasque
+              )
+            : nettoyerTexte(
+                produit.categorie
+              );
 
         const cle =
           normaliserCle(nom);
@@ -662,9 +669,16 @@
     listeProduits.forEach(
       function (produit) {
         const nom =
+          langue === "eu" &&
           nettoyerTexte(
-            produit.sousCategorie
-          );
+            produit.sousCategorieBasque
+          )
+            ? nettoyerTexte(
+                produit.sousCategorieBasque
+              )
+            : nettoyerTexte(
+                produit.sousCategorie
+              );
 
         const cle =
           normaliserCle(nom);
