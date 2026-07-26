@@ -76,7 +76,10 @@
         "Diminuer la quantité",
 
       augmentationQuantite:
-        "Augmenter la quantité"
+        "Augmenter la quantité",
+
+      presentation:
+        "Présentation"
     },
 
     eu: {
@@ -147,7 +150,10 @@
         "Kopurua gutitu",
 
       augmentationQuantite:
-        "Kopurua handitu"
+        "Kopurua handitu",
+
+      presentation:
+        "Aurkezpena"
     }
   };
 
@@ -164,17 +170,9 @@
   function initialiser() {
     memoriserElements();
 
-    /*
-     * On détermine d'abord la langue.
-     * Le paramètre ?lang= est prioritaire.
-     */
     langue =
       determinerLangueInitiale();
 
-    /*
-     * On mémorise immédiatement cette langue
-     * pour toutes les autres pages du site.
-     */
     try {
       localStorage.setItem(
         CLE_LANGUE,
@@ -183,7 +181,7 @@
     } catch (_) {}
 
     /*
-     * On synchronise aussi le moteur commun langues.js.
+     * On laisse langues.js gérer les boutons.
      */
     if (
       typeof window.hbSetLanguage ===
@@ -277,6 +275,16 @@
     elements.badge =
       document.getElementById(
         "badge-disponibilite"
+      );
+
+    elements.blocPresentation =
+      document.getElementById(
+        "bloc-presentation"
+      );
+
+    elements.titrePresentation =
+      document.getElementById(
+        "titre-presentation"
       );
 
     elements.description =
@@ -395,7 +403,7 @@
 
     if (
       typeof window.hbCurrentLanguage ===
-      "function" &&
+        "function" &&
       window.hbCurrentLanguage() === "eu"
     ) {
       return "eu";
@@ -405,6 +413,10 @@
   }
 
   function installerEvenements() {
+    /*
+     * Langues.js émet cet événement lorsqu'on
+     * clique sur l'un de ses deux boutons.
+     */
     document.addEventListener(
       "herria-language-change",
       function (evenement) {
@@ -413,12 +425,6 @@
           evenement.detail.lang === "eu"
             ? "eu"
             : "fr";
-
-        if (
-          nouvelleLangue === langue
-        ) {
-          return;
-        }
 
         langue =
           nouvelleLangue;
@@ -438,18 +444,14 @@
     elements.diminuer.addEventListener(
       "click",
       function () {
-        modifierQuantite(
-          -1
-        );
+        modifierQuantite(-1);
       }
     );
 
     elements.augmenter.addEventListener(
       "click",
       function () {
-        modifierQuantite(
-          1
-        );
+        modifierQuantite(1);
       }
     );
 
@@ -504,77 +506,54 @@
         ? "eu"
         : "fr";
 
-    if (elements.titrePage) {
-      elements.titrePage.textContent =
-        t.titrePage;
-    }
+    elements.titrePage.textContent =
+      t.titrePage;
 
-    if (elements.texteChargement) {
-      elements.texteChargement.textContent =
-        t.chargement;
-    }
+    elements.texteChargement.textContent =
+      t.chargement;
 
-    if (elements.titreErreur) {
-      elements.titreErreur.textContent =
-        t.titreErreur;
-    }
+    elements.titreErreur.textContent =
+      t.titreErreur;
 
-    if (elements.etiquetteExpedition) {
-      elements.etiquetteExpedition.textContent =
-        t.expedition;
-    }
+    elements.titrePresentation.textContent =
+      t.presentation;
 
-    if (elements.etiquetteFrais) {
-      elements.etiquetteFrais.textContent =
-        t.fraisLivraison;
-    }
+    elements.etiquetteExpedition.textContent =
+      t.expedition;
 
-    if (elements.etiquettePoids) {
-      elements.etiquettePoids.textContent =
-        t.poids;
-    }
+    elements.etiquetteFrais.textContent =
+      t.fraisLivraison;
 
-    if (elements.etiquetteQuantite) {
-      elements.etiquetteQuantite.textContent =
-        t.quantite;
-    }
+    elements.etiquettePoids.textContent =
+      t.poids;
 
-    if (elements.imageAbsente) {
-      elements.imageAbsente.textContent =
-        t.photoAbsente;
-    }
+    elements.etiquetteQuantite.textContent =
+      t.quantite;
 
-    if (elements.confirmation) {
-      elements.confirmation.textContent =
-        t.confirmation;
-    }
+    elements.imageAbsente.textContent =
+      t.photoAbsente;
 
-    if (elements.textePanier) {
-      elements.textePanier.textContent =
-        t.panier;
-    }
+    elements.confirmation.textContent =
+      t.confirmation;
 
-    if (elements.lienRetour) {
-      elements.lienRetour.textContent =
-        t.retourBoutique;
+    elements.textePanier.textContent =
+      t.panier;
 
-      elements.lienRetour.href =
-        "boutique.html";
-    }
+    elements.lienRetour.textContent =
+      t.retourBoutique;
 
-    if (elements.diminuer) {
-      elements.diminuer.setAttribute(
-        "aria-label",
-        t.diminutionQuantite
-      );
-    }
+    elements.lienRetour.href =
+      "boutique.html";
 
-    if (elements.augmenter) {
-      elements.augmenter.setAttribute(
-        "aria-label",
-        t.augmentationQuantite
-      );
-    }
+    elements.diminuer.setAttribute(
+      "aria-label",
+      t.diminutionQuantite
+    );
+
+    elements.augmenter.setAttribute(
+      "aria-label",
+      t.augmentationQuantite
+    );
 
     if (produit) {
       afficherProduit();
@@ -590,10 +569,6 @@
         window.location.search
       );
 
-    /*
-     * On accepte les deux noms pour éviter
-     * toute incompatibilité avec un ancien lien.
-     */
     const produitId =
       nettoyerTexte(
         parametres.get("id") ||
@@ -605,7 +580,6 @@
         traductions[langue]
           .identifiantAbsent
       );
-
       return;
     }
 
@@ -622,7 +596,6 @@
         traductions[langue]
           .apiAbsente
       );
-
       return;
     }
 
@@ -649,8 +622,7 @@
             return;
           }
 
-          termine =
-            true;
+          termine = true;
 
           nettoyerJSONP(
             script,
@@ -671,8 +643,7 @@
           return;
         }
 
-        termine =
-          true;
+        termine = true;
 
         window.clearTimeout(
           minuterie
@@ -710,6 +681,10 @@
         ? "&"
         : "?";
 
+    /*
+     * IMPORTANT :
+     * Apps Script attend bien produitId.
+     */
     script.src =
       apiUrl +
       separateur +
@@ -725,8 +700,7 @@
       "&_=" +
       Date.now();
 
-    script.async =
-      true;
+    script.async = true;
 
     script.onerror =
       function () {
@@ -734,8 +708,7 @@
           return;
         }
 
-        termine =
-          true;
+        termine = true;
 
         window.clearTimeout(
           minuterie
@@ -825,11 +798,23 @@
         produit.prix
       );
 
-    elements.description.textContent =
-      description;
+    /*
+     * TEXTE DE PRÉSENTATION
+     */
+    if (description) {
+      elements.description.textContent =
+        description;
 
-    elements.description.hidden =
-      !description;
+      elements.blocPresentation.hidden =
+        false;
+
+    } else {
+      elements.description.textContent =
+        "";
+
+      elements.blocPresentation.hidden =
+        true;
+    }
 
     const disponible =
       produit.disponible === true;
@@ -986,37 +971,29 @@
       );
     }
 
+    /*
+     * C'est bien le nom renvoyé actuellement
+     * par Apps Script.
+     */
     return nettoyerTexte(
       produit.descriptionFrancaise
     );
   }
 
+  /*
+   * GALERIE :
+   * le tableau "photos" contient uniquement
+   * les cellules non vides de RESSOURCES.
+   */
   function afficherGalerie() {
-    let photos = [];
-
-    if (
+    const photos =
       Array.isArray(
         produit.photos
       )
-    ) {
-      photos =
-        produit.photos
-          .map(nettoyerTexte)
-          .filter(Boolean);
-    }
-
-    if (
-      photos.length === 0 &&
-      nettoyerTexte(
-        produit.photoPrincipale
-      )
-    ) {
-      photos.push(
-        nettoyerTexte(
-          produit.photoPrincipale
-        )
-      );
-    }
+        ? produit.photos
+            .map(nettoyerTexte)
+            .filter(Boolean)
+        : [];
 
     elements.miniatures.innerHTML =
       "";
@@ -1040,6 +1017,10 @@
       photos[0]
     );
 
+    /*
+     * Une seule photo :
+     * pas besoin de miniatures.
+     */
     if (
       photos.length === 1
     ) {
@@ -1072,8 +1053,7 @@
             "img"
           );
 
-        image.src =
-          url;
+        image.src = url;
 
         image.alt =
           obtenirTitreProduit() +
@@ -1215,8 +1195,7 @@
     if (
       !Number.isFinite(valeur)
     ) {
-      valeur =
-        1;
+      valeur = 1;
     }
 
     valeur =
@@ -1306,6 +1285,7 @@
       mettreAJourArticle(
         articleExistant
       );
+
     } else {
       panier.push({
         produitId:
@@ -1412,26 +1392,6 @@
   function mettreAJourArticle(
     article
   ) {
-    article.categorie =
-      nettoyerTexte(
-        produit.categorie
-      );
-
-    article.categorieBasque =
-      nettoyerTexte(
-        produit.categorieBasque
-      );
-
-    article.sousCategorie =
-      nettoyerTexte(
-        produit.sousCategorie
-      );
-
-    article.sousCategorieBasque =
-      nettoyerTexte(
-        produit.sousCategorieBasque
-      );
-
     article.titre =
       nettoyerTexte(
         produit.titre
@@ -1460,11 +1420,6 @@
     article.fraisLivraison =
       Number(
         produit.fraisLivraison
-      );
-
-    article.modeExpedition =
-      nettoyerTexte(
-        produit.modeExpedition
       );
 
     article.photoPrincipale =
@@ -1504,6 +1459,7 @@
       )
         ? panier
         : [];
+
     } catch (_) {
       return [];
     }
