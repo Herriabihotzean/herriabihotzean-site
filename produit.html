@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
-
+<html
+  lang="fr"
+  data-title-fr="Produit — Herria Bihotzean"
+  data-title-eu="Produktua — Herria Bihotzean"
+>
 <head>
   <meta charset="UTF-8">
 
@@ -9,24 +12,20 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title id="titre-document">
-    Produit — Herria Bihotzean
-  </title>
+  <title>Produit — Herria Bihotzean</title>
 
   <style>
     * {
       box-sizing: border-box;
     }
 
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
+      margin: 0;
       min-height: 100vh;
-      padding: 24px 12px 50px;
 
       font-family:
         Georgia,
@@ -35,209 +34,179 @@
 
       color: white;
 
-      background:
+      background-image:
         linear-gradient(
-          rgba(0, 0, 0, 0.46),
-          rgba(0, 0, 0, 0.58)
+          rgba(0, 0, 0, 0.52),
+          rgba(0, 0, 0, 0.70)
         ),
-        url("fond-herriabihotzean.jpg")
-        center / cover fixed;
+        url("fond-herriabihotzean.jpg");
+
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input,
+    a {
+      font: inherit;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     .page {
-      width: min(1100px, 96%);
+      width: min(1100px, calc(100% - 28px));
       margin: 0 auto;
     }
 
-    /* =========================
-       LANGUES
-       ========================= */
-
-    .barre-langues {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-bottom: 18px;
+    /*
+     * Titre de page identique dans son esprit
+     * aux autres rubriques du site :
+     * capitales, sans cadre ni fond.
+     */
+    .entete {
+      padding: 46px 16px 26px;
+      text-align: center;
     }
 
-    .bouton-langue {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .bloc-titre {
+      width: min(900px, 100%);
+      margin: 0 auto;
+      padding: 30px 24px;
+    }
 
-      border: 1px solid
-        rgba(255, 255, 255, 0.45);
+    .titre-page {
+      margin: 0;
+
+      font-size:
+        clamp(2rem, 6vw, 3.8rem);
+
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    main {
+      padding-bottom: 40px;
+    }
+
+    .etat {
+      width: min(760px, 100%);
+      margin: 30px auto;
+      padding: 24px;
 
       border-radius: 8px;
 
-      padding: 7px 11px;
-
-      color: white;
       background:
-        rgba(0, 0, 0, 0.32);
+        rgba(20, 55, 32, 0.90);
 
-      font-family: inherit;
-      font-size: 0.92rem;
-
-      cursor: pointer;
+      line-height: 1.6;
+      text-align: center;
     }
 
-    .bouton-langue img {
-      width: 28px;
-      height: 28px;
+    .etat-erreur {
+      background:
+        rgba(110, 25, 25, 0.94);
+    }
+
+    .roue {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto 15px;
+
+      border:
+        4px solid rgba(255, 255, 255, 0.28);
+
+      border-top-color: white;
+      border-radius: 50%;
+
+      animation:
+        tourner 0.8s linear infinite;
+    }
+
+    @keyframes tourner {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .fiche-produit {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1.05fr)
+        minmax(320px, 0.95fr);
+
+      gap: 34px;
+
+      margin: 0 auto 34px;
+      padding: 28px;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.60);
+
+      border-radius: 8px;
+
+      background:
+        rgba(20, 55, 32, 0.88);
+    }
+
+    .galerie {
+      min-width: 0;
+    }
+
+    .image-principale-conteneur {
+      position: relative;
+
+      width: 100%;
+      aspect-ratio: 4 / 3;
+
+      overflow: hidden;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.30);
+
+      border-radius: 8px;
+
+      background:
+        rgba(255, 255, 255, 0.07);
+    }
+
+    .image-principale {
+      display: block;
+      width: 100%;
+      height: 100%;
 
       object-fit: contain;
     }
 
-    .bouton-langue.actif {
-      background:
-        rgba(255, 255, 255, 0.18);
-    }
-
-    /* =========================
-       TITRE
-       ========================= */
-
-    h1 {
-      margin: 18px 0 25px;
-
-      text-align: center;
-
-      font-size:
-        clamp(2rem, 5vw, 3.3rem);
-
-      font-weight: normal;
-
-      text-transform: uppercase;
-
-      letter-spacing: 0.05em;
-
-      text-shadow:
-        0 2px 7px
-        rgba(0, 0, 0, 0.8);
-    }
-
-    /* =========================
-       RETOUR / PANIER
-       ========================= */
-
-    .navigation {
+    .image-absente {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-
-      margin-bottom: 20px;
-    }
-
-    .bouton-navigation {
-      display: inline-block;
-
-      padding: 10px 15px;
-
-      border: 1px solid
-        rgba(255, 255, 255, 0.45);
-
-      border-radius: 8px;
-
-      color: white;
-
-      background:
-        rgba(0, 0, 0, 0.32);
-
-      text-decoration: none;
-
-      font-family: inherit;
-
-      cursor: pointer;
-    }
-
-    .bouton-navigation:hover {
-      background:
-        rgba(255, 255, 255, 0.15);
-    }
-
-    /* =========================
-       CARTE PRODUIT
-       ========================= */
-
-    .produit {
-      padding: 28px;
-
-      border-radius: 12px;
-
-      background:
-        rgba(0, 0, 0, 0.50);
-
-      box-shadow:
-        0 8px 30px
-        rgba(0, 0, 0, 0.25);
-    }
-
-    .chargement,
-    .erreur {
-      padding: 35px 15px;
-
-      text-align: center;
-
-      font-size: 1.1rem;
-    }
-
-    .contenu-produit {
-      display: none;
-    }
-
-    /* =========================
-       GALERIE
-       ========================= */
-
-    .galerie {
-      width: min(650px, 100%);
-      margin: 0 auto 30px;
-    }
-
-    .photo-principale {
-      display: flex;
-
       align-items: center;
       justify-content: center;
 
-      min-height: 300px;
+      width: 100%;
+      height: 100%;
+      padding: 28px;
 
-      padding: 10px;
+      color:
+        rgba(255, 255, 255, 0.78);
 
-      border-radius: 10px;
-
-      background:
-        rgba(255, 255, 255, 0.08);
-    }
-
-    .photo-principale img {
-      display: block;
-
-      max-width: 100%;
-      max-height: 600px;
-
-      width: auto;
-      height: auto;
-
-      object-fit: contain;
-
-      border-radius: 6px;
-    }
-
-    .photo-absente {
-      padding: 80px 20px;
-
+      font-style: italic;
       text-align: center;
-
-      opacity: 0.8;
     }
 
     .miniatures {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
+      display: grid;
+
+      grid-template-columns:
+        repeat(5, minmax(0, 1fr));
 
       gap: 10px;
 
@@ -245,489 +214,649 @@
     }
 
     .miniature {
-      width: 82px;
-      height: 82px;
+      width: 100%;
+      aspect-ratio: 1 / 1;
 
-      padding: 4px;
+      padding: 0;
+      overflow: hidden;
 
-      border: 1px solid
-        rgba(255, 255, 255, 0.35);
+      border:
+        2px solid transparent;
 
       border-radius: 6px;
 
       background:
-        rgba(0, 0, 0, 0.25);
+        rgba(255, 255, 255, 0.08);
 
       cursor: pointer;
     }
 
+    .miniature:hover,
+    .miniature:focus-visible,
+    .miniature.active {
+      border-color: white;
+      outline: none;
+    }
+
     .miniature img {
+      display: block;
       width: 100%;
       height: 100%;
 
       object-fit: cover;
-
-      border-radius: 3px;
     }
 
-    .miniature.active {
-      border: 2px solid white;
+    .informations {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
     }
 
-    /* =========================
-       INFORMATIONS
-       ========================= */
+    .categorie {
+      margin: 0 0 10px;
+
+      color:
+        rgba(255, 255, 255, 0.80);
+
+      font-family:
+        Arial,
+        sans-serif;
+
+      font-size: 0.84rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
 
     .titre-produit {
-      margin: 10px 0 8px;
-
-      text-align: center;
+      margin: 0 0 10px;
 
       font-size:
-        clamp(1.7rem, 4vw, 2.5rem);
+        clamp(2rem, 4vw, 3.2rem);
 
       font-weight: normal;
+      line-height: 1.1;
     }
 
     .sous-titre-produit {
-      margin: 0 auto 18px;
+      margin: 0 0 22px;
 
-      text-align: center;
+      color:
+        rgba(255, 255, 255, 0.84);
 
+      font-size: 1.18rem;
       font-style: italic;
-
-      font-size: 1.08rem;
-
-      opacity: 0.92;
+      line-height: 1.4;
     }
 
-    .prix {
-      margin: 14px 0;
+    .prix-produit {
+      margin: 0 0 14px;
 
-      text-align: center;
-
-      font-size: 1.7rem;
+      font-size: 2rem;
       font-weight: bold;
     }
 
-    .disponibilite {
-      margin: 10px 0 24px;
+    .badge {
+      align-self: flex-start;
 
-      text-align: center;
+      margin-bottom: 22px;
+      padding: 8px 12px;
 
+      border-radius: 999px;
+
+      font-family:
+        Arial,
+        sans-serif;
+
+      font-size: 0.78rem;
       font-weight: bold;
-    }
-
-    /* =========================
-       PRÉSENTATION
-       ========================= */
-
-    .bloc-presentation {
-      margin: 28px auto;
-
-      width: min(850px, 100%);
-    }
-
-    .titre-section {
-      margin: 0 0 15px;
-
-      text-align: center;
-
-      font-size: 1.35rem;
-      font-weight: normal;
-
+      letter-spacing: 0.04em;
       text-transform: uppercase;
+    }
 
-      letter-spacing: 0.06em;
+    .badge-disponible {
+      background: #e8f5e9;
+      color: #1d5b2b;
+    }
+
+    .badge-indisponible {
+      background: #f8e5e5;
+      color: #7c1f1f;
     }
 
     .description {
+      margin-bottom: 23px;
+
       font-size: 1.06rem;
-      line-height: 1.7;
-
-      text-align: justify;
-      text-justify: inter-word;
-
+      line-height: 1.68;
       white-space: pre-line;
     }
 
-    .bloc-presentation.masque {
-      display: none;
-    }
-
-    /* =========================
-       INFORMATIONS PRATIQUES
-       ========================= */
-
     .details {
-      width: min(650px, 100%);
-      margin: 25px auto;
+      margin: 0 0 24px;
+      padding: 15px 18px;
 
-      padding: 18px 20px;
+      border:
+        1px solid rgba(255, 255, 255, 0.25);
 
       border-radius: 8px;
 
       background:
-        rgba(255, 255, 255, 0.08);
+        rgba(0, 0, 0, 0.16);
     }
 
-    .detail {
+    .ligne-detail {
+      display: grid;
+
+      grid-template-columns:
+        minmax(145px, 0.45fr)
+        1fr;
+
+      gap: 12px;
+
+      padding: 8px 0;
+    }
+
+    .ligne-detail + .ligne-detail {
+      border-top:
+        1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .etiquette-detail {
+      font-weight: bold;
+    }
+
+    .commande {
+      margin-top: auto;
+      padding-top: 21px;
+
+      border-top:
+        1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .selection-quantite {
       display: flex;
-      justify-content: space-between;
-      gap: 20px;
+      align-items: center;
+      gap: 13px;
+      flex-wrap: wrap;
 
-      padding: 7px 0;
-
-      border-bottom: 1px solid
-        rgba(255, 255, 255, 0.15);
+      margin-bottom: 16px;
     }
 
-    .detail:last-child {
-      border-bottom: none;
+    .selection-quantite label {
+      font-weight: bold;
     }
 
-    /* =========================
-       AJOUT AU PANIER
-       ========================= */
-
-    .achat {
-      display: flex;
-      flex-direction: column;
+    .controle-quantite {
+      display: inline-flex;
       align-items: center;
 
-      gap: 15px;
+      overflow: hidden;
 
-      margin-top: 28px;
-    }
+      border:
+        1px solid rgba(255, 255, 255, 0.55);
 
-    .choix-quantite {
-      display: flex;
-      align-items: center;
-
-      gap: 10px;
+      border-radius: 7px;
     }
 
     .bouton-quantite {
-      width: 38px;
-      height: 38px;
+      width: 42px;
+      height: 42px;
 
-      border: 1px solid
-        rgba(255, 255, 255, 0.5);
+      border: 0;
 
-      border-radius: 6px;
+      background: white;
+      color: #222;
 
-      color: white;
-
-      background:
-        rgba(0, 0, 0, 0.35);
-
-      font-size: 1.25rem;
+      font-size: 1.3rem;
+      font-weight: bold;
 
       cursor: pointer;
     }
 
-    #quantite {
-      min-width: 40px;
-
-      text-align: center;
-
-      font-size: 1.1rem;
-    }
-
-    #ajouter-panier {
-      padding: 13px 24px;
-
-      border: 1px solid
-        rgba(255, 255, 255, 0.6);
-
-      border-radius: 8px;
-
-      color: white;
-
-      background:
-        rgba(0, 0, 0, 0.45);
-
-      font-family: inherit;
-      font-size: 1.08rem;
-
-      cursor: pointer;
-    }
-
-    #ajouter-panier:hover {
-      background:
-        rgba(255, 255, 255, 0.16);
-    }
-
-    #ajouter-panier:disabled {
+    .bouton-quantite:disabled {
       opacity: 0.5;
-      cursor: default;
+      cursor: not-allowed;
+    }
+
+    .champ-quantite {
+      width: 58px;
+      height: 42px;
+
+      border: 0;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+
+      background: white;
+      color: #222;
+
+      font-family:
+        Arial,
+        sans-serif;
+
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .bouton-ajouter {
+      display: block;
+      width: 100%;
+      min-height: 52px;
+      padding: 13px 18px;
+
+      border: 1px solid white;
+      border-radius: 7px;
+
+      background:
+        rgba(0, 0, 0, 0.32);
+
+      color: white;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .bouton-ajouter:hover:not(:disabled),
+    .bouton-ajouter:focus-visible:not(:disabled) {
+      background: white;
+      color: #222;
+      outline: none;
+    }
+
+    .bouton-ajouter:disabled {
+      opacity: 0.58;
+      cursor: not-allowed;
     }
 
     .confirmation {
-      min-height: 24px;
+      margin: 14px 0 0;
+      padding: 12px;
+
+      border-radius: 7px;
+
+      background:
+        rgba(232, 245, 233, 0.96);
+
+      color: #1d5b2b;
+
+      font-family:
+        Arial,
+        sans-serif;
+
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .actions-secondaires {
+      display: flex;
+      justify-content: center;
+      margin: 25px 0 0;
+    }
+
+    .lien-panier {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+
+      padding: 11px 18px;
+
+      border: 1px solid white;
+      border-radius: 7px;
+
+      background:
+        rgba(0, 0, 0, 0.32);
+
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .lien-panier:hover,
+    .lien-panier:focus-visible {
+      background: white;
+      color: #222;
+      outline: none;
+    }
+
+    .nombre-panier {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-width: 24px;
+      height: 24px;
+      padding: 0 6px;
+
+      border-radius: 999px;
+
+      background: #8f1f1f;
+      color: white;
+
+      font-family:
+        Arial,
+        sans-serif;
+
+      font-size: 0.82rem;
+      font-weight: bold;
+    }
+
+    /*
+     * Même bouton retour que sur langue-basque.html.
+     */
+    .retour {
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .retour a {
+      display: inline-block;
+      padding: 11px 18px;
+
+      border: 1px solid white;
+      border-radius: 7px;
+
+      background:
+        rgba(0, 0, 0, 0.32);
+
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .retour a:hover,
+    .retour a:focus-visible {
+      background: white;
+      color: #222;
+      outline: none;
+    }
+
+    footer {
+      padding: 22px 14px 28px;
+
+      border-top:
+        1px solid rgba(255, 255, 255, 0.25);
+
+      background:
+        rgba(0, 0, 0, 0.58);
 
       text-align: center;
     }
 
-    /* =========================
-       MOBILE
-       ========================= */
+    @media (max-width: 850px) {
+      .fiche-produit {
+        grid-template-columns: 1fr;
+      }
+    }
 
-    @media (max-width: 650px) {
+    @media (max-width: 700px) {
       body {
-        padding: 14px 8px 35px;
+        background-attachment: scroll;
       }
 
-      .produit {
-        padding: 20px 15px;
+      .entete {
+        padding: 28px 8px 18px;
       }
 
-      .navigation {
-        align-items: stretch;
+      .bloc-titre {
+        padding: 24px 14px;
       }
 
-      .bouton-navigation {
-        text-align: center;
+      .fiche-produit {
+        padding: 18px;
+        gap: 26px;
       }
 
-      .photo-principale {
-        min-height: 220px;
-      }
-
-      .miniature {
-        width: 65px;
-        height: 65px;
-      }
-
-      .description {
-        font-size: 1rem;
-        line-height: 1.6;
-      }
-
-      .detail {
-        flex-direction: column;
+      .ligne-detail {
+        grid-template-columns: 1fr;
         gap: 3px;
+      }
+
+      .miniatures {
+        grid-template-columns:
+          repeat(4, minmax(0, 1fr));
       }
     }
   </style>
+
+  <link
+    href="langues.css"
+    rel="stylesheet"
+  >
 </head>
 
 <body>
+  <header class="entete">
+    <div class="bloc-titre">
+      <h1
+        id="titre-page"
+        class="titre-page"
+      >
+        Produit
+      </h1>
+    </div>
+  </header>
 
   <main class="page">
-
-    <div class="barre-langues">
-
-      <button
-        type="button"
-        id="langue-fr"
-        class="bouton-langue"
-      >
-        <img
-          src="blason-france.svg"
-          alt=""
-        >
-
-        <span id="texte-langue-fr">
-          Français
-        </span>
-      </button>
-
-      <button
-        type="button"
-        id="langue-eu"
-        class="bouton-langue"
-      >
-        <img
-          src="blason-navarre.svg"
-          alt=""
-        >
-
-        <span id="texte-langue-eu">
-          Basque
-        </span>
-      </button>
-
-    </div>
-
-    <h1 id="titre-page">
-      Produit
-    </h1>
-
-    <div class="navigation">
-
-      <a
-        id="retour-boutique"
-        class="bouton-navigation"
-        href="boutique.html"
-      >
-        ← Retour à la boutique
-      </a>
-
-      <a
-        id="bouton-panier"
-        class="bouton-navigation"
-        href="panier.html"
-      >
-        Panier
-      </a>
-
-    </div>
-
-    <section class="produit">
-
+    <section
+      id="chargement"
+      class="etat"
+      aria-live="polite"
+    >
       <div
-        id="chargement"
-        class="chargement"
-      >
-        Chargement du produit…
-      </div>
-
-      <div
-        id="erreur"
-        class="erreur"
-        hidden
+        class="roue"
+        aria-hidden="true"
       ></div>
 
-      <div
-        id="contenu-produit"
-        class="contenu-produit"
-      >
+      <p id="texte-chargement">
+        Chargement du produit…
+      </p>
+    </section>
+
+    <section
+      id="erreur"
+      class="etat etat-erreur"
+      aria-live="assertive"
+      hidden
+    >
+      <h2 id="titre-erreur">
+        Produit introuvable
+      </h2>
+
+      <p id="message-erreur"></p>
+    </section>
+
+    <article
+      id="fiche-produit"
+      class="fiche-produit"
+      hidden
+    >
+      <section class="galerie">
+        <div class="image-principale-conteneur">
+          <img
+            id="image-principale"
+            class="image-principale"
+            src=""
+            alt=""
+            hidden
+          >
+
+          <div
+            id="image-absente"
+            class="image-absente"
+          >
+            Photographie non disponible
+          </div>
+        </div>
 
         <div
-          id="galerie"
-          class="galerie"
-        >
+          id="miniatures"
+          class="miniatures"
+          hidden
+        ></div>
+      </section>
 
-          <div
-            id="photo-principale"
-            class="photo-principale"
-          ></div>
-
-          <div
-            id="miniatures"
-            class="miniatures"
-          ></div>
-
-        </div>
+      <section class="informations">
+        <p
+          id="categorie-produit"
+          class="categorie"
+        ></p>
 
         <h2
           id="titre-produit"
           class="titre-produit"
         ></h2>
 
-        <div
+        <p
           id="sous-titre-produit"
           class="sous-titre-produit"
-        ></div>
+        ></p>
 
-        <div
+        <p
           id="prix-produit"
-          class="prix"
-        ></div>
+          class="prix-produit"
+        ></p>
+
+        <span
+          id="badge-disponibilite"
+          class="badge"
+        ></span>
 
         <div
-          id="disponibilite-produit"
-          class="disponibilite"
+          id="description-produit"
+          class="description"
         ></div>
-
-        <section
-          id="bloc-presentation"
-          class="bloc-presentation"
-        >
-          <h3
-            id="titre-presentation"
-            class="titre-section"
-          >
-            Présentation
-          </h3>
-
-          <div
-            id="description-produit"
-            class="description"
-          ></div>
-        </section>
 
         <div class="details">
-
-          <div class="detail">
-            <span id="libelle-expedition">
+          <div class="ligne-detail">
+            <span
+              id="etiquette-expedition"
+              class="etiquette-detail"
+            >
               Expédition
             </span>
 
-            <span id="expedition-produit">
-            </span>
+            <span id="mode-expedition"></span>
           </div>
 
-          <div class="detail">
-            <span id="libelle-frais">
+          <div class="ligne-detail">
+            <span
+              id="etiquette-frais"
+              class="etiquette-detail"
+            >
               Frais de livraison
             </span>
 
-            <span id="frais-produit">
-            </span>
+            <span id="frais-livraison"></span>
           </div>
 
-          <div class="detail">
-            <span id="libelle-poids">
+          <div
+            id="ligne-poids"
+            class="ligne-detail"
+          >
+            <span
+              id="etiquette-poids"
+              class="etiquette-detail"
+            >
               Poids
             </span>
 
-            <span id="poids-produit">
-            </span>
+            <span id="poids-produit"></span>
           </div>
-
         </div>
 
-        <div class="achat">
-
-          <div class="choix-quantite">
-
-            <button
-              type="button"
-              id="moins"
-              class="bouton-quantite"
+        <div class="commande">
+          <div class="selection-quantite">
+            <label
+              id="etiquette-quantite"
+              for="quantite"
             >
-              −
-            </button>
+              Quantité
+            </label>
 
-            <span id="quantite">
-              1
-            </span>
+            <div class="controle-quantite">
+              <button
+                id="diminuer-quantite"
+                class="bouton-quantite"
+                type="button"
+                aria-label="Diminuer la quantité"
+              >
+                −
+              </button>
 
-            <button
-              type="button"
-              id="plus"
-              class="bouton-quantite"
-            >
-              +
-            </button>
+              <input
+                id="quantite"
+                class="champ-quantite"
+                type="number"
+                min="1"
+                value="1"
+                inputmode="numeric"
+              >
 
+              <button
+                id="augmenter-quantite"
+                class="bouton-quantite"
+                type="button"
+                aria-label="Augmenter la quantité"
+              >
+                +
+              </button>
+            </div>
           </div>
 
           <button
+            id="bouton-ajouter"
+            class="bouton-ajouter"
             type="button"
-            id="ajouter-panier"
           >
             Ajouter au panier
           </button>
 
-          <div
-            id="confirmation"
+          <p
+            id="confirmation-ajout"
             class="confirmation"
-          ></div>
-
+            hidden
+          >
+            Le produit a été ajouté au panier.
+          </p>
         </div>
+      </section>
+    </article>
 
-      </div>
+    <div class="actions-secondaires">
+      <a
+        id="lien-panier"
+        class="lien-panier"
+        href="panier.html"
+      >
+        <span id="texte-panier">
+          Panier
+        </span>
 
-    </section>
+        <span
+          id="nombre-panier"
+          class="nombre-panier"
+        >
+          0
+        </span>
+      </a>
+    </div>
 
+    <div class="retour">
+      <a
+        id="lien-retour"
+        href="boutique.html"
+      >
+        ← Retour à la boutique
+      </a>
+    </div>
   </main>
+
+  <footer>
+    © Herria Bihotzean
+  </footer>
 
   <script src="config.js"></script>
   <script src="langues.js"></script>
   <script src="produit.js"></script>
-
 </body>
 </html>
