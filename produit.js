@@ -1,5 +1,11 @@
+"use strict";
+
 (function () {
-  "use strict";
+  const CLE_LANGUE =
+    "herria_langue";
+
+  const CLE_PANIER =
+    "herria-bihotzean-panier";
 
   const traductions = {
     fr: {
@@ -70,10 +76,7 @@
         "Diminuer la quantité",
 
       augmentationQuantite:
-        "Augmenter la quantité",
-
-      presentation:
-        "Présentation"
+        "Augmenter la quantité"
     },
 
     eu: {
@@ -144,231 +147,336 @@
         "Kopurua gutitu",
 
       augmentationQuantite:
-        "Kopurua handitu",
-
-      presentation:
-        "Aurkezpena"
+        "Kopurua handitu"
     }
   };
 
-  let langue =
-    obtenirLangue();
+  let langue = "fr";
+  let produit = null;
 
-  let produit =
-    null;
+  const elements = {};
 
-  let quantite =
-    1;
+  document.addEventListener(
+    "DOMContentLoaded",
+    initialiser
+  );
 
-  const elements = {
-    titreDocument:
-      document.getElementById(
-        "titre-document"
-      ),
+  function initialiser() {
+    memoriserElements();
 
-    titrePage:
-      document.getElementById(
-        "titre-page"
-      ),
+    /*
+     * On détermine d'abord la langue.
+     * Le paramètre ?lang= est prioritaire.
+     */
+    langue =
+      determinerLangueInitiale();
 
-    chargement:
-      document.getElementById(
-        "chargement"
-      ),
+    /*
+     * On mémorise immédiatement cette langue
+     * pour toutes les autres pages du site.
+     */
+    try {
+      localStorage.setItem(
+        CLE_LANGUE,
+        langue
+      );
+    } catch (_) {}
 
-    erreur:
-      document.getElementById(
-        "erreur"
-      ),
+    /*
+     * On synchronise aussi le moteur commun langues.js.
+     */
+    if (
+      typeof window.hbSetLanguage ===
+      "function"
+    ) {
+      window.hbSetLanguage(
+        langue,
+        {
+          silent: true
+        }
+      );
+    }
 
-    contenu:
-      document.getElementById(
-        "contenu-produit"
-      ),
-
-    retourBoutique:
-      document.getElementById(
-        "retour-boutique"
-      ),
-
-    boutonPanier:
-      document.getElementById(
-        "bouton-panier"
-      ),
-
-    langueFr:
-      document.getElementById(
-        "langue-fr"
-      ),
-
-    langueEu:
-      document.getElementById(
-        "langue-eu"
-      ),
-
-    texteLangueFr:
-      document.getElementById(
-        "texte-langue-fr"
-      ),
-
-    texteLangueEu:
-      document.getElementById(
-        "texte-langue-eu"
-      ),
-
-    photoPrincipale:
-      document.getElementById(
-        "photo-principale"
-      ),
-
-    miniatures:
-      document.getElementById(
-        "miniatures"
-      ),
-
-    titreProduit:
-      document.getElementById(
-        "titre-produit"
-      ),
-
-    sousTitreProduit:
-      document.getElementById(
-        "sous-titre-produit"
-      ),
-
-    prixProduit:
-      document.getElementById(
-        "prix-produit"
-      ),
-
-    disponibilite:
-      document.getElementById(
-        "disponibilite-produit"
-      ),
-
-    blocPresentation:
-      document.getElementById(
-        "bloc-presentation"
-      ),
-
-    titrePresentation:
-      document.getElementById(
-        "titre-presentation"
-      ),
-
-    description:
-      document.getElementById(
-        "description-produit"
-      ),
-
-    libelleExpedition:
-      document.getElementById(
-        "libelle-expedition"
-      ),
-
-    expedition:
-      document.getElementById(
-        "expedition-produit"
-      ),
-
-    libelleFrais:
-      document.getElementById(
-        "libelle-frais"
-      ),
-
-    frais:
-      document.getElementById(
-        "frais-produit"
-      ),
-
-    libellePoids:
-      document.getElementById(
-        "libelle-poids"
-      ),
-
-    poids:
-      document.getElementById(
-        "poids-produit"
-      ),
-
-    moins:
-      document.getElementById(
-        "moins"
-      ),
-
-    plus:
-      document.getElementById(
-        "plus"
-      ),
-
-    quantite:
-      document.getElementById(
-        "quantite"
-      ),
-
-    ajouter:
-      document.getElementById(
-        "ajouter-panier"
-      ),
-
-    confirmation:
-      document.getElementById(
-        "confirmation"
-      )
-  };
-
-  function nettoyerTexte(valeur) {
-    return String(
-      valeur == null
-        ? ""
-        : valeur
-    ).trim();
+    installerEvenements();
+    appliquerLangue();
+    mettreAJourNombrePanier();
+    chargerProduit();
   }
 
-  function obtenirLangue() {
+  function memoriserElements() {
+    elements.titrePage =
+      document.getElementById(
+        "titre-page"
+      );
+
+    elements.chargement =
+      document.getElementById(
+        "chargement"
+      );
+
+    elements.texteChargement =
+      document.getElementById(
+        "texte-chargement"
+      );
+
+    elements.erreur =
+      document.getElementById(
+        "erreur"
+      );
+
+    elements.titreErreur =
+      document.getElementById(
+        "titre-erreur"
+      );
+
+    elements.messageErreur =
+      document.getElementById(
+        "message-erreur"
+      );
+
+    elements.ficheProduit =
+      document.getElementById(
+        "fiche-produit"
+      );
+
+    elements.imagePrincipale =
+      document.getElementById(
+        "image-principale"
+      );
+
+    elements.imageAbsente =
+      document.getElementById(
+        "image-absente"
+      );
+
+    elements.miniatures =
+      document.getElementById(
+        "miniatures"
+      );
+
+    elements.categorie =
+      document.getElementById(
+        "categorie-produit"
+      );
+
+    elements.titre =
+      document.getElementById(
+        "titre-produit"
+      );
+
+    elements.sousTitre =
+      document.getElementById(
+        "sous-titre-produit"
+      );
+
+    elements.prix =
+      document.getElementById(
+        "prix-produit"
+      );
+
+    elements.badge =
+      document.getElementById(
+        "badge-disponibilite"
+      );
+
+    elements.description =
+      document.getElementById(
+        "description-produit"
+      );
+
+    elements.etiquetteExpedition =
+      document.getElementById(
+        "etiquette-expedition"
+      );
+
+    elements.modeExpedition =
+      document.getElementById(
+        "mode-expedition"
+      );
+
+    elements.etiquetteFrais =
+      document.getElementById(
+        "etiquette-frais"
+      );
+
+    elements.fraisLivraison =
+      document.getElementById(
+        "frais-livraison"
+      );
+
+    elements.lignePoids =
+      document.getElementById(
+        "ligne-poids"
+      );
+
+    elements.etiquettePoids =
+      document.getElementById(
+        "etiquette-poids"
+      );
+
+    elements.poids =
+      document.getElementById(
+        "poids-produit"
+      );
+
+    elements.etiquetteQuantite =
+      document.getElementById(
+        "etiquette-quantite"
+      );
+
+    elements.quantite =
+      document.getElementById(
+        "quantite"
+      );
+
+    elements.diminuer =
+      document.getElementById(
+        "diminuer-quantite"
+      );
+
+    elements.augmenter =
+      document.getElementById(
+        "augmenter-quantite"
+      );
+
+    elements.boutonAjouter =
+      document.getElementById(
+        "bouton-ajouter"
+      );
+
+    elements.confirmation =
+      document.getElementById(
+        "confirmation-ajout"
+      );
+
+    elements.textePanier =
+      document.getElementById(
+        "texte-panier"
+      );
+
+    elements.nombrePanier =
+      document.getElementById(
+        "nombre-panier"
+      );
+
+    elements.lienRetour =
+      document.getElementById(
+        "lien-retour"
+      );
+  }
+
+  function determinerLangueInitiale() {
     const parametres =
       new URLSearchParams(
         window.location.search
       );
 
     const langueUrl =
-      parametres.get("lang");
+      parametres.get(
+        "lang"
+      );
 
     if (
       langueUrl === "eu" ||
       langueUrl === "fr"
     ) {
-      localStorage.setItem(
-        "hb_langue",
-        langueUrl
-      );
-
       return langueUrl;
     }
 
-    const langueMemorisee =
-      localStorage.getItem(
-        "hb_langue"
-      );
+    try {
+      if (
+        localStorage.getItem(
+          CLE_LANGUE
+        ) === "eu"
+      ) {
+        return "eu";
+      }
+    } catch (_) {}
 
-    return langueMemorisee === "eu"
-      ? "eu"
-      : "fr";
+    if (
+      typeof window.hbCurrentLanguage ===
+      "function" &&
+      window.hbCurrentLanguage() === "eu"
+    ) {
+      return "eu";
+    }
+
+    return "fr";
   }
 
-  function memoriserLangue(
-    nouvelleLangue
-  ) {
-    langue =
-      nouvelleLangue === "eu"
-        ? "eu"
-        : "fr";
+  function installerEvenements() {
+    document.addEventListener(
+      "herria-language-change",
+      function (evenement) {
+        const nouvelleLangue =
+          evenement.detail &&
+          evenement.detail.lang === "eu"
+            ? "eu"
+            : "fr";
 
-    localStorage.setItem(
-      "hb_langue",
-      langue
+        if (
+          nouvelleLangue === langue
+        ) {
+          return;
+        }
+
+        langue =
+          nouvelleLangue;
+
+        try {
+          localStorage.setItem(
+            CLE_LANGUE,
+            langue
+          );
+        } catch (_) {}
+
+        mettreAJourAdresseLangue();
+        appliquerLangue();
+      }
     );
 
+    elements.diminuer.addEventListener(
+      "click",
+      function () {
+        modifierQuantite(
+          -1
+        );
+      }
+    );
+
+    elements.augmenter.addEventListener(
+      "click",
+      function () {
+        modifierQuantite(
+          1
+        );
+      }
+    );
+
+    elements.quantite.addEventListener(
+      "change",
+      normaliserQuantite
+    );
+
+    elements.boutonAjouter.addEventListener(
+      "click",
+      ajouterAuPanier
+    );
+
+    window.addEventListener(
+      "storage",
+      function (evenement) {
+        if (
+          evenement.key ===
+          CLE_PANIER
+        ) {
+          mettreAJourNombrePanier();
+        }
+      }
+    );
+  }
+
+  function mettreAJourAdresseLangue() {
     const url =
       new URL(
         window.location.href
@@ -384,708 +492,96 @@
       "",
       url
     );
-
-    afficherInterface();
-
-    if (produit) {
-      afficherProduit();
-    }
   }
 
-  function lienAvecLangue(
-    fichier
-  ) {
-    return (
-      fichier +
-      "?lang=" +
-      encodeURIComponent(
-        langue
-      )
-    );
-  }
-
-  function afficherInterface() {
+  function appliquerLangue() {
     const t =
-      traductions[langue];
+      traductions[langue] ||
+      traductions.fr;
 
     document.documentElement.lang =
       langue === "eu"
         ? "eu"
         : "fr";
 
-    document.title =
-      t.titreDocument;
+    if (elements.titrePage) {
+      elements.titrePage.textContent =
+        t.titrePage;
+    }
 
-    if (elements.titreDocument) {
-      elements.titreDocument.textContent =
+    if (elements.texteChargement) {
+      elements.texteChargement.textContent =
+        t.chargement;
+    }
+
+    if (elements.titreErreur) {
+      elements.titreErreur.textContent =
+        t.titreErreur;
+    }
+
+    if (elements.etiquetteExpedition) {
+      elements.etiquetteExpedition.textContent =
+        t.expedition;
+    }
+
+    if (elements.etiquetteFrais) {
+      elements.etiquetteFrais.textContent =
+        t.fraisLivraison;
+    }
+
+    if (elements.etiquettePoids) {
+      elements.etiquettePoids.textContent =
+        t.poids;
+    }
+
+    if (elements.etiquetteQuantite) {
+      elements.etiquetteQuantite.textContent =
+        t.quantite;
+    }
+
+    if (elements.imageAbsente) {
+      elements.imageAbsente.textContent =
+        t.photoAbsente;
+    }
+
+    if (elements.confirmation) {
+      elements.confirmation.textContent =
+        t.confirmation;
+    }
+
+    if (elements.textePanier) {
+      elements.textePanier.textContent =
+        t.panier;
+    }
+
+    if (elements.lienRetour) {
+      elements.lienRetour.textContent =
+        t.retourBoutique;
+
+      elements.lienRetour.href =
+        "boutique.html";
+    }
+
+    if (elements.diminuer) {
+      elements.diminuer.setAttribute(
+        "aria-label",
+        t.diminutionQuantite
+      );
+    }
+
+    if (elements.augmenter) {
+      elements.augmenter.setAttribute(
+        "aria-label",
+        t.augmentationQuantite
+      );
+    }
+
+    if (produit) {
+      afficherProduit();
+    } else {
+      document.title =
         t.titreDocument;
     }
-
-    elements.titrePage.textContent =
-      t.titrePage;
-
-    elements.chargement.textContent =
-      t.chargement;
-
-    elements.retourBoutique.textContent =
-      t.retourBoutique;
-
-    elements.retourBoutique.href =
-      lienAvecLangue(
-        "boutique.html"
-      );
-
-    elements.boutonPanier.textContent =
-      t.panier;
-
-    elements.boutonPanier.href =
-      lienAvecLangue(
-        "panier.html"
-      );
-
-    elements.titrePresentation.textContent =
-      t.presentation;
-
-    elements.libelleExpedition.textContent =
-      t.expedition;
-
-    elements.libelleFrais.textContent =
-      t.fraisLivraison;
-
-    elements.libellePoids.textContent =
-      t.poids;
-
-    elements.moins.setAttribute(
-      "aria-label",
-      t.diminutionQuantite
-    );
-
-    elements.plus.setAttribute(
-      "aria-label",
-      t.augmentationQuantite
-    );
-
-    /*
-     * Affichage des deux boutons :
-     *
-     * français sélectionné :
-     * Français / Basque
-     *
-     * basque sélectionné :
-     * Frantsesez / Eskuaraz
-     */
-
-    if (langue === "fr") {
-      elements.texteLangueFr.textContent =
-        "Français";
-
-      elements.texteLangueEu.textContent =
-        "Basque";
-
-      elements.langueFr.classList.add(
-        "actif"
-      );
-
-      elements.langueEu.classList.remove(
-        "actif"
-      );
-
-    } else {
-      elements.texteLangueFr.textContent =
-        "Frantsesez";
-
-      elements.texteLangueEu.textContent =
-        "Eskuaraz";
-
-      elements.langueEu.classList.add(
-        "actif"
-      );
-
-      elements.langueFr.classList.remove(
-        "actif"
-      );
-    }
-  }
-
-  function formaterPrix(
-    valeur
-  ) {
-    const nombre =
-      Number(
-        String(
-          valeur == null
-            ? 0
-            : valeur
-        ).replace(",", ".")
-      );
-
-    if (
-      !Number.isFinite(nombre)
-    ) {
-      return "";
-    }
-
-    return new Intl.NumberFormat(
-      "fr-FR",
-      {
-        style: "currency",
-        currency: "EUR"
-      }
-    ).format(nombre);
-  }
-
-  function produitDisponible() {
-    if (!produit) {
-      return false;
-    }
-
-    const statut =
-      nettoyerTexte(
-        produit.statut
-      ).toUpperCase();
-
-    const stock =
-      Number(
-        produit.stock
-      );
-
-    return (
-      statut === "EN VENTE" &&
-      Number.isFinite(stock) &&
-      stock > 0
-    );
-  }
-
-  function obtenirPhotos() {
-    if (
-      !produit ||
-      !Array.isArray(
-        produit.photos
-      )
-    ) {
-      return [];
-    }
-
-    return produit.photos
-      .map(nettoyerTexte)
-      .filter(Boolean);
-  }
-
-  function afficherGalerie() {
-    const photos =
-      obtenirPhotos();
-
-    elements.photoPrincipale.innerHTML =
-      "";
-
-    elements.miniatures.innerHTML =
-      "";
-
-    if (photos.length === 0) {
-      const absence =
-        document.createElement(
-          "div"
-        );
-
-      absence.className =
-        "photo-absente";
-
-      absence.textContent =
-        traductions[langue]
-          .photoAbsente;
-
-      elements.photoPrincipale.appendChild(
-        absence
-      );
-
-      return;
-    }
-
-    const imagePrincipale =
-      document.createElement(
-        "img"
-      );
-
-    imagePrincipale.src =
-      photos[0];
-
-    imagePrincipale.alt =
-      langue === "eu"
-        ? nettoyerTexte(
-            produit.titreBasque
-          ) ||
-          nettoyerTexte(
-            produit.titre
-          )
-        : nettoyerTexte(
-            produit.titre
-          );
-
-    elements.photoPrincipale.appendChild(
-      imagePrincipale
-    );
-
-    /*
-     * Une seule photo :
-     * pas besoin d'afficher une miniature.
-     */
-    if (photos.length === 1) {
-      return;
-    }
-
-    photos.forEach(
-      function (
-        urlPhoto,
-        index
-      ) {
-        const bouton =
-          document.createElement(
-            "button"
-          );
-
-        bouton.type =
-          "button";
-
-        bouton.className =
-          "miniature";
-
-        if (index === 0) {
-          bouton.classList.add(
-            "active"
-          );
-        }
-
-        const image =
-          document.createElement(
-            "img"
-          );
-
-        image.src =
-          urlPhoto;
-
-        image.alt =
-          "";
-
-        bouton.appendChild(
-          image
-        );
-
-        bouton.addEventListener(
-          "click",
-          function () {
-            imagePrincipale.src =
-              urlPhoto;
-
-            elements.miniatures
-              .querySelectorAll(
-                ".miniature"
-              )
-              .forEach(
-                function (element) {
-                  element.classList.remove(
-                    "active"
-                  );
-                }
-              );
-
-            bouton.classList.add(
-              "active"
-            );
-          }
-        );
-
-        elements.miniatures.appendChild(
-          bouton
-        );
-      }
-    );
-  }
-
-  function afficherProduit() {
-    if (!produit) {
-      return;
-    }
-
-    const t =
-      traductions[langue];
-
-    const titre =
-      langue === "eu"
-        ? (
-            nettoyerTexte(
-              produit.titreBasque
-            ) ||
-            nettoyerTexte(
-              produit.titre
-            )
-          )
-        : nettoyerTexte(
-            produit.titre
-          );
-
-    const sousTitre =
-      langue === "eu"
-        ? (
-            nettoyerTexte(
-              produit.sousTitreBasque
-            ) ||
-            nettoyerTexte(
-              produit.sousTitre
-            )
-          )
-        : nettoyerTexte(
-            produit.sousTitre
-          );
-
-    const description =
-      langue === "eu"
-        ? (
-            nettoyerTexte(
-              produit.descriptionBasque
-            ) ||
-            nettoyerTexte(
-              produit.description
-            )
-          )
-        : nettoyerTexte(
-            produit.description
-          );
-
-    elements.titreProduit.textContent =
-      titre;
-
-    elements.sousTitreProduit.textContent =
-      sousTitre;
-
-    elements.sousTitreProduit.hidden =
-      !sousTitre;
-
-    elements.prixProduit.textContent =
-      formaterPrix(
-        produit.prix
-      );
-
-    const disponible =
-      produitDisponible();
-
-    elements.disponibilite.textContent =
-      disponible
-        ? t.disponible
-        : t.indisponible;
-
-    /*
-     * Présentation :
-     * si aucune description n'existe,
-     * on masque tout le bloc.
-     */
-
-    if (description) {
-      elements.description.textContent =
-        description;
-
-      elements.blocPresentation.classList.remove(
-        "masque"
-      );
-
-    } else {
-      elements.description.textContent =
-        "";
-
-      elements.blocPresentation.classList.add(
-        "masque"
-      );
-    }
-
-    elements.expedition.textContent =
-      nettoyerTexte(
-        produit.modeExpedition
-      ) ||
-      t.nonRenseigne;
-
-    const frais =
-      Number(
-        String(
-          produit.fraisLivraison == null
-            ? ""
-            : produit.fraisLivraison
-        ).replace(",", ".")
-      );
-
-    if (
-      Number.isFinite(frais)
-    ) {
-      elements.frais.textContent =
-        frais === 0
-          ? t.gratuit
-          : formaterPrix(frais);
-    } else {
-      elements.frais.textContent =
-        t.nonRenseigne;
-    }
-
-    const poids =
-      Number(
-        produit.poids
-      );
-
-    elements.poids.textContent =
-      Number.isFinite(poids) &&
-      poids > 0
-        ? poids + " g"
-        : t.nonRenseigne;
-
-    elements.ajouter.textContent =
-      disponible
-        ? t.ajouter
-        : t.ajouterIndisponible;
-
-    elements.ajouter.disabled =
-      !disponible;
-
-    elements.moins.disabled =
-      !disponible;
-
-    elements.plus.disabled =
-      !disponible;
-
-    quantite =
-      1;
-
-    afficherQuantite();
-
-    afficherGalerie();
-  }
-
-  function afficherQuantite() {
-    elements.quantite.textContent =
-      String(
-        quantite
-      );
-  }
-
-  function modifierQuantite(
-    variation
-  ) {
-    if (
-      !produitDisponible()
-    ) {
-      return;
-    }
-
-    const stock =
-      Number(
-        produit.stock
-      );
-
-    let nouvelleQuantite =
-      quantite +
-      variation;
-
-    if (nouvelleQuantite < 1) {
-      nouvelleQuantite =
-        1;
-    }
-
-    if (
-      Number.isFinite(stock) &&
-      nouvelleQuantite > stock
-    ) {
-      nouvelleQuantite =
-        stock;
-    }
-
-    quantite =
-      nouvelleQuantite;
-
-    afficherQuantite();
-  }
-
-  function lirePanier() {
-    try {
-      const valeur =
-        localStorage.getItem(
-          "hb_panier"
-        );
-
-      if (!valeur) {
-        return [];
-      }
-
-      const panier =
-        JSON.parse(
-          valeur
-        );
-
-      return Array.isArray(
-        panier
-      )
-        ? panier
-        : [];
-
-    } catch (erreur) {
-      return [];
-    }
-  }
-
-  function enregistrerPanier(
-    panier
-  ) {
-    localStorage.setItem(
-      "hb_panier",
-      JSON.stringify(
-        panier
-      )
-    );
-  }
-
-  function ajouterAuPanier() {
-    if (
-      !produit ||
-      !produitDisponible()
-    ) {
-      return;
-    }
-
-    const panier =
-      lirePanier();
-
-    const produitId =
-      nettoyerTexte(
-        produit.produitId
-      );
-
-    const existant =
-      panier.find(
-        function (article) {
-          return (
-            nettoyerTexte(
-              article.produitId
-            ) ===
-            produitId
-          );
-        }
-      );
-
-    if (existant) {
-      existant.quantite =
-        Number(
-          existant.quantite || 0
-        ) +
-        quantite;
-
-      const stock =
-        Number(
-          produit.stock
-        );
-
-      if (
-        Number.isFinite(stock) &&
-        existant.quantite > stock
-      ) {
-        existant.quantite =
-          stock;
-      }
-
-    } else {
-      panier.push({
-        produitId:
-          produitId,
-
-        quantite:
-          quantite
-      });
-    }
-
-    enregistrerPanier(
-      panier
-    );
-
-    elements.confirmation.textContent =
-      traductions[langue]
-        .confirmation;
-
-    window.setTimeout(
-      function () {
-        elements.confirmation.textContent =
-          "";
-      },
-      3500
-    );
-  }
-
-  function afficherErreur(
-    message
-  ) {
-    elements.chargement.hidden =
-      true;
-
-    elements.contenu.style.display =
-      "none";
-
-    elements.erreur.hidden =
-      false;
-
-    elements.erreur.innerHTML =
-      "";
-
-    const titre =
-      document.createElement(
-        "strong"
-      );
-
-    titre.textContent =
-      traductions[langue]
-        .titreErreur;
-
-    const paragraphe =
-      document.createElement(
-        "p"
-      );
-
-    paragraphe.textContent =
-      message;
-
-    elements.erreur.appendChild(
-      titre
-    );
-
-    elements.erreur.appendChild(
-      paragraphe
-    );
-  }
-
-  function recevoirProduit(
-    donnees
-  ) {
-    if (
-      !donnees ||
-      donnees.succes !== true ||
-      !donnees.produit
-    ) {
-      afficherErreur(
-        donnees &&
-        donnees.message
-          ? donnees.message
-          : traductions[langue]
-              .erreurGenerale
-      );
-
-      return;
-    }
-
-    produit =
-      donnees.produit;
-
-    elements.chargement.hidden =
-      true;
-
-    elements.erreur.hidden =
-      true;
-
-    elements.contenu.style.display =
-      "block";
-
-    afficherProduit();
   }
 
   function chargerProduit() {
@@ -1094,9 +590,14 @@
         window.location.search
       );
 
+    /*
+     * On accepte les deux noms pour éviter
+     * toute incompatibilité avec un ancien lien.
+     */
     const produitId =
       nettoyerTexte(
-        parametres.get("id")
+        parametres.get("id") ||
+        parametres.get("produitId")
       );
 
     if (!produitId) {
@@ -1125,64 +626,130 @@
       return;
     }
 
-    const callback =
-      "hbProduit_" +
+    const nomCallback =
+      "recevoirProduit_" +
       Date.now() +
       "_" +
-      Math.floor(
-        Math.random() *
-        100000
-      );
-
-    window[callback] =
-      function (donnees) {
-        try {
-          recevoirProduit(
-            donnees
-          );
-        } finally {
-          delete window[
-            callback
-          ];
-
-          if (
-            script &&
-            script.parentNode
-          ) {
-            script.parentNode.removeChild(
-              script
-            );
-          }
-        }
-      };
+      Math.random()
+        .toString(36)
+        .slice(2);
 
     const script =
       document.createElement(
         "script"
       );
 
+    let termine =
+      false;
+
+    const minuterie =
+      window.setTimeout(
+        function () {
+          if (termine) {
+            return;
+          }
+
+          termine =
+            true;
+
+          nettoyerJSONP(
+            script,
+            nomCallback
+          );
+
+          afficherErreur(
+            traductions[langue]
+              .erreurGenerale
+          );
+        },
+        15000
+      );
+
+    window[nomCallback] =
+      function (reponse) {
+        if (termine) {
+          return;
+        }
+
+        termine =
+          true;
+
+        window.clearTimeout(
+          minuterie
+        );
+
+        nettoyerJSONP(
+          script,
+          nomCallback
+        );
+
+        if (
+          !reponse ||
+          reponse.succes !== true ||
+          !reponse.produit
+        ) {
+          afficherErreur(
+            reponse &&
+            reponse.message
+              ? reponse.message
+              : traductions[langue]
+                  .erreurGenerale
+          );
+
+          return;
+        }
+
+        produit =
+          reponse.produit;
+
+        afficherProduit();
+      };
+
+    const separateur =
+      apiUrl.includes("?")
+        ? "&"
+        : "?";
+
     script.src =
       apiUrl +
-      "?action=produit" +
-      "&id=" +
+      separateur +
+      "action=produit" +
+      "&produitId=" +
       encodeURIComponent(
         produitId
       ) +
       "&callback=" +
       encodeURIComponent(
-        callback
-      );
+        nomCallback
+      ) +
+      "&_=" +
+      Date.now();
+
+    script.async =
+      true;
 
     script.onerror =
       function () {
+        if (termine) {
+          return;
+        }
+
+        termine =
+          true;
+
+        window.clearTimeout(
+          minuterie
+        );
+
+        nettoyerJSONP(
+          script,
+          nomCallback
+        );
+
         afficherErreur(
           traductions[langue]
             .erreurGenerale
         );
-
-        delete window[
-          callback
-        ];
       };
 
     document.body.appendChild(
@@ -1190,48 +757,841 @@
     );
   }
 
-  elements.langueFr.addEventListener(
-    "click",
-    function () {
-      memoriserLangue(
-        "fr"
+  function nettoyerJSONP(
+    script,
+    nomCallback
+  ) {
+    if (
+      script &&
+      script.parentNode
+    ) {
+      script.parentNode.removeChild(
+        script
       );
     }
-  );
 
-  elements.langueEu.addEventListener(
-    "click",
-    function () {
-      memoriserLangue(
-        "eu"
+    try {
+      delete window[nomCallback];
+    } catch (_) {
+      window[nomCallback] =
+        undefined;
+    }
+  }
+
+  function afficherProduit() {
+    const t =
+      traductions[langue] ||
+      traductions.fr;
+
+    elements.chargement.hidden =
+      true;
+
+    elements.erreur.hidden =
+      true;
+
+    elements.ficheProduit.hidden =
+      false;
+
+    const titre =
+      obtenirTitreProduit();
+
+    const sousTitre =
+      obtenirSousTitreProduit();
+
+    const description =
+      obtenirDescriptionProduit();
+
+    document.title =
+      titre +
+      " — Herria Bihotzean";
+
+    elements.categorie.textContent =
+      obtenirCategorieProduit();
+
+    elements.categorie.hidden =
+      !elements.categorie.textContent;
+
+    elements.titre.textContent =
+      titre;
+
+    elements.sousTitre.textContent =
+      sousTitre;
+
+    elements.sousTitre.hidden =
+      !sousTitre;
+
+    elements.prix.textContent =
+      formaterPrix(
+        produit.prix
+      );
+
+    elements.description.textContent =
+      description;
+
+    elements.description.hidden =
+      !description;
+
+    const disponible =
+      produit.disponible === true;
+
+    elements.badge.textContent =
+      disponible
+        ? t.disponible
+        : t.indisponible;
+
+    elements.badge.className =
+      disponible
+        ? "badge badge-disponible"
+        : "badge badge-indisponible";
+
+    elements.modeExpedition.textContent =
+      nettoyerTexte(
+        produit.modeExpedition
+      ) ||
+      t.nonRenseigne;
+
+    const frais =
+      Number(
+        produit.fraisLivraison
+      );
+
+    elements.fraisLivraison.textContent =
+      Number.isFinite(frais) &&
+      frais > 0
+        ? formaterPrix(frais)
+        : t.gratuit;
+
+    const poids =
+      Number(
+        produit.poids
+      );
+
+    if (
+      Number.isFinite(poids) &&
+      poids > 0
+    ) {
+      elements.poids.textContent =
+        Math.round(poids) +
+        " g";
+
+      elements.lignePoids.hidden =
+        false;
+    } else {
+      elements.lignePoids.hidden =
+        true;
+    }
+
+    elements.boutonAjouter.disabled =
+      !disponible;
+
+    elements.quantite.disabled =
+      !disponible;
+
+    elements.diminuer.disabled =
+      !disponible;
+
+    elements.augmenter.disabled =
+      !disponible;
+
+    elements.boutonAjouter.textContent =
+      disponible
+        ? t.ajouter
+        : t.ajouterIndisponible;
+
+    definirMaximumQuantite();
+    afficherGalerie();
+  }
+
+  function obtenirCategorieProduit() {
+    const categorie =
+      langue === "eu" &&
+      nettoyerTexte(
+        produit.categorieBasque
+      )
+        ? nettoyerTexte(
+            produit.categorieBasque
+          )
+        : nettoyerTexte(
+            produit.categorie
+          );
+
+    const sousCategorie =
+      langue === "eu" &&
+      nettoyerTexte(
+        produit.sousCategorieBasque
+      )
+        ? nettoyerTexte(
+            produit.sousCategorieBasque
+          )
+        : nettoyerTexte(
+            produit.sousCategorie
+          );
+
+    return [
+      categorie,
+      sousCategorie
+    ]
+      .filter(Boolean)
+      .join(" — ");
+  }
+
+  function obtenirTitreProduit() {
+    if (
+      langue === "eu" &&
+      nettoyerTexte(
+        produit.titreBasque
+      )
+    ) {
+      return nettoyerTexte(
+        produit.titreBasque
       );
     }
-  );
 
-  elements.moins.addEventListener(
-    "click",
-    function () {
-      modifierQuantite(
-        -1
+    return (
+      nettoyerTexte(
+        produit.titre
+      ) ||
+      nettoyerTexte(
+        produit.produitId
+      )
+    );
+  }
+
+  function obtenirSousTitreProduit() {
+    if (
+      langue === "eu" &&
+      nettoyerTexte(
+        produit.sousTitreBasque
+      )
+    ) {
+      return nettoyerTexte(
+        produit.sousTitreBasque
       );
     }
-  );
 
-  elements.plus.addEventListener(
-    "click",
-    function () {
-      modifierQuantite(
-        1
+    return nettoyerTexte(
+      produit.sousTitre
+    );
+  }
+
+  function obtenirDescriptionProduit() {
+    if (
+      langue === "eu" &&
+      nettoyerTexte(
+        produit.descriptionBasque
+      )
+    ) {
+      return nettoyerTexte(
+        produit.descriptionBasque
       );
     }
-  );
 
-  elements.ajouter.addEventListener(
-    "click",
-    ajouterAuPanier
-  );
+    return nettoyerTexte(
+      produit.descriptionFrancaise
+    );
+  }
 
-  afficherInterface();
-  chargerProduit();
+  function afficherGalerie() {
+    let photos = [];
 
+    if (
+      Array.isArray(
+        produit.photos
+      )
+    ) {
+      photos =
+        produit.photos
+          .map(nettoyerTexte)
+          .filter(Boolean);
+    }
+
+    if (
+      photos.length === 0 &&
+      nettoyerTexte(
+        produit.photoPrincipale
+      )
+    ) {
+      photos.push(
+        nettoyerTexte(
+          produit.photoPrincipale
+        )
+      );
+    }
+
+    elements.miniatures.innerHTML =
+      "";
+
+    if (
+      photos.length === 0
+    ) {
+      elements.imagePrincipale.hidden =
+        true;
+
+      elements.imageAbsente.hidden =
+        false;
+
+      elements.miniatures.hidden =
+        true;
+
+      return;
+    }
+
+    afficherImagePrincipale(
+      photos[0]
+    );
+
+    if (
+      photos.length === 1
+    ) {
+      elements.miniatures.hidden =
+        true;
+
+      return;
+    }
+
+    elements.miniatures.hidden =
+      false;
+
+    photos.forEach(
+      function (url, index) {
+        const bouton =
+          document.createElement(
+            "button"
+          );
+
+        bouton.type =
+          "button";
+
+        bouton.className =
+          index === 0
+            ? "miniature active"
+            : "miniature";
+
+        const image =
+          document.createElement(
+            "img"
+          );
+
+        image.src =
+          url;
+
+        image.alt =
+          obtenirTitreProduit() +
+          " — " +
+          (index + 1);
+
+        image.loading =
+          "lazy";
+
+        bouton.appendChild(
+          image
+        );
+
+        bouton.addEventListener(
+          "click",
+          function () {
+            afficherImagePrincipale(
+              url
+            );
+
+            selectionnerMiniature(
+              bouton
+            );
+          }
+        );
+
+        elements.miniatures.appendChild(
+          bouton
+        );
+      }
+    );
+  }
+
+  function afficherImagePrincipale(
+    url
+  ) {
+    elements.imagePrincipale.src =
+      url;
+
+    elements.imagePrincipale.alt =
+      obtenirTitreProduit();
+
+    elements.imagePrincipale.hidden =
+      false;
+
+    elements.imageAbsente.hidden =
+      true;
+
+    elements.imagePrincipale.onerror =
+      function () {
+        elements.imagePrincipale.hidden =
+          true;
+
+        elements.imageAbsente.hidden =
+          false;
+      };
+  }
+
+  function selectionnerMiniature(
+    boutonActif
+  ) {
+    elements.miniatures
+      .querySelectorAll(
+        ".miniature"
+      )
+      .forEach(
+        function (bouton) {
+          bouton.classList.remove(
+            "active"
+          );
+        }
+      );
+
+    boutonActif.classList.add(
+      "active"
+    );
+  }
+
+  function definirMaximumQuantite() {
+    const stock =
+      parseInt(
+        produit.stockActuel,
+        10
+      );
+
+    const maximum =
+      Number.isFinite(stock) &&
+      stock > 0
+        ? Math.min(
+            stock,
+            20
+          )
+        : 1;
+
+    elements.quantite.max =
+      String(maximum);
+
+    normaliserQuantite();
+  }
+
+  function modifierQuantite(
+    ecart
+  ) {
+    const actuelle =
+      parseInt(
+        elements.quantite.value,
+        10
+      );
+
+    elements.quantite.value =
+      String(
+        (
+          Number.isFinite(
+            actuelle
+          )
+            ? actuelle
+            : 1
+        ) +
+        ecart
+      );
+
+    normaliserQuantite();
+  }
+
+  function normaliserQuantite() {
+    let valeur =
+      parseInt(
+        elements.quantite.value,
+        10
+      );
+
+    const maximum =
+      parseInt(
+        elements.quantite.max ||
+        "20",
+        10
+      );
+
+    if (
+      !Number.isFinite(valeur)
+    ) {
+      valeur =
+        1;
+    }
+
+    valeur =
+      Math.max(
+        1,
+        valeur
+      );
+
+    valeur =
+      Math.min(
+        maximum,
+        valeur
+      );
+
+    elements.quantite.value =
+      String(valeur);
+  }
+
+  function ajouterAuPanier() {
+    if (
+      !produit ||
+      produit.disponible !== true
+    ) {
+      return;
+    }
+
+    normaliserQuantite();
+
+    const quantite =
+      parseInt(
+        elements.quantite.value,
+        10
+      );
+
+    const panier =
+      lirePanier();
+
+    const articleExistant =
+      panier.find(
+        function (article) {
+          return (
+            nettoyerTexte(
+              article.produitId
+            ) ===
+            nettoyerTexte(
+              produit.produitId
+            )
+          );
+        }
+      );
+
+    const stock =
+      parseInt(
+        produit.stockActuel,
+        10
+      );
+
+    const maximum =
+      Number.isFinite(stock) &&
+      stock > 0
+        ? Math.min(
+            stock,
+            20
+          )
+        : 20;
+
+    if (articleExistant) {
+      const ancienneQuantite =
+        parseInt(
+          articleExistant.quantite,
+          10
+        );
+
+      articleExistant.quantite =
+        Math.min(
+          maximum,
+          (
+            Number.isFinite(
+              ancienneQuantite
+            )
+              ? ancienneQuantite
+              : 0
+          ) +
+          quantite
+        );
+
+      mettreAJourArticle(
+        articleExistant
+      );
+    } else {
+      panier.push({
+        produitId:
+          nettoyerTexte(
+            produit.produitId
+          ),
+
+        categorie:
+          nettoyerTexte(
+            produit.categorie
+          ),
+
+        categorieBasque:
+          nettoyerTexte(
+            produit.categorieBasque
+          ),
+
+        sousCategorie:
+          nettoyerTexte(
+            produit.sousCategorie
+          ),
+
+        sousCategorieBasque:
+          nettoyerTexte(
+            produit.sousCategorieBasque
+          ),
+
+        titre:
+          nettoyerTexte(
+            produit.titre
+          ),
+
+        titreBasque:
+          nettoyerTexte(
+            produit.titreBasque
+          ),
+
+        sousTitre:
+          nettoyerTexte(
+            produit.sousTitre
+          ),
+
+        sousTitreBasque:
+          nettoyerTexte(
+            produit.sousTitreBasque
+          ),
+
+        prix:
+          Number(
+            produit.prix
+          ),
+
+        fraisLivraison:
+          Number(
+            produit.fraisLivraison
+          ),
+
+        modeExpedition:
+          nettoyerTexte(
+            produit.modeExpedition
+          ),
+
+        photoPrincipale:
+          nettoyerTexte(
+            produit.photoPrincipale
+          ),
+
+        stockActuel:
+          Number(
+            produit.stockActuel
+          ),
+
+        poids:
+          Number(
+            produit.poids
+          ),
+
+        quantite:
+          quantite
+      });
+    }
+
+    localStorage.setItem(
+      CLE_PANIER,
+      JSON.stringify(
+        panier
+      )
+    );
+
+    mettreAJourNombrePanier();
+
+    elements.confirmation.hidden =
+      false;
+
+    window.setTimeout(
+      function () {
+        elements.confirmation.hidden =
+          true;
+      },
+      3500
+    );
+  }
+
+  function mettreAJourArticle(
+    article
+  ) {
+    article.categorie =
+      nettoyerTexte(
+        produit.categorie
+      );
+
+    article.categorieBasque =
+      nettoyerTexte(
+        produit.categorieBasque
+      );
+
+    article.sousCategorie =
+      nettoyerTexte(
+        produit.sousCategorie
+      );
+
+    article.sousCategorieBasque =
+      nettoyerTexte(
+        produit.sousCategorieBasque
+      );
+
+    article.titre =
+      nettoyerTexte(
+        produit.titre
+      );
+
+    article.titreBasque =
+      nettoyerTexte(
+        produit.titreBasque
+      );
+
+    article.sousTitre =
+      nettoyerTexte(
+        produit.sousTitre
+      );
+
+    article.sousTitreBasque =
+      nettoyerTexte(
+        produit.sousTitreBasque
+      );
+
+    article.prix =
+      Number(
+        produit.prix
+      );
+
+    article.fraisLivraison =
+      Number(
+        produit.fraisLivraison
+      );
+
+    article.modeExpedition =
+      nettoyerTexte(
+        produit.modeExpedition
+      );
+
+    article.photoPrincipale =
+      nettoyerTexte(
+        produit.photoPrincipale
+      );
+
+    article.stockActuel =
+      Number(
+        produit.stockActuel
+      );
+
+    article.poids =
+      Number(
+        produit.poids
+      );
+  }
+
+  function lirePanier() {
+    try {
+      const contenu =
+        localStorage.getItem(
+          CLE_PANIER
+        );
+
+      if (!contenu) {
+        return [];
+      }
+
+      const panier =
+        JSON.parse(
+          contenu
+        );
+
+      return Array.isArray(
+        panier
+      )
+        ? panier
+        : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function mettreAJourNombrePanier() {
+    const panier =
+      lirePanier();
+
+    const total =
+      panier.reduce(
+        function (
+          somme,
+          article
+        ) {
+          const quantite =
+            parseInt(
+              article.quantite,
+              10
+            );
+
+          return (
+            somme +
+            (
+              Number.isFinite(
+                quantite
+              )
+                ? Math.max(
+                    0,
+                    quantite
+                  )
+                : 0
+            )
+          );
+        },
+        0
+      );
+
+    elements.nombrePanier.textContent =
+      String(total);
+  }
+
+  function afficherErreur(
+    message
+  ) {
+    elements.chargement.hidden =
+      true;
+
+    elements.ficheProduit.hidden =
+      true;
+
+    elements.erreur.hidden =
+      false;
+
+    elements.messageErreur.textContent =
+      message ||
+      traductions[langue]
+        .erreurGenerale;
+  }
+
+  function formaterPrix(
+    valeur
+  ) {
+    const nombre =
+      Number(valeur);
+
+    if (
+      !Number.isFinite(nombre)
+    ) {
+      return "—";
+    }
+
+    return new Intl.NumberFormat(
+      "fr-FR",
+      {
+        style: "currency",
+        currency: "EUR"
+      }
+    ).format(nombre);
+  }
+
+  function nettoyerTexte(
+    valeur
+  ) {
+    return String(
+      valeur == null
+        ? ""
+        : valeur
+    ).trim();
+  }
 })();
