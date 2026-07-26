@@ -117,10 +117,10 @@
         "Ez dago eskuragarri",
 
       ajouter:
-        "Saskira gehitu",
+        "Saskirat gehitu",
 
       ajouterIndisponible:
-        "Produktua ez dago eskuragarri",
+        "Salgaia ez dago eskuragarri",
 
       quantite:
         "Kopurua",
