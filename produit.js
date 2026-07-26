@@ -1,6 +1,9 @@
 "use strict";
 
 (function () {
+  const CLE_LANGUE =
+    "herria_langue";
+
   const CLE_PANIER =
     "herria-bihotzean-panier";
 
@@ -99,7 +102,7 @@
         "APIaren helbidea ez da config.js fitxategian adierazia.",
 
       retourBoutique:
-        "← Saltokia itzuli",
+        "← Saltokiarat itzuli",
 
       panier:
         "Saskia",
@@ -114,7 +117,7 @@
         "Saskira gehitu",
 
       ajouterIndisponible:
-        "Salgaia ez dago eskuragarri",
+        "Produktua ez dago eskuragarri",
 
       quantite:
         "Kopurua",
@@ -160,11 +163,41 @@
 
   function initialiser() {
     memoriserElements();
-    installerEvenements();
 
+    /*
+     * On détermine d'abord la langue.
+     * Le paramètre ?lang= est prioritaire.
+     */
     langue =
-      obtenirLangueCourante();
+      determinerLangueInitiale();
 
+    /*
+     * On mémorise immédiatement cette langue
+     * pour toutes les autres pages du site.
+     */
+    try {
+      localStorage.setItem(
+        CLE_LANGUE,
+        langue
+      );
+    } catch (_) {}
+
+    /*
+     * On synchronise aussi le moteur commun langues.js.
+     */
+    if (
+      typeof window.hbSetLanguage ===
+      "function"
+    ) {
+      window.hbSetLanguage(
+        langue,
+        {
+          silent: true
+        }
+      );
+    }
+
+    installerEvenements();
     appliquerLangue();
     mettreAJourNombrePanier();
     chargerProduit();
@@ -332,16 +365,72 @@
       );
   }
 
+  function determinerLangueInitiale() {
+    const parametres =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const langueUrl =
+      parametres.get(
+        "lang"
+      );
+
+    if (
+      langueUrl === "eu" ||
+      langueUrl === "fr"
+    ) {
+      return langueUrl;
+    }
+
+    try {
+      if (
+        localStorage.getItem(
+          CLE_LANGUE
+        ) === "eu"
+      ) {
+        return "eu";
+      }
+    } catch (_) {}
+
+    if (
+      typeof window.hbCurrentLanguage ===
+      "function" &&
+      window.hbCurrentLanguage() === "eu"
+    ) {
+      return "eu";
+    }
+
+    return "fr";
+  }
+
   function installerEvenements() {
     document.addEventListener(
       "herria-language-change",
       function (evenement) {
-        langue =
+        const nouvelleLangue =
           evenement.detail &&
           evenement.detail.lang === "eu"
             ? "eu"
             : "fr";
 
+        if (
+          nouvelleLangue === langue
+        ) {
+          return;
+        }
+
+        langue =
+          nouvelleLangue;
+
+        try {
+          localStorage.setItem(
+            CLE_LANGUE,
+            langue
+          );
+        } catch (_) {}
+
+        mettreAJourAdresseLangue();
         appliquerLangue();
       }
     );
@@ -349,24 +438,23 @@
     elements.diminuer.addEventListener(
       "click",
       function () {
-        modifierQuantite(-1);
+        modifierQuantite(
+          -1
+        );
       }
     );
 
     elements.augmenter.addEventListener(
       "click",
       function () {
-        modifierQuantite(1);
+        modifierQuantite(
+          1
+        );
       }
     );
 
     elements.quantite.addEventListener(
       "change",
-      normaliserQuantite
-    );
-
-    elements.quantite.addEventListener(
-      "input",
       normaliserQuantite
     );
 
@@ -388,22 +476,21 @@
     );
   }
 
-  function obtenirLangueCourante() {
-    if (
-      typeof window.hbCurrentLanguage ===
-      "function"
-    ) {
-      return (
-        window.hbCurrentLanguage() === "eu"
-          ? "eu"
-          : "fr"
+  function mettreAJourAdresseLangue() {
+    const url =
+      new URL(
+        window.location.href
       );
-    }
 
-    return (
-      document.documentElement.lang === "eu"
-        ? "eu"
-        : "fr"
+    url.searchParams.set(
+      "lang",
+      langue
+    );
+
+    window.history.replaceState(
+      {},
+      "",
+      url
     );
   }
 
@@ -417,51 +504,77 @@
         ? "eu"
         : "fr";
 
-    elements.titrePage.textContent =
-      t.titrePage;
+    if (elements.titrePage) {
+      elements.titrePage.textContent =
+        t.titrePage;
+    }
 
-    elements.texteChargement.textContent =
-      t.chargement;
+    if (elements.texteChargement) {
+      elements.texteChargement.textContent =
+        t.chargement;
+    }
 
-    elements.titreErreur.textContent =
-      t.titreErreur;
+    if (elements.titreErreur) {
+      elements.titreErreur.textContent =
+        t.titreErreur;
+    }
 
-    elements.etiquetteExpedition.textContent =
-      t.expedition;
+    if (elements.etiquetteExpedition) {
+      elements.etiquetteExpedition.textContent =
+        t.expedition;
+    }
 
-    elements.etiquetteFrais.textContent =
-      t.fraisLivraison;
+    if (elements.etiquetteFrais) {
+      elements.etiquetteFrais.textContent =
+        t.fraisLivraison;
+    }
 
-    elements.etiquettePoids.textContent =
-      t.poids;
+    if (elements.etiquettePoids) {
+      elements.etiquettePoids.textContent =
+        t.poids;
+    }
 
-    elements.etiquetteQuantite.textContent =
-      t.quantite;
+    if (elements.etiquetteQuantite) {
+      elements.etiquetteQuantite.textContent =
+        t.quantite;
+    }
 
-    elements.imageAbsente.textContent =
-      t.photoAbsente;
+    if (elements.imageAbsente) {
+      elements.imageAbsente.textContent =
+        t.photoAbsente;
+    }
 
-    elements.confirmation.textContent =
-      t.confirmation;
+    if (elements.confirmation) {
+      elements.confirmation.textContent =
+        t.confirmation;
+    }
 
-    elements.textePanier.textContent =
-      t.panier;
+    if (elements.textePanier) {
+      elements.textePanier.textContent =
+        t.panier;
+    }
 
-    elements.lienRetour.textContent =
-      t.retourBoutique;
+    if (elements.lienRetour) {
+      elements.lienRetour.textContent =
+        t.retourBoutique;
 
-    elements.lienRetour.href =
-      "boutique.html";
+      elements.lienRetour.href =
+        "boutique.html";
+    }
 
-    elements.diminuer.setAttribute(
-      "aria-label",
-      t.diminutionQuantite
-    );
+    if (elements.diminuer) {
+      elements.diminuer.setAttribute(
+        "aria-label",
+        t.diminutionQuantite
+      );
+    }
 
-    elements.augmenter.setAttribute(
-      "aria-label",
-      t.augmentationQuantite
-    );
+    if (elements.augmenter) {
+      elements.augmenter.setAttribute(
+        "aria-label",
+        t.augmentationQuantite
+      );
+    }
 
     if (produit) {
       afficherProduit();
@@ -477,9 +590,14 @@
         window.location.search
       );
 
+    /*
+     * On accepte les deux noms pour éviter
+     * toute incompatibilité avec un ancien lien.
+     */
     const produitId =
       nettoyerTexte(
-        parametres.get("id")
+        parametres.get("id") ||
+        parametres.get("produitId")
       );
 
     if (!produitId) {
@@ -521,14 +639,18 @@
         "script"
       );
 
-    let reponseRecue = false;
+    let termine =
+      false;
 
     const minuterie =
       window.setTimeout(
         function () {
-          if (reponseRecue) {
+          if (termine) {
             return;
           }
+
+          termine =
+            true;
 
           nettoyerJSONP(
             script,
@@ -545,7 +667,12 @@
 
     window[nomCallback] =
       function (reponse) {
-        reponseRecue = true;
+        if (termine) {
+          return;
+        }
+
+        termine =
+          true;
 
         window.clearTimeout(
           minuterie
@@ -598,13 +725,17 @@
       "&_=" +
       Date.now();
 
-    script.async = true;
+    script.async =
+      true;
 
     script.onerror =
       function () {
-        if (reponseRecue) {
+        if (termine) {
           return;
         }
+
+        termine =
+          true;
 
         window.clearTimeout(
           minuterie
@@ -890,7 +1021,9 @@
     elements.miniatures.innerHTML =
       "";
 
-    if (photos.length === 0) {
+    if (
+      photos.length === 0
+    ) {
       elements.imagePrincipale.hidden =
         true;
 
@@ -907,7 +1040,9 @@
       photos[0]
     );
 
-    if (photos.length === 1) {
+    if (
+      photos.length === 1
+    ) {
       elements.miniatures.hidden =
         true;
 
@@ -1000,19 +1135,17 @@
   function selectionnerMiniature(
     boutonActif
   ) {
-    const boutons =
-      elements.miniatures
-        .querySelectorAll(
-          ".miniature"
-        );
-
-    boutons.forEach(
-      function (bouton) {
-        bouton.classList.remove(
-          "active"
-        );
-      }
-    );
+    elements.miniatures
+      .querySelectorAll(
+        ".miniature"
+      )
+      .forEach(
+        function (bouton) {
+          bouton.classList.remove(
+            "active"
+          );
+        }
+      );
 
     boutonActif.classList.add(
       "active"
@@ -1029,7 +1162,10 @@
     const maximum =
       Number.isFinite(stock) &&
       stock > 0
-        ? Math.min(stock, 20)
+        ? Math.min(
+            stock,
+            20
+          )
         : 1;
 
     elements.quantite.max =
@@ -1047,22 +1183,27 @@
         10
       );
 
-    const nouvelle =
-      (
-        Number.isFinite(actuelle)
-          ? actuelle
-          : 1
-      ) +
-      ecart;
-
     elements.quantite.value =
-      String(nouvelle);
+      String(
+        (
+          Number.isFinite(
+            actuelle
+          )
+            ? actuelle
+            : 1
+        ) +
+        ecart
+      );
 
     normaliserQuantite();
   }
 
   function normaliserQuantite() {
-    const minimum = 1;
+    let valeur =
+      parseInt(
+        elements.quantite.value,
+        10
+      );
 
     const maximum =
       parseInt(
@@ -1071,22 +1212,16 @@
         10
       );
 
-    let valeur =
-      parseInt(
-        elements.quantite.value,
-        10
-      );
-
     if (
       !Number.isFinite(valeur)
     ) {
       valeur =
-        minimum;
+        1;
     }
 
     valeur =
       Math.max(
-        minimum,
+        1,
         valeur
       );
 
@@ -1142,11 +1277,14 @@
     const maximum =
       Number.isFinite(stock) &&
       stock > 0
-        ? Math.min(stock, 20)
+        ? Math.min(
+            stock,
+            20
+          )
         : 20;
 
     if (articleExistant) {
-      const quantiteActuelle =
+      const ancienneQuantite =
         parseInt(
           articleExistant.quantite,
           10
@@ -1157,19 +1295,19 @@
           maximum,
           (
             Number.isFinite(
-              quantiteActuelle
+              ancienneQuantite
             )
-              ? quantiteActuelle
+              ? ancienneQuantite
               : 0
           ) +
           quantite
         );
 
-      mettreAJourArticlePanier(
+      mettreAJourArticle(
         articleExistant
       );
     } else {
-      const nouvelArticle = {
+      panier.push({
         produitId:
           nettoyerTexte(
             produit.produitId
@@ -1247,10 +1385,7 @@
 
         quantite:
           quantite
-
-      panier.push(
-        nouvelArticle
-      );
+      });
     }
 
     localStorage.setItem(
@@ -1265,21 +1400,16 @@
     elements.confirmation.hidden =
       false;
 
-    window.clearTimeout(
-      ajouterAuPanier.minuterie
+    window.setTimeout(
+      function () {
+        elements.confirmation.hidden =
+          true;
+      },
+      3500
     );
-
-    ajouterAuPanier.minuterie =
-      window.setTimeout(
-        function () {
-          elements.confirmation.hidden =
-            true;
-        },
-        3500
-      );
   }
 
-  function mettreAJourArticlePanier(
+  function mettreAJourArticle(
     article
   ) {
     article.categorie =
@@ -1346,7 +1476,7 @@
       Number(
         produit.stockActuel
       );
-    
+
     article.poids =
       Number(
         produit.poids
