@@ -756,6 +756,9 @@
       traductions[langue] ||
       traductions.fr;
 
+    elements.titrePresentation.textContent =
+      t.presentation;
+
     elements.chargement.hidden =
       true;
 
