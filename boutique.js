@@ -865,6 +865,10 @@
       "produit.html?id=" +
       encodeURIComponent(
         produit.produitId
+      ) +
+      "&lang=" +
+      encodeURIComponent(
+        langue
       );
 
     bas.appendChild(
