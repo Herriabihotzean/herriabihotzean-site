@@ -2,7 +2,7 @@
 <html
   lang="fr"
   data-title-fr="Produit — Herria Bihotzean"
-  data-title-eu="Produktua — Herria Bihotzean"
+  data-title-eu="Salgaia — Herria Bihotzean"
 >
 <head>
   <meta charset="UTF-8">
@@ -66,11 +66,8 @@
       margin: 0 auto;
     }
 
-    /*
-     * Titre de page identique dans son esprit
-     * aux autres rubriques du site :
-     * capitales, sans cadre ni fond.
-     */
+    /* TITRE DE PAGE */
+
     .entete {
       padding: 46px 16px 26px;
       text-align: center;
@@ -95,6 +92,8 @@
     main {
       padding-bottom: 40px;
     }
+
+    /* CHARGEMENT / ERREUR */
 
     .etat {
       width: min(760px, 100%);
@@ -136,6 +135,8 @@
       }
     }
 
+    /* FICHE PRODUIT */
+
     .fiche-produit {
       display: grid;
 
@@ -157,13 +158,13 @@
         rgba(20, 55, 32, 0.88);
     }
 
+    /* GALERIE */
+
     .galerie {
       min-width: 0;
     }
 
     .image-principale-conteneur {
-      position: relative;
-
       width: 100%;
       aspect-ratio: 4 / 3;
 
@@ -203,10 +204,9 @@
     }
 
     .miniatures {
-      display: grid;
-
-      grid-template-columns:
-        repeat(5, minmax(0, 1fr));
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
 
       gap: 10px;
 
@@ -214,10 +214,10 @@
     }
 
     .miniature {
-      width: 100%;
-      aspect-ratio: 1 / 1;
+      width: 86px;
+      height: 86px;
 
-      padding: 0;
+      padding: 3px;
       overflow: hidden;
 
       border:
@@ -245,6 +245,8 @@
 
       object-fit: cover;
     }
+
+    /* INFORMATIONS */
 
     .informations {
       display: flex;
@@ -323,13 +325,44 @@
       color: #7c1f1f;
     }
 
+    /* PRÉSENTATION */
+
+    .bloc-presentation {
+      margin: 5px 0 25px;
+      padding: 20px 22px;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.22);
+
+      border-radius: 8px;
+
+      background:
+        rgba(0, 0, 0, 0.16);
+    }
+
+    .titre-presentation {
+      margin: 0 0 15px;
+
+      font-size: 1.2rem;
+      font-weight: normal;
+
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
     .description {
-      margin-bottom: 23px;
+      margin: 0;
 
       font-size: 1.06rem;
-      line-height: 1.68;
+      line-height: 1.72;
+
+      text-align: justify;
+      text-justify: inter-word;
+
       white-space: pre-line;
     }
+
+    /* DÉTAILS */
 
     .details {
       margin: 0 0 24px;
@@ -364,6 +397,8 @@
     .etiquette-detail {
       font-weight: bold;
     }
+
+    /* COMMANDE */
 
     .commande {
       margin-top: auto;
@@ -413,11 +448,6 @@
       cursor: pointer;
     }
 
-    .bouton-quantite:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
     .champ-quantite {
       width: 58px;
       height: 42px;
@@ -429,11 +459,7 @@
       background: white;
       color: #222;
 
-      font-family:
-        Arial,
-        sans-serif;
-
-      font-size: 1rem;
+      font-family: Arial, sans-serif;
       font-weight: bold;
       text-align: center;
     }
@@ -457,11 +483,9 @@
       cursor: pointer;
     }
 
-    .bouton-ajouter:hover:not(:disabled),
-    .bouton-ajouter:focus-visible:not(:disabled) {
+    .bouton-ajouter:hover:not(:disabled) {
       background: white;
       color: #222;
-      outline: none;
     }
 
     .bouton-ajouter:disabled {
@@ -480,13 +504,12 @@
 
       color: #1d5b2b;
 
-      font-family:
-        Arial,
-        sans-serif;
-
+      font-family: Arial, sans-serif;
       font-weight: bold;
       text-align: center;
     }
+
+    /* PANIER ET RETOUR */
 
     .actions-secondaires {
       display: flex;
@@ -494,11 +517,11 @@
       margin: 25px 0 0;
     }
 
-    .lien-panier {
+    .lien-panier,
+    .retour a {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
 
       padding: 11px 18px;
 
@@ -508,15 +531,16 @@
       background:
         rgba(0, 0, 0, 0.32);
 
+      color: white;
+
       font-weight: bold;
       text-decoration: none;
     }
 
     .lien-panier:hover,
-    .lien-panier:focus-visible {
+    .retour a:hover {
       background: white;
       color: #222;
-      outline: none;
     }
 
     .nombre-panier {
@@ -526,6 +550,7 @@
 
       min-width: 24px;
       height: 24px;
+      margin-left: 7px;
       padding: 0 6px;
 
       border-radius: 999px;
@@ -533,41 +558,14 @@
       background: #8f1f1f;
       color: white;
 
-      font-family:
-        Arial,
-        sans-serif;
-
+      font-family: Arial, sans-serif;
       font-size: 0.82rem;
       font-weight: bold;
     }
 
-    /*
-     * Même bouton retour que sur langue-basque.html.
-     */
     .retour {
       margin: 30px 0;
       text-align: center;
-    }
-
-    .retour a {
-      display: inline-block;
-      padding: 11px 18px;
-
-      border: 1px solid white;
-      border-radius: 7px;
-
-      background:
-        rgba(0, 0, 0, 0.32);
-
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .retour a:hover,
-    .retour a:focus-visible {
-      background: white;
-      color: #222;
-      outline: none;
     }
 
     footer {
@@ -593,17 +591,8 @@
         background-attachment: scroll;
       }
 
-      .entete {
-        padding: 28px 8px 18px;
-      }
-
-      .bloc-titre {
-        padding: 24px 14px;
-      }
-
       .fiche-produit {
         padding: 18px;
-        gap: 26px;
       }
 
       .ligne-detail {
@@ -611,13 +600,18 @@
         gap: 3px;
       }
 
-      .miniatures {
-        grid-template-columns:
-          repeat(4, minmax(0, 1fr));
+      .miniature {
+        width: 70px;
+        height: 70px;
       }
     }
   </style>
 
+  <!--
+    IMPORTANT :
+    le système commun du site crée lui-même
+    les deux boutons avec les blasons SVG.
+  -->
   <link
     href="langues.css"
     rel="stylesheet"
@@ -625,6 +619,10 @@
 </head>
 
 <body>
+
+  <!-- AUCUN bouton de langue ici :
+       langues.js les crée automatiquement. -->
+
   <header class="entete">
     <div class="bloc-titre">
       <h1
@@ -637,6 +635,7 @@
   </header>
 
   <main class="page">
+
     <section
       id="chargement"
       class="etat"
@@ -655,7 +654,6 @@
     <section
       id="erreur"
       class="etat etat-erreur"
-      aria-live="assertive"
       hidden
     >
       <h2 id="titre-erreur">
@@ -670,8 +668,11 @@
       class="fiche-produit"
       hidden
     >
+
       <section class="galerie">
+
         <div class="image-principale-conteneur">
+
           <img
             id="image-principale"
             class="image-principale"
@@ -686,6 +687,7 @@
           >
             Photographie non disponible
           </div>
+
         </div>
 
         <div
@@ -693,9 +695,11 @@
           class="miniatures"
           hidden
         ></div>
+
       </section>
 
       <section class="informations">
+
         <p
           id="categorie-produit"
           class="categorie"
@@ -721,13 +725,31 @@
           class="badge"
         ></span>
 
-        <div
-          id="description-produit"
-          class="description"
-        ></div>
+        <!-- PRÉSENTATION -->
+
+        <section
+          id="bloc-presentation"
+          class="bloc-presentation"
+        >
+          <h3
+            id="titre-presentation"
+            class="titre-presentation"
+          >
+            Présentation
+          </h3>
+
+          <div
+            id="description-produit"
+            class="description"
+          ></div>
+        </section>
+
+        <!-- INFORMATIONS PRATIQUES -->
 
         <div class="details">
+
           <div class="ligne-detail">
+
             <span
               id="etiquette-expedition"
               class="etiquette-detail"
@@ -736,9 +758,11 @@
             </span>
 
             <span id="mode-expedition"></span>
+
           </div>
 
           <div class="ligne-detail">
+
             <span
               id="etiquette-frais"
               class="etiquette-detail"
@@ -747,12 +771,14 @@
             </span>
 
             <span id="frais-livraison"></span>
+
           </div>
 
           <div
             id="ligne-poids"
             class="ligne-detail"
           >
+
             <span
               id="etiquette-poids"
               class="etiquette-detail"
@@ -761,11 +787,17 @@
             </span>
 
             <span id="poids-produit"></span>
+
           </div>
+
         </div>
 
+        <!-- AJOUT AU PANIER -->
+
         <div class="commande">
+
           <div class="selection-quantite">
+
             <label
               id="etiquette-quantite"
               for="quantite"
@@ -774,11 +806,11 @@
             </label>
 
             <div class="controle-quantite">
+
               <button
                 id="diminuer-quantite"
                 class="bouton-quantite"
                 type="button"
-                aria-label="Diminuer la quantité"
               >
                 −
               </button>
@@ -796,11 +828,12 @@
                 id="augmenter-quantite"
                 class="bouton-quantite"
                 type="button"
-                aria-label="Augmenter la quantité"
               >
                 +
               </button>
+
             </div>
+
           </div>
 
           <button
@@ -818,11 +851,15 @@
           >
             Le produit a été ajouté au panier.
           </p>
+
         </div>
+
       </section>
+
     </article>
 
     <div class="actions-secondaires">
+
       <a
         id="lien-panier"
         class="lien-panier"
@@ -839,16 +876,20 @@
           0
         </span>
       </a>
+
     </div>
 
     <div class="retour">
+
       <a
         id="lien-retour"
         href="boutique.html"
       >
         ← Retour à la boutique
       </a>
+
     </div>
+
   </main>
 
   <footer>
@@ -858,5 +899,6 @@
   <script src="config.js"></script>
   <script src="langues.js"></script>
   <script src="produit.js"></script>
+
 </body>
 </html>
