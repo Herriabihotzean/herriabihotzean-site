@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html
+  lang="fr"
+  data-title-fr="Commander — Herria Bihotzean"
+  data-title-eu="Eskaera — Herria Bihotzean"
+>
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Commander — Herria Bihotzean</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      color: white;
+
+      background-image:
+        linear-gradient(
+          rgba(0, 0, 0, 0.52),
+          rgba(0, 0, 0, 0.70)
+        ),
+        url("fond-herriabihotzean.jpg");
+
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    button,
+    input,
+    textarea,
+    a {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1050px, calc(100% - 28px));
+      margin: 0 auto;
+    }
+
+    .entete {
+      padding: 46px 16px 26px;
+      text-align: center;
+    }
+
+    .bloc-titre {
+      padding: 30px 24px;
+    }
+
+    h1 {
+      margin: 0;
+
+      font-size:
+        clamp(2rem, 6vw, 3.8rem);
+
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .panier-vide {
+      margin-bottom: 30px;
+      padding: 30px;
+
+      border-radius: 8px;
+
+      background:
+        rgba(0, 0, 0, 0.58);
+
+      text-align: center;
+    }
+
+    .grille {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(320px, 0.72fr);
+
+      gap: 28px;
+      align-items: start;
+    }
+
+    .bloc {
+      margin-bottom: 24px;
+      padding: 25px;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.55);
+
+      border-radius: 8px;
+
+      background:
+        rgba(20, 55, 32, 0.88);
+    }
+
+    .bloc h2 {
+      margin: 0 0 22px;
+
+      font-size: 1.55rem;
+      font-weight: normal;
+    }
+
+    .ligne-formulaire {
+      margin-bottom: 17px;
+    }
+
+    .ligne-formulaire label {
+      display: block;
+      margin-bottom: 6px;
+
+      font-weight: bold;
+    }
+
+    .ligne-double {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 11px 12px;
+
+      border: 1px solid #ddd;
+      border-radius: 5px;
+
+      background: white;
+      color: #222;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .mention {
+      color:
+        rgba(255, 255, 255, 0.76);
+
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .produit {
+      display: grid;
+
+      grid-template-columns:
+        64px minmax(0, 1fr) auto;
+
+      gap: 12px;
+
+      padding: 13px 0;
+
+      border-bottom:
+        1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .produit:last-child {
+      border-bottom: 0;
+    }
+
+    .photo {
+      width: 64px;
+      height: 64px;
+
+      object-fit: contain;
+
+      border-radius: 5px;
+
+      background:
+        rgba(255, 255, 255, 0.08);
+    }
+
+    .titre-produit {
+      margin: 0 0 4px;
+      font-weight: bold;
+    }
+
+    .quantite-produit {
+      margin: 0;
+
+      color:
+        rgba(255, 255, 255, 0.78);
+
+      font-size: 0.92rem;
+    }
+
+    .prix-ligne {
+      white-space: nowrap;
+      font-weight: bold;
+    }
+
+    .recapitulatif {
+      margin-top: 18px;
+
+      border-top:
+        1px solid rgba(255, 255, 255, 0.30);
+    }
+
+    .ligne-total {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+
+      padding: 9px 0;
+    }
+
+    .ligne-total-finale {
+      margin-top: 5px;
+      padding-top: 15px;
+
+      border-top:
+        1px solid rgba(255, 255, 255, 0.30);
+
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .attente-livraison {
+      font-style: italic;
+    }
+
+    .bouton {
+      display: inline-block;
+
+      padding: 12px 20px;
+
+      border: 1px solid white;
+      border-radius: 7px;
+
+      background:
+        rgba(0, 0, 0, 0.32);
+
+      color: white;
+
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+
+      cursor: pointer;
+    }
+
+    .bouton:hover,
+    .bouton:focus-visible {
+      background: white;
+      color: #222;
+      outline: none;
+    }
+
+    .bouton-validation {
+      width: 100%;
+      min-height: 52px;
+
+      margin-top: 10px;
+
+      background:
+        rgba(20, 55, 32, 0.96);
+    }
+
+    .bouton-validation:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+
+      border-radius: 6px;
+
+      background:
+        rgba(255, 255, 255, 0.92);
+
+      color: #222;
+
+      line-height: 1.45;
+    }
+
+    .message-erreur {
+      background: #f8e5e5;
+      color: #7c1f1f;
+    }
+
+    .retour {
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .retour a {
+      display: inline-block;
+      padding: 11px 18px;
+
+      border: 1px solid white;
+      border-radius: 7px;
+
+      background:
+        rgba(0, 0, 0, 0.32);
+
+      font-weight: bold;
+      text-decoration: none;
+      color: white;
+    }
+
+    .retour a:hover,
+    .retour a:focus-visible {
+      background: white;
+      color: #222;
+      outline: none;
+    }
+
+    footer {
+      padding: 22px 14px 28px;
+
+      border-top:
+        1px solid rgba(255, 255, 255, 0.25);
+
+      background:
+        rgba(0, 0, 0, 0.58);
+
+      text-align: center;
+    }
+
+    @media (max-width: 800px) {
+      body {
+        background-attachment: scroll;
+      }
+
+      .grille {
+        grid-template-columns: 1fr;
+      }
+
+      .ligne-double {
+        grid-template-columns: 1fr;
+      }
+
+      .entete {
+        padding: 28px 8px 18px;
+      }
+    }
+  </style>
+
+  <link
+    href="langues.css"
+    rel="stylesheet"
+  >
+</head>
+
+<body>
+
+  <header class="entete">
+    <div class="bloc-titre">
+      <h1 id="titre-page">
+        Commander
+      </h1>
+    </div>
+  </header>
+
+  <main class="page">
+
+    <section
+      id="panier-vide"
+      class="panier-vide"
+      hidden
+    >
+      <p id="texte-panier-vide">
+        Votre panier est vide.
+      </p>
+
+      <a
+        id="retour-boutique-vide"
+        class="bouton"
+        href="boutique.html"
+      >
+        Retour à la boutique
+      </a>
+    </section>
+
+    <div
+      id="contenu-commande"
+      class="grille"
+      hidden
+    >
+
+      <section>
+
+        <form id="formulaire-commande">
+
+          <div class="bloc">
+            <h2 id="titre-coordonnees">
+              Vos coordonnées
+            </h2>
+
+            <div class="ligne-double">
+
+              <div class="ligne-formulaire">
+                <label
+                  id="label-prenom"
+                  for="prenom"
+                >
+                  Prénom *
+                </label>
+
+                <input
+                  id="prenom"
+                  name="prenom"
+                  type="text"
+                  autocomplete="given-name"
+                  required
+                >
+              </div>
+
+              <div class="ligne-formulaire">
+                <label
+                  id="label-nom"
+                  for="nom"
+                >
+                  Nom *
+                </label>
+
+                <input
+                  id="nom"
+                  name="nom"
+                  type="text"
+                  autocomplete="family-name"
+                  required
+                >
+              </div>
+
+            </div>
+
+            <div class="ligne-formulaire">
+              <label
+                id="label-email"
+                for="email"
+              >
+                Adresse électronique *
+              </label>
+
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+              >
+            </div>
+
+            <div class="ligne-formulaire">
+              <label
+                id="label-telephone"
+                for="telephone"
+              >
+                Téléphone *
+              </label>
+
+              <input
+                id="telephone"
+                name="telephone"
+                type="tel"
+                autocomplete="tel"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="bloc">
+
+            <h2 id="titre-adresse">
+              Adresse
+            </h2>
+
+            <p
+              id="explication-adresse"
+              class="mention"
+            >
+              Ces informations permettront de préparer
+              l'expédition de votre commande.
+            </p>
+
+            <div class="ligne-formulaire">
+              <label
+                id="label-adresse"
+                for="adresse"
+              >
+                Adresse *
+              </label>
+
+              <input
+                id="adresse"
+                name="adresse"
+                type="text"
+                autocomplete="street-address"
+                required
+              >
+            </div>
+
+            <div class="ligne-double">
+
+              <div class="ligne-formulaire">
+                <label
+                  id="label-code-postal"
+                  for="code-postal"
+                >
+                  Code postal *
+                </label>
+
+                <input
+                  id="code-postal"
+                  name="codePostal"
+                  type="text"
+                  autocomplete="postal-code"
+                  required
+                >
+              </div>
+
+              <div class="ligne-formulaire">
+                <label
+                  id="label-ville"
+                  for="ville"
+                >
+                  Ville *
+                </label>
+
+                <input
+                  id="ville"
+                  name="ville"
+                  type="text"
+                  autocomplete="address-level2"
+                  required
+                >
+              </div>
+
+            </div>
+
+            <div class="ligne-formulaire">
+              <label
+                id="label-pays"
+                for="pays"
+              >
+                Pays *
+              </label>
+
+              <input
+                id="pays"
+                name="pays"
+                type="text"
+                autocomplete="country-name"
+                value="France"
+                required
+              >
+            </div>
+
+          </div>
+
+          <div class="bloc">
+
+            <h2 id="titre-observation">
+              Informations complémentaires
+            </h2>
+
+            <div class="ligne-formulaire">
+              <label
+                id="label-observation"
+                for="observation"
+              >
+                Observation
+              </label>
+
+              <textarea
+                id="observation"
+                name="observation"
+              ></textarea>
+            </div>
+
+          </div>
+
+          <button
+            id="bouton-valider"
+            class="bouton bouton-validation"
+            type="submit"
+          >
+            Continuer
+          </button>
+
+          <div
+            id="message"
+            class="message"
+            hidden
+          ></div>
+
+        </form>
+
+      </section>
+
+      <aside class="bloc">
+
+        <h2 id="titre-recapitulatif">
+          Votre commande
+        </h2>
+
+        <div id="liste-produits"></div>
+
+        <div class="recapitulatif">
+
+          <div class="ligne-total">
+            <span id="label-sous-total">
+              Sous-total
+            </span>
+
+            <span id="sous-total">
+              0,00 €
+            </span>
+          </div>
+
+          <div class="ligne-total">
+            <span id="label-poids">
+              Poids total
+            </span>
+
+            <span id="poids-total">
+              —
+            </span>
+          </div>
+
+          <div class="ligne-total">
+            <span id="label-livraison">
+              Livraison Mondial Relay
+            </span>
+
+            <span
+              id="frais-livraison"
+              class="attente-livraison"
+            >
+              À calculer
+            </span>
+          </div>
+
+          <div
+            class="ligne-total ligne-total-finale"
+          >
+            <span id="label-total">
+              Total
+            </span>
+
+            <span id="total">
+              —
+            </span>
+          </div>
+
+        </div>
+
+        <p
+          id="note-calcul"
+          class="mention"
+        >
+          Le montant définitif des frais de livraison
+          sera calculé à partir du poids total de la commande.
+        </p>
+
+      </aside>
+
+    </div>
+
+    <div class="retour">
+      <a
+        id="lien-retour"
+        href="panier.html"
+      >
+        ← Retour au panier
+      </a>
+    </div>
+
+  </main>
+
+  <footer>
+    © Herria Bihotzean
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="langues.js"></script>
+  <script src="commander.js"></script>
+
+</body>
+</html>
