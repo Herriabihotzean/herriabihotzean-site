@@ -1240,9 +1240,13 @@
             produit.stockActuel
           ),
 
+        poids:
+          Number(
+            produit.poids
+          ),
+
         quantite:
           quantite
-      };
 
       panier.push(
         nouvelArticle
@@ -1341,6 +1345,11 @@
     article.stockActuel =
       Number(
         produit.stockActuel
+      );
+    
+    article.poids =
+      Number(
+        produit.poids
       );
   }
 
