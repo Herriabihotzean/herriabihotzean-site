@@ -726,23 +726,123 @@
       return;
     }
 
-    /*
-     * À l'étape suivante, ce bouton
-     * enverra seulement :
-     *
-     * - coordonnées du client
-     * - produitId
-     * - quantité
-     *
-     * Apps Script relira prix,
-     * poids, stock et bénéficiaire
-     * directement dans Google Sheets.
-     */
+    const panier =
+      lirePanier();
 
-    afficherMessage(
-      traductions[langue]
-        .prochaineEtape,
-      false
+    if (
+      !Array.isArray(panier) ||
+      panier.length === 0
+    ) {
+      afficherMessage(
+        traductions[langue]
+          .panierVide,
+        true
+      );
+
+      return;
+    }
+
+   /*
+   * On n'envoie à Apps Script que
+   * produitId + quantité.
+   *
+   * Prix, poids, stock et bénéficiaire
+   * seront relus dans Google Sheets.
+   */
+    const panierAEnvoyer =
+      panier.map(
+        function (article) {
+          return {
+            produitId:
+              nettoyerTexte(
+                article.produitId
+              ),
+
+            quantite:
+              entier(
+                article.quantite,
+                1
+              )
+          };
+        }
+      );
+
+    const apiUrl =
+      window.HB_CONFIG &&
+      window.HB_CONFIG.API_URL
+        ? nettoyerTexte(
+            window.HB_CONFIG.API_URL
+          )
+        : "";
+
+    if (!apiUrl) {
+      afficherMessage(
+        "L’adresse de l’API Apps Script est absente de config.js.",
+        true
+      );
+
+      return;
+    }
+
+  /*
+   * Ajout du panier sous forme JSON
+   * dans le formulaire.
+   */
+    let champPanier =
+      formulaire.querySelector(
+        'input[name="panier"]'
+      );
+
+    if (!champPanier) {
+      champPanier =
+        document.createElement(
+          "input"
+        );
+
+      champPanier.type =
+        "hidden";
+
+      champPanier.name =
+        "panier";
+
+      formulaire.appendChild(
+        champPanier
+      );
+    }
+
+    champPanier.value =
+      JSON.stringify(
+        panierAEnvoyer
+      );
+
+  /*
+   * Envoi réel à Apps Script.
+   */
+    formulaire.action =
+      apiUrl;
+
+    formulaire.method =
+      "POST";
+
+    elements[
+      "bouton-valider"
+    ].disabled =
+      true;
+
+    elements[
+      "bouton-valider"
+    ].textContent =
+      langue === "eu"
+        ? "Igortzen…"
+        : "Envoi…";
+
+  /*
+   * On utilise submit() directement afin
+   * de ne pas redéclencher l'événement
+   * submit que nous sommes en train de traiter.
+   */
+    HTMLFormElement.prototype.submit.call(
+      formulaire
     );
   }
 
