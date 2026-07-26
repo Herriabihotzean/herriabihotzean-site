@@ -96,10 +96,10 @@
 
     eu: {
       titreDocument:
-        "Eskaera — Herria Bihotzean",
+        "Eskatzea — Herria Bihotzean",
 
       titrePage:
-        "Eskaera",
+        "Eskatzea",
 
       panierVide:
         "Zure saskia hutsik da.",
@@ -126,7 +126,7 @@
         "Helbidea",
 
       adresseExplication:
-        "Datu hauek zure eskaeraren bidalketa prestatzeko erabiliko dira.",
+        "Datu hauek zure eskatzearen bidalketa prestatzeko erabiliko dira.",
 
       adresse:
         "Helbidea *",
@@ -147,7 +147,7 @@
         "Oharra",
 
       recapitulatif:
-        "Zure eskaera",
+        "Zure eskatzea",
 
       quantite:
         "Kopurua",
@@ -168,7 +168,7 @@
         "Guztira",
 
       noteCalcul:
-        "Bidalketa gastuen behin betiko zenbatekoa eskaeraren pisu osoaren arabera kalkulatuko da.",
+        "Bidalketa gastuen behin betiko zenbatekoa eskatzearen pisu osoaren arabera kalkulatuko da.",
 
       continuer:
         "Segitu",
