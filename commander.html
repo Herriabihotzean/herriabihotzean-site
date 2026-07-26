@@ -167,6 +167,65 @@
       line-height: 1.45;
     }
 
+
+    /* =========================
+       MONDIAL RELAY
+       ========================= */
+
+    .bloc-mondial-relay {
+      background:
+        rgba(16, 50, 30, 0.94);
+    }
+
+    .mondial-introduction {
+      margin: 0 0 18px;
+
+      color:
+        rgba(255, 255, 255, 0.88);
+
+      line-height: 1.55;
+    }
+
+    .mondial-actions {
+      margin: 0 0 22px;
+      text-align: center;
+    }
+
+    .bouton-mondial {
+      display: inline-block;
+
+      padding: 12px 18px;
+
+      border: 1px solid white;
+      border-radius: 7px;
+
+      background:
+        rgba(0, 0, 0, 0.32);
+
+      color: white;
+
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .bouton-mondial:hover,
+    .bouton-mondial:focus-visible {
+      background: white;
+      color: #222;
+      outline: none;
+    }
+
+    .mondial-note {
+      margin: 10px 0 0;
+
+      color:
+        rgba(255, 255, 255, 0.72);
+
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
     .produit {
       display: grid;
 
@@ -574,6 +633,126 @@
                 value="France"
                 required
               >
+            </div>
+
+          </div>
+
+          <div class="bloc bloc-mondial-relay">
+
+            <h2 id="titre-mondial-relay">
+              Livraison Mondial Relay
+            </h2>
+
+            <p
+              id="explication-mondial-relay"
+              class="mondial-introduction"
+            >
+              Choisissez le Point Relais® ou Locker dans lequel vous souhaitez recevoir votre colis.
+              Ouvrez la carte Mondial Relay, recherchez le point qui vous convient, puis recopiez
+              ci-dessous ses coordonnées.
+            </p>
+
+            <div class="mondial-actions">
+              <a
+                id="bouton-carte-mondial-relay"
+                class="bouton-mondial"
+                href="https://www.mondialrelay.fr/trouver-le-point-relais-le-plus-proche-de-chez-moi/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Consulter la carte Mondial Relay
+              </a>
+            </div>
+
+            <div class="ligne-formulaire">
+              <label
+                id="label-point-relais-nom"
+                for="point-relais-nom"
+              >
+                Nom du Point Relais / Locker *
+              </label>
+
+              <input
+                id="point-relais-nom"
+                name="pointRelaisNom"
+                type="text"
+                required
+              >
+            </div>
+
+            <div class="ligne-formulaire">
+              <label
+                id="label-point-relais-adresse"
+                for="point-relais-adresse"
+              >
+                Adresse du Point Relais / Locker *
+              </label>
+
+              <input
+                id="point-relais-adresse"
+                name="pointRelaisAdresse"
+                type="text"
+                required
+              >
+            </div>
+
+            <div class="ligne-double">
+
+              <div class="ligne-formulaire">
+                <label
+                  id="label-point-relais-code-postal"
+                  for="point-relais-code-postal"
+                >
+                  Code postal *
+                </label>
+
+                <input
+                  id="point-relais-code-postal"
+                  name="pointRelaisCodePostal"
+                  type="text"
+                  inputmode="numeric"
+                  required
+                >
+              </div>
+
+              <div class="ligne-formulaire">
+                <label
+                  id="label-point-relais-ville"
+                  for="point-relais-ville"
+                >
+                  Ville *
+                </label>
+
+                <input
+                  id="point-relais-ville"
+                  name="pointRelaisVille"
+                  type="text"
+                  required
+                >
+              </div>
+
+            </div>
+
+            <div class="ligne-formulaire">
+              <label
+                id="label-point-relais-numero"
+                for="point-relais-numero"
+              >
+                Numéro du Point Relais / Locker
+              </label>
+
+              <input
+                id="point-relais-numero"
+                name="pointRelaisNumero"
+                type="text"
+              >
+
+              <p
+                id="note-point-relais-numero"
+                class="mondial-note"
+              >
+                Facultatif : renseignez-le s'il apparaît sur la fiche Mondial Relay.
+              </p>
             </div>
 
           </div>
