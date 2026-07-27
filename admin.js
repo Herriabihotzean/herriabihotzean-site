@@ -163,6 +163,15 @@
   function initialiser() {
 
     memoriserElements();
+    const champOrigine =
+      document.getElementById(
+        "origine-admin"
+      );
+
+if (champOrigine) {
+  champOrigine.value =
+    window.location.origin;
+}
 
     try {
       localStorage.setItem(
