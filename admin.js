@@ -178,6 +178,11 @@
       document.getElementById(
         "liste-produits"
       );
+
+    elements.adminIframe =
+      document.getElementById(
+        "admin-iframe"
+      );
   }
 
 
