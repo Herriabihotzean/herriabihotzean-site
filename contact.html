@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html
+  lang="fr"
+  data-title-fr="Nous contacter — Herria Bihotzean"
+  data-title-eu="Gurekin harremanetan jarri — Herria Bihotzean"
+>
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Nous contacter — Herria Bihotzean
+  </title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      color: white;
+
+      background-image:
+        linear-gradient(
+          rgba(0, 0, 0, 0.52),
+          rgba(0, 0, 0, 0.70)
+        ),
+        url("fond-herriabihotzean.jpg");
+
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    button,
+    input,
+    select,
+    textarea,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: min(
+        760px,
+        calc(100% - 28px)
+      );
+
+      margin: 0 auto;
+    }
+
+    .entete {
+      padding: 46px 16px 26px;
+      text-align: center;
+    }
+
+    .bloc-titre {
+      padding: 30px 24px;
+    }
+
+    h1 {
+      margin: 0;
+
+      font-size:
+        clamp(
+          2rem,
+          6vw,
+          3.8rem
+        );
+
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    main {
+      padding-bottom: 40px;
+    }
+
+    .bloc {
+      margin-bottom: 24px;
+      padding: 28px;
+
+      border:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.55
+        );
+
+      border-radius: 8px;
+
+      background:
+        rgba(
+          20,
+          55,
+          32,
+          0.90
+        );
+    }
+
+    .introduction {
+      margin:
+        0 0 26px;
+
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .champ {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+
+      padding:
+        11px 12px;
+
+      border:
+        1px solid #ddd;
+
+      border-radius:
+        6px;
+
+      background:
+        white;
+
+      color:
+        #222;
+    }
+
+    textarea {
+      min-height:
+        180px;
+
+      resize:
+        vertical;
+    }
+
+    .bouton-envoyer {
+      display: block;
+
+      width: 100%;
+      min-height: 52px;
+
+      margin-top: 12px;
+
+      padding:
+        13px 18px;
+
+      border:
+        1px solid white;
+
+      border-radius:
+        7px;
+
+      background:
+        rgba(
+          0,
+          0,
+          0,
+          0.32
+        );
+
+      color:
+        white;
+
+      font-weight:
+        bold;
+
+      cursor:
+        pointer;
+    }
+
+    .bouton-envoyer:hover,
+    .bouton-envoyer:focus-visible {
+      background:
+        white;
+
+      color:
+        #222;
+
+      outline:
+        none;
+    }
+
+    .bouton-envoyer:disabled {
+      opacity:
+        0.55;
+
+      cursor:
+        not-allowed;
+    }
+
+    .message-etat {
+      margin:
+        16px 0 0;
+
+      min-height:
+        24px;
+
+      line-height:
+        1.45;
+
+      text-align:
+        center;
+
+      font-weight:
+        bold;
+    }
+
+    .message-erreur {
+      color:
+        #ffdede;
+    }
+
+    .retour {
+      margin:
+        30px 0;
+
+      text-align:
+        center;
+    }
+
+    .retour a {
+      display:
+        inline-block;
+
+      padding:
+        11px 18px;
+
+      border:
+        1px solid white;
+
+      border-radius:
+        7px;
+
+      background:
+        rgba(
+          0,
+          0,
+          0,
+          0.32
+        );
+
+      color:
+        white;
+
+      font-weight:
+        bold;
+
+      text-decoration:
+        none;
+    }
+
+    .retour a:hover,
+    .retour a:focus-visible {
+      background:
+        white;
+
+      color:
+        #222;
+
+      outline:
+        none;
+    }
+
+    footer {
+      padding:
+        22px 14px 28px;
+
+      border-top:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.25
+        );
+
+      background:
+        rgba(
+          0,
+          0,
+          0,
+          0.58
+        );
+
+      text-align:
+        center;
+    }
+
+    @media (
+      max-width: 700px
+    ) {
+      body {
+        background-attachment:
+          scroll;
+      }
+
+      .entete {
+        padding:
+          28px 8px 18px;
+      }
+
+      .bloc {
+        padding:
+          21px 16px;
+      }
+    }
+  </style>
+
+  <link
+    href="langues.css"
+    rel="stylesheet"
+  >
+</head>
+
+<body>
+
+  <header class="entete">
+
+    <div class="bloc-titre">
+
+      <h1 id="titre-page">
+        Nous contacter
+      </h1>
+
+    </div>
+
+  </header>
+
+  <main class="page">
+
+    <section class="bloc">
+
+      <p
+        id="introduction"
+        class="introduction"
+      >
+        Pour toute question concernant le site,
+        la boutique, une commande ou toute autre
+        demande, vous pouvez nous écrire au moyen
+        de ce formulaire.
+      </p>
+
+      <form
+        id="formulaire-contact"
+        method="post"
+        target="reponse-invisible"
+      >
+
+        <input
+          type="hidden"
+          name="type"
+          value="contact"
+        >
+
+        <input
+          id="langue-formulaire"
+          type="hidden"
+          name="langue"
+          value="fr"
+        >
+
+        <div class="champ">
+
+          <label
+            id="label-prenom"
+            for="prenom"
+          >
+            Prénom *
+          </label>
+
+          <input
+            id="prenom"
+            name="prenom"
+            type="text"
+            autocomplete="given-name"
+            required
+          >
+
+        </div>
+
+        <div class="champ">
+
+          <label
+            id="label-nom"
+            for="nom"
+          >
+            Nom *
+          </label>
+
+          <input
+            id="nom"
+            name="nom"
+            type="text"
+            autocomplete="family-name"
+            required
+          >
+
+        </div>
+
+        <div class="champ">
+
+          <label
+            id="label-email"
+            for="email"
+          >
+            Adresse électronique *
+          </label>
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+        <div class="champ">
+
+          <label
+            id="label-objet"
+            for="objet"
+          >
+            Objet *
+          </label>
+
+          <select
+            id="objet"
+            name="objet"
+            required
+          >
+
+            <option
+              id="option-choisir"
+              value=""
+            >
+              Choisissez
+            </option>
+
+            <option
+              id="option-generale"
+              value="Question générale"
+            >
+              Question générale
+            </option>
+
+            <option
+              id="option-produit"
+              value="Question sur un produit"
+            >
+              Question sur un produit
+            </option>
+
+            <option
+              id="option-commande"
+              value="Question sur une commande"
+            >
+              Question sur une commande
+            </option>
+
+            <option
+              id="option-livraison"
+              value="Question sur une livraison"
+            >
+              Question sur une livraison
+            </option>
+
+            <option
+              id="option-autre"
+              value="Autre demande"
+            >
+              Autre demande
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="champ">
+
+          <label
+            id="label-message"
+            for="message"
+          >
+            Votre message *
+          </label>
+
+          <textarea
+            id="message"
+            name="message"
+            required
+          ></textarea>
+
+        </div>
+
+        <button
+          id="bouton-envoyer"
+          class="bouton-envoyer"
+          type="submit"
+        >
+          Envoyer le message
+        </button>
+
+        <p
+          id="message-etat"
+          class="message-etat"
+          aria-live="polite"
+        ></p>
+
+      </form>
+
+      <iframe
+        id="reponse-invisible"
+        name="reponse-invisible"
+        title="Réponse du formulaire"
+        hidden
+      ></iframe>
+
+    </section>
+
+    <div class="retour">
+
+      <a
+        id="lien-retour"
+        href="index.html"
+      >
+        ← Retour à l'accueil
+      </a>
+
+    </div>
+
+  </main>
+
+  <footer>
+    © Herria Bihotzean
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="langues.js"></script>
+
+  <script>
+    "use strict";
+
+    (function () {
+
+      const CLE_LANGUE =
+        "herria_langue";
+
+      const traductions = {
+
+        fr: {
+          titreDocument:
+            "Nous contacter — Herria Bihotzean",
+
+          titrePage:
+            "Nous contacter",
+
+          introduction:
+            "Pour toute question concernant le site, la boutique, une commande ou toute autre demande, vous pouvez nous écrire au moyen de ce formulaire.",
+
+          prenom:
+            "Prénom *",
+
+          nom:
+            "Nom *",
+
+          email:
+            "Adresse électronique *",
+
+          objet:
+            "Objet *",
+
+          choisir:
+            "Choisissez",
+
+          generale:
+            "Question générale",
+
+          produit:
+            "Question sur un produit",
+
+          commande:
+            "Question sur une commande",
+
+          livraison:
+            "Question sur une livraison",
+
+          autre:
+            "Autre demande",
+
+          message:
+            "Votre message *",
+
+          envoyer:
+            "Envoyer le message",
+
+          envoi:
+            "Envoi du message…",
+
+          transmis:
+            "Votre message a été transmis.",
+
+          erreur:
+            "Une erreur s’est produite lors de l’envoi.",
+
+          apiAbsente:
+            "Le formulaire n’est pas encore relié à Apps Script.",
+
+          retour:
+            "← Retour à l'accueil"
+        },
+
+        eu: {
+          titreDocument:
+            "Gurekin harremanetan jarri — Herria Bihotzean",
+
+          titrePage:
+            "Gurekin harremanetan jarri",
+
+          introduction:
+            "Webguneari, saltokiari, eskatzeari edo beste edozein gairi buruzko galderarik baduzu, formulario honen bidez idatz diezagukezu.",
+
+          prenom:
+            "Izena *",
+
+          nom:
+            "Deitura *",
+
+          email:
+            "Helbide elektronikoa *",
+
+          objet:
+            "Gaia *",
+
+          choisir:
+            "Hauta ezazu",
+
+          generale:
+            "Galdera orokorra",
+
+          produit:
+            "Salgai bati buruzko galdera",
+
+          commande:
+            "Eskatze bati buruzko galdera",
+
+          livraison:
+            "Bidalketa bati buruzko galdera",
+
+          autre:
+            "Beste eskaera bat",
+
+          message:
+            "Zure mezua *",
+
+          envoyer:
+            "Mezua igorri",
+
+          envoi:
+            "Mezua igortzen…",
+
+          transmis:
+            "Zure mezua igorria izan da.",
+
+          erreur:
+            "Huts bat gertatu da mezua igortzean.",
+
+          apiAbsente:
+            "Formularioa ez da oraindik Apps Script-ekin lotua.",
+
+          retour:
+            "← Harrerat itzuli"
+        }
+
+      };
+
+      let langue =
+        determinerLangue();
+
+      const formulaire =
+        document.getElementById(
+          "formulaire-contact"
+        );
+
+      const messageEtat =
+        document.getElementById(
+          "message-etat"
+        );
+
+      const boutonEnvoyer =
+        document.getElementById(
+          "bouton-envoyer"
+        );
+
+      const iframe =
+        document.getElementById(
+          "reponse-invisible"
+        );
+
+      function determinerLangue() {
+
+        const params =
+          new URLSearchParams(
+            window.location.search
+          );
+
+        const langueUrl =
+          params.get(
+            "lang"
+          );
+
+        if (
+          langueUrl === "fr" ||
+          langueUrl === "eu"
+        ) {
+          return langueUrl;
+        }
+
+        try {
+          const memoire =
+            localStorage.getItem(
+              CLE_LANGUE
+            );
+
+          if (
+            memoire === "eu"
+          ) {
+            return "eu";
+          }
+        } catch (_) {}
+
+        if (
+          typeof window.hbCurrentLanguage ===
+          "function" &&
+          window.hbCurrentLanguage() ===
+          "eu"
+        ) {
+          return "eu";
+        }
+
+        return "fr";
+      }
+
+      function texte(
+        id,
+        valeur
+      ) {
+
+        const element =
+          document.getElementById(
+            id
+          );
+
+        if (element) {
+          element.textContent =
+            valeur;
+        }
+      }
+
+      function appliquerLangue() {
+
+        const t =
+          traductions[langue];
+
+        document.documentElement.lang =
+          langue === "eu"
+            ? "eu"
+            : "fr";
+
+        document.title =
+          t.titreDocument;
+
+        texte(
+          "titre-page",
+          t.titrePage
+        );
+
+        texte(
+          "introduction",
+          t.introduction
+        );
+
+        texte(
+          "label-prenom",
+          t.prenom
+        );
+
+        texte(
+          "label-nom",
+          t.nom
+        );
+
+        texte(
+          "label-email",
+          t.email
+        );
+
+        texte(
+          "label-objet",
+          t.objet
+        );
+
+        texte(
+          "option-choisir",
+          t.choisir
+        );
+
+        texte(
+          "option-generale",
+          t.generale
+        );
+
+        texte(
+          "option-produit",
+          t.produit
+        );
+
+        texte(
+          "option-commande",
+          t.commande
+        );
+
+        texte(
+          "option-livraison",
+          t.livraison
+        );
+
+        texte(
+          "option-autre",
+          t.autre
+        );
+
+        texte(
+          "label-message",
+          t.message
+        );
+
+        texte(
+          "bouton-envoyer",
+          t.envoyer
+        );
+
+        texte(
+          "lien-retour",
+          t.retour
+        );
+
+        document.getElementById(
+          "langue-formulaire"
+        ).value =
+          langue;
+
+        document.getElementById(
+          "lien-retour"
+        ).href =
+          "index.html?lang=" +
+          encodeURIComponent(
+            langue
+          );
+      }
+
+      document.addEventListener(
+        "herria-language-change",
+        function (evenement) {
+
+          langue =
+            evenement.detail &&
+            evenement.detail.lang ===
+            "eu"
+              ? "eu"
+              : "fr";
+
+          try {
+            localStorage.setItem(
+              CLE_LANGUE,
+              langue
+            );
+          } catch (_) {}
+
+          appliquerLangue();
+        }
+      );
+
+      formulaire.addEventListener(
+        "submit",
+        function (evenement) {
+
+          const apiUrl =
+            window.HB_CONFIG &&
+            window.HB_CONFIG.API_URL
+              ? String(
+                  window.HB_CONFIG.API_URL
+                ).trim()
+              : "";
+
+          if (!apiUrl) {
+
+            evenement.preventDefault();
+
+            messageEtat.textContent =
+              traductions[
+                langue
+              ].apiAbsente;
+
+            messageEtat.className =
+              "message-etat message-erreur";
+
+            return;
+          }
+
+          formulaire.action =
+            apiUrl;
+
+          messageEtat.textContent =
+            traductions[
+              langue
+            ].envoi;
+
+          messageEtat.className =
+            "message-etat";
+
+          boutonEnvoyer.disabled =
+            true;
+
+          /*
+           * Apps Script répondra dans
+           * l'iframe invisible.
+           *
+           * Le navigateur reste donc
+           * sur contact.html.
+           */
+          window.setTimeout(
+            function () {
+
+              messageEtat.textContent =
+                traductions[
+                  langue
+                ].transmis;
+
+              boutonEnvoyer.disabled =
+                false;
+
+              formulaire.reset();
+
+              document.getElementById(
+                "langue-formulaire"
+              ).value =
+                langue;
+
+            },
+            1400
+          );
+        }
+      );
+
+      appliquerLangue();
+
+    })();
+  </script>
+
+</body>
+</html>
