@@ -72,13 +72,13 @@
         "Zure saskia hutsik da.",
 
       decouvrir:
-        "Denda ikusi",
+        "Saltokia ikusi",
 
       prixUnitaire:
         "Bateko prezioa",
 
       diminuer:
-        "Kopurua gutxitu",
+        "Kopurua gutitu",
 
       augmenter:
         "Kopurua handitu",
@@ -96,22 +96,22 @@
         "Bidalketa",
 
       expeditionValeur:
-        "Eskaera egiterakoan kalkulatua",
+        "Eskaintza egiterakoan kalkulatua",
 
       texteLivraison:
-        "Bidalketa gastuak, behar badira, eskaera egiterakoan kalkulatuko dira hautatutako produktuen arabera.",
+        "Bidalketa gastuak, behar badira, eskaintza egiterakoan kalkulatuko dira hautatutako produktuen arabera.",
 
       continuer:
         "Erosketekin segitu",
 
       commander:
-        "Eskaera egin",
+        "Eskaintza egin",
 
       vider:
         "Saskia hustu",
 
       retour:
-        "← Dendara itzuli",
+        "← Saltokirat itzuli",
 
       confirmationVider:
         "Saskia osoki hustu nahi duzu ?"
