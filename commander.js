@@ -453,6 +453,14 @@ if (boutonCarte) {
   boutonCarte.addEventListener(
     "click",
     function (evenement) {
+
+      /*
+       * On bloque d'abord l'ouverture automatique.
+       * Nous ouvrirons Mondial Relay nous-mêmes
+       * une fois les vérifications faites.
+       */
+      evenement.preventDefault();
+
       const champCodePostal =
         document.getElementById(
           "code-postal"
@@ -477,9 +485,10 @@ if (boutonCarte) {
             : ""
         );
 
+      /*
+       * Le code postal est indispensable.
+       */
       if (!codePostal) {
-        evenement.preventDefault();
-
         alert(
           langue === "eu"
             ? "Lehenik, bete posta kodea."
@@ -500,22 +509,57 @@ if (boutonCarte) {
             ville.toUpperCase()
           : codePostal;
 
-      const indication =
+      /*
+       * On cherche la zone d'indication.
+       * Si elle n'existe pas dans le HTML,
+       * on la crée automatiquement.
+       */
+      let indication =
+        document.getElementById(
+          "indication-recherche-mondial"
+        );
+
+      if (!indication) {
+        indication =
+          document.createElement(
+            "p"
+          );
+
+        indication.id =
+          "indication-recherche-mondial";
+
+        indication.className =
+          "mondial-note";
+
+        boutonCarte.insertAdjacentElement(
+          "afterend",
+          indication
+        );
+
         elements[
           "indication-recherche-mondial"
-        ];
-
-      if (indication) {
-        indication.textContent =
-          langue === "eu"
-            ? "Bilatu Mondial Relay-ren orrian : " +
-              recherche
-            : "Recherchez sur la page Mondial Relay : " +
-              recherche;
-
-        indication.hidden =
-          false;
+        ] =
+          indication;
       }
+
+      indication.textContent =
+        langue === "eu"
+          ? "Mondial Relay-ren orrian, bilatu : " +
+            recherche
+          : "Sur la page Mondial Relay, recherchez : " +
+            recherche;
+
+      indication.hidden =
+        false;
+
+      /*
+       * Puis ouverture de Mondial Relay
+       * dans un nouvel onglet.
+       */
+      window.open(
+        boutonCarte.href,
+        "_blank"
+      );
     }
   );
 }
