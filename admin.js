@@ -163,6 +163,22 @@
   function initialiser() {
 
     memoriserElements();
+    const champRetour =
+  document.getElementById(
+    "retour-admin"
+  );
+
+if (champRetour) {
+  champRetour.value =
+    window.location.origin +
+    window.location.pathname +
+    "?lang=" +
+    encodeURIComponent(
+      langue
+    );
+}
+
+traiterRetourConnexion();
     const champOrigine =
       document.getElementById(
         "origine-admin"
@@ -454,11 +470,7 @@ if (champOrigine) {
      * depuis l'iframe invisible.
      */
 
-    window.addEventListener(
-      "message",
-      traiterReponseAppsScript
-    );
-  }
+    }
 
   function mettreAJourAdresseLangue() {
 
@@ -547,9 +559,6 @@ if (champOrigine) {
     elements.formulaire.method =
       "POST";
 
-    elements.formulaire.target =
-      "reponse-admin";
-
     requeteConnexionEnCours =
       true;
 
@@ -578,39 +587,7 @@ if (champOrigine) {
       minuterieConnexion
     );
 
-    minuterieConnexion =
-      window.setTimeout(
-        function () {
-
-          if (
-            !requeteConnexionEnCours
-          ) {
-            return;
-          }
-
-          requeteConnexionEnCours =
-            false;
-
-          elements.boutonConnexion.disabled =
-            false;
-
-          elements.boutonConnexion.textContent =
-            traductions[
-              langue
-            ].connexion;
-
-          afficherMessage(
-            traductions[
-              langue
-            ].delaiDepasse,
-            true
-          );
-
-        },
-        20000
-      );
-
-    /*
+     /*
      * submit() natif :
      * évite de redéclencher l'événement
      * submit actuel.
@@ -630,127 +607,6 @@ if (champOrigine) {
    * ========================================
    */
 
-  function traiterReponseAppsScript(
-    evenement
-  ) {
-
-    /*
-     * Nous acceptons uniquement le message
-     * provenant de NOTRE iframe.
-     *
-     * C'est plus robuste que de dépendre
-     * du domaine Google exact utilisé
-     * par HtmlService.
-     */
-
-    const originesAutorisees = [
-      "https://script.google.com",
-      "https://script.googleusercontent.com"
-    ];
-
-    if (
-      !originesAutorisees.includes(
-        evenement.origin
-      )
-    ) {
-  return;
-}
-
-    const donnees =
-      evenement.data;
-
-    if (
-      !donnees ||
-      typeof donnees !==
-        "object" ||
-      donnees.type !==
-        "admin-login"
-    ) {
-      return;
-    }
-
-    requeteConnexionEnCours =
-      false;
-
-    window.clearTimeout(
-      minuterieConnexion
-    );
-
-    elements.boutonConnexion.disabled =
-      false;
-
-    elements.boutonConnexion.textContent =
-      traductions[
-        langue
-      ].connexion;
-
-    /*
-     * ÉCHEC
-     */
-
-    if (
-      donnees.succes !== true
-    ) {
-
-      supprimerJeton();
-
-      afficherMessage(
-        nettoyerTexte(
-          donnees.message
-        ) ||
-        traductions[
-          langue
-        ].erreurConnexion,
-        true
-      );
-
-      /*
-       * On efface uniquement le mot de passe.
-       */
-
-      elements.motDePasse.value =
-        "";
-
-      elements.motDePasse.focus();
-
-      return;
-    }
-
-    /*
-     * SUCCÈS
-     */
-
-    const jeton =
-      nettoyerTexte(
-        donnees.jeton
-      );
-
-    if (!jeton) {
-
-      afficherMessage(
-        traductions[
-          langue
-        ].erreurConnexion,
-        true
-      );
-
-      return;
-    }
-
-    enregistrerJeton(
-      jeton
-    );
-
-    /*
-     * Le mot de passe disparaît immédiatement
-     * du formulaire.
-     */
-
-    elements.motDePasse.value =
-      "";
-
-    afficherAdministration();
-  }
 
   /*
    * ========================================
@@ -803,6 +659,106 @@ if (champOrigine) {
         : "message message-succes";
   }
 
+function traiterRetourConnexion() {
+
+  const fragment =
+    window.location.hash
+      .replace(/^#/, "");
+
+  if (!fragment) {
+    return;
+  }
+
+  const parametres =
+    new URLSearchParams(
+      fragment
+    );
+
+  const jeton =
+    nettoyerTexte(
+      parametres.get(
+        "jeton"
+      )
+    );
+
+  const erreur =
+    nettoyerTexte(
+      parametres.get(
+        "erreur"
+      )
+    );
+
+  /*
+   * On retire immédiatement le jeton
+   * ou l'erreur de la barre d'adresse.
+   */
+
+  window.history.replaceState(
+    {},
+    "",
+    window.location.pathname +
+    window.location.search
+  );
+
+  if (jeton) {
+
+    enregistrerJeton(
+      jeton
+    );
+
+    afficherAdministration();
+
+    return;
+  }
+
+  if (erreur) {
+
+    supprimerJeton();
+
+    let message =
+      traductions[
+        langue
+      ].erreurConnexion;
+
+    if (
+      erreur ===
+      "identifiants"
+    ) {
+      message =
+        langue === "eu"
+          ? "Identifikatzailea edo pasahitza ez da zuzena."
+          : "Identifiant ou mot de passe incorrect.";
+    }
+
+    if (
+      erreur ===
+      "configuration"
+    ) {
+      message =
+        langue === "eu"
+          ? "Kudeatzailearen konexioa ez da konfiguratua."
+          : "La connexion administrateur n’est pas configurée.";
+    }
+
+    if (
+      erreur ===
+      "champs"
+    ) {
+      message =
+        traductions[
+          langue
+        ].champsObligatoires;
+    }
+
+    afficherConnexion();
+
+    afficherMessage(
+      message,
+      true
+    );
+  }
+}
+  
   /*
    * ========================================
    * SESSION
