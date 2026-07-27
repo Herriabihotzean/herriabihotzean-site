@@ -891,6 +891,17 @@
   b
 ) {
 
+  const categorieA =
+    nettoyerTexte(
+      a.categorie
+    ).toLowerCase();
+
+  const categorieB =
+    nettoyerTexte(
+      b.categorie
+    ).toLowerCase();
+
+
   const titreA =
     nettoyerTexte(
       a.titre
@@ -900,6 +911,62 @@
     nettoyerTexte(
       b.titre
     );
+
+
+  /*
+   * 1. LIVRES EN PREMIER
+   */
+
+  const estLivreA =
+    categorieA.includes(
+      "livre"
+    );
+
+  const estLivreB =
+    categorieB.includes(
+      "livre"
+    );
+
+
+  if (
+    estLivreA &&
+    !estLivreB
+  ) {
+    return -1;
+  }
+
+
+  if (
+    !estLivreA &&
+    estLivreB
+  ) {
+    return 1;
+  }
+
+
+  /*
+   * Si les deux sont des livres :
+   * ordre alphabétique.
+   */
+
+  if (
+    estLivreA &&
+    estLivreB
+  ) {
+
+    return titreA.localeCompare(
+      titreB,
+      "fr",
+      {
+        sensitivity: "base"
+      }
+    );
+  }
+
+
+  /*
+   * 2. DRAPEAUX
+   */
 
   const ordreDrapeaux = [
     "navarre 150",
@@ -926,53 +993,45 @@
     );
 
 
-  /*
-   * Aucun des deux n'est un drapeau :
-   * ce sont les livres.
-   * Classement alphabétique.
-   */
   if (
-    indexA === -1 &&
-    indexB === -1
+    indexA !== -1 &&
+    indexB !== -1
   ) {
-
-    return titreA.localeCompare(
-      titreB,
-      "fr",
-      {
-        sensitivity: "base"
-      }
-    );
+    return indexA - indexB;
   }
 
 
   /*
-   * A est un livre et B un drapeau :
-   * A passe avant.
+   * Un drapeau reconnu passe avant
+   * un éventuel autre produit.
    */
+
   if (
-    indexA === -1
+    indexA !== -1
   ) {
     return -1;
   }
 
 
-  /*
-   * B est un livre et A un drapeau :
-   * B passe avant.
-   */
   if (
-    indexB === -1
+    indexB !== -1
   ) {
     return 1;
   }
 
 
   /*
-   * Les deux sont des drapeaux :
-   * ordre imposé ci-dessus.
+   * Autres produits éventuels :
+   * ordre alphabétique.
    */
-  return indexA - indexB;
+
+  return titreA.localeCompare(
+    titreB,
+    "fr",
+    {
+      sensitivity: "base"
+    }
+  );
 }
 
 
