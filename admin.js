@@ -643,13 +643,18 @@ if (champOrigine) {
      * par HtmlService.
      */
 
+    const originesAutorisees = [
+      "https://script.google.com",
+      "https://script.googleusercontent.com"
+    ];
+
     if (
-      !elements.iframe ||
-      evenement.source !==
-        elements.iframe.contentWindow
+      !originesAutorisees.includes(
+        evenement.origin
+      )
     ) {
-      return;
-    }
+  return;
+}
 
     const donnees =
       evenement.data;
