@@ -318,11 +318,6 @@ if (champOrigine) {
       document.getElementById(
         "lien-retour"
       );
-
-    elements.iframe =
-      document.getElementById(
-        "reponse-admin"
-      );
   }
 
   /*
