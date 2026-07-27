@@ -142,6 +142,10 @@
       document.getElementById(
         "liste-produits"
       );
+    elements.chargementProduits =
+  document.getElementById(
+    "chargement-produits"
+  );
   }
 
 
@@ -324,6 +328,12 @@
         )
       );
 
+    const donneesAdmin =
+  nettoyerTexte(
+    parametres.get(
+      "admin"
+    )
+  );
 
     /*
      * On retire immédiatement le fragment
@@ -432,11 +442,224 @@
       return true;
     }
 
+    if (donneesAdmin) {
+
+  afficherAdministration();
+
+  traiterRetourAdministration(
+    donneesAdmin
+  );
+
+  return true;
+}
 
     return false;
   }
 
+function traiterRetourAdministration(
+  texte
+) {
 
+  try {
+
+    const json =
+      decoderBase64WebSafe(
+        texte
+      );
+
+    const donnees =
+      JSON.parse(
+        json
+      );
+
+    if (
+      donnees.succes !== true
+    ) {
+
+      if (
+        elements.chargementProduits
+      ) {
+        elements.chargementProduits.textContent =
+          donnees.message ||
+          "Impossible de charger les produits.";
+      }
+
+      return;
+    }
+
+    if (
+      donnees.type ===
+      "admin-produits"
+    ) {
+
+      afficherProduits(
+        donnees.produits || []
+      );
+    }
+
+  } catch (_) {
+
+    if (
+      elements.chargementProduits
+    ) {
+      elements.chargementProduits.textContent =
+        "Impossible de lire les données d’administration.";
+    }
+  }
+}
+
+
+function decoderBase64WebSafe(
+  texte
+) {
+
+  let base64 =
+    String(
+      texte || ""
+    )
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+
+  while (
+    base64.length % 4
+  ) {
+    base64 += "=";
+  }
+
+  const binaire =
+    atob(
+      base64
+    );
+
+  const octets =
+    Uint8Array.from(
+      binaire,
+      function (caractere) {
+        return caractere.charCodeAt(0);
+      }
+    );
+
+  return new TextDecoder(
+    "utf-8"
+  ).decode(
+    octets
+  );
+}
+
+
+function afficherProduits(
+  produits
+) {
+
+  if (
+    elements.chargementProduits
+  ) {
+    elements.chargementProduits.hidden =
+      true;
+  }
+
+  if (
+    !elements.listeProduits
+  ) {
+    return;
+  }
+
+  elements.listeProduits.innerHTML =
+    "";
+
+  if (
+    !Array.isArray(
+      produits
+    ) ||
+    produits.length === 0
+  ) {
+
+    elements.listeProduits.textContent =
+      "Aucun produit trouvé.";
+
+    return;
+  }
+
+  produits.forEach(
+    function (produit) {
+
+      const bloc =
+        document.createElement(
+          "article"
+        );
+
+      bloc.className =
+        "produit-admin";
+
+      const titre =
+        document.createElement(
+          "h3"
+        );
+
+      titre.textContent =
+        produit.titre ||
+        produit.id ||
+        "Produit";
+
+      bloc.appendChild(
+        titre
+      );
+
+      const lignes = [
+        "Stock : " +
+          Number(
+            produit.stockActuel || 0
+          ),
+
+        "Statut : " +
+          (
+            produit.statut ||
+            "—"
+          ),
+
+        "Prix : " +
+          Number(
+            produit.prix || 0
+          ).toLocaleString(
+            "fr-FR",
+            {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            }
+          ) +
+          " €",
+
+        "Poids : " +
+          Number(
+            produit.poids || 0
+          ) +
+          " g"
+      ];
+
+      lignes.forEach(
+        function (texte) {
+
+          const p =
+            document.createElement(
+              "p"
+            );
+
+          p.textContent =
+            texte;
+
+          bloc.appendChild(
+            p
+          );
+        }
+      );
+
+      elements.listeProduits.appendChild(
+        bloc
+      );
+    }
+  );
+}
+  
   /*
    * ========================================
    * AFFICHAGE
@@ -478,29 +701,27 @@
 
   function afficherAdministration() {
 
-    if (
-      elements.blocConnexion
-    ) {
-
-      elements.blocConnexion.hidden =
-        true;
-    }
-
-
-    if (
-      elements.blocAdministration
-    ) {
-
-      elements.blocAdministration.hidden =
-        false;
-    }
-
-
-    afficherMessage(
-      "",
-      false
-    );
+  if (
+    elements.blocConnexion
+  ) {
+    elements.blocConnexion.hidden =
+      true;
   }
+
+  if (
+    elements.blocAdministration
+  ) {
+    elements.blocAdministration.hidden =
+      false;
+  }
+
+  afficherMessage(
+    "",
+    false
+  );
+
+  demanderProduits();
+}
 
 
   /*
@@ -558,6 +779,110 @@
     }
   }
 
+  function demanderProduits() {
+
+  const jeton =
+    lireJeton();
+
+  if (!jeton) {
+    afficherConnexion();
+    return;
+  }
+
+  const apiUrl =
+    obtenirApiUrl();
+
+  if (!apiUrl) {
+
+    if (
+      elements.chargementProduits
+    ) {
+      elements.chargementProduits.textContent =
+        "L’adresse de l’API Apps Script est absente.";
+    }
+
+    return;
+  }
+
+  if (
+    elements.chargementProduits
+  ) {
+    elements.chargementProduits.hidden =
+      false;
+
+    elements.chargementProduits.textContent =
+      "Chargement des produits…";
+  }
+
+  const formulaire =
+    document.createElement(
+      "form"
+    );
+
+  formulaire.method =
+    "POST";
+
+  formulaire.action =
+    apiUrl;
+
+  formulaire.target =
+    "_top";
+
+  formulaire.style.display =
+    "none";
+
+  ajouterChamp(
+    formulaire,
+    "type",
+    "admin-produits"
+  );
+
+  ajouterChamp(
+    formulaire,
+    "jeton",
+    jeton
+  );
+
+  ajouterChamp(
+    formulaire,
+    "retourAdmin",
+    URL_ADMIN
+  );
+
+  document.body.appendChild(
+    formulaire
+  );
+
+  formulaire.submit();
+}
+
+
+function ajouterChamp(
+  formulaire,
+  nom,
+  valeur
+) {
+
+  const champ =
+    document.createElement(
+      "input"
+    );
+
+  champ.type =
+    "hidden";
+
+  champ.name =
+    nom;
+
+  champ.value =
+    valeur;
+
+  formulaire.appendChild(
+    champ
+  );
+}
+
+  
 
   /*
    * ========================================
