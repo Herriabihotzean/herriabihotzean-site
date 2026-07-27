@@ -1,9 +1,5 @@
 <!DOCTYPE html>
-<html
-  lang="fr"
-  data-title-fr="Administration — Herria Bihotzean"
-  data-title-eu="Kudeaketa — Herria Bihotzean"
->
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
 
@@ -84,11 +80,6 @@
 
       text-align:
         center;
-    }
-
-    .bloc-titre {
-      padding:
-        30px 24px;
     }
 
     h1 {
@@ -219,21 +210,17 @@
         2px;
     }
 
-    .bouton-principal {
-      display:
-        block;
+    /* =========================
+       BOUTONS
+       ========================= */
 
-      width:
-        100%;
-
+    .bouton-principal,
+    .bouton-secondaire {
       min-height:
-        52px;
-
-      margin-top:
-        10px;
+        50px;
 
       padding:
-        13px 18px;
+        12px 18px;
 
       border:
         1px solid white;
@@ -259,8 +246,18 @@
         pointer;
     }
 
+    .bouton-principal {
+      display:
+        block;
+
+      width:
+        100%;
+    }
+
     .bouton-principal:hover,
-    .bouton-principal:focus-visible {
+    .bouton-secondaire:hover,
+    .bouton-principal:focus-visible,
+    .bouton-secondaire:focus-visible {
       background:
         white;
 
@@ -271,7 +268,8 @@
         none;
     }
 
-    .bouton-principal:disabled {
+    .bouton-principal:disabled,
+    .bouton-secondaire:disabled {
       opacity:
         0.55;
 
@@ -311,7 +309,7 @@
     }
 
     /* =========================
-       CONNEXION RÉUSSIE
+       ADMINISTRATION
        ========================= */
 
     .administration-ouverte {
@@ -321,10 +319,7 @@
 
     .administration-ouverte h2 {
       margin:
-        0 0 20px;
-
-      font-size:
-        1.7rem;
+        0 0 18px;
     }
 
     .administration-ouverte p {
@@ -334,7 +329,7 @@
 
     .info-session {
       margin:
-        25px 0;
+        24px 0;
 
       padding:
         17px;
@@ -360,15 +355,55 @@
         );
     }
 
-    .bouton-deconnexion {
+    /* =========================
+       TABLEAU DE BORD
+       ========================= */
+
+    #tableau-bord {
+      margin-top:
+        32px;
+
+      text-align:
+        left;
+    }
+
+    #tableau-bord h2 {
+      text-align:
+        center;
+    }
+
+    .outils-admin {
       display:
-        inline-block;
+        flex;
+
+      justify-content:
+        center;
+
+      gap:
+        12px;
+
+      flex-wrap:
+        wrap;
+
+      margin:
+        22px 0;
+    }
+
+    .produit-admin {
+      margin-bottom:
+        14px;
 
       padding:
-        11px 18px;
+        18px;
 
       border:
-        1px solid white;
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.25
+        );
 
       border-radius:
         7px;
@@ -378,25 +413,18 @@
           0,
           0,
           0,
-          0.32
+          0.18
         );
-
-      color:
-        white;
-
-      font-weight:
-        bold;
-
-      cursor:
-        pointer;
     }
 
-    .bouton-deconnexion:hover {
-      background:
-        white;
+    .produit-admin h3 {
+      margin:
+        0 0 12px;
+    }
 
-      color:
-        #222;
+    .produit-admin p {
+      margin:
+        6px 0;
     }
 
     /* =========================
@@ -475,76 +503,6 @@
         center;
     }
 
-    /* =========================
-   PRODUITS
-   ========================= */
-
-#tableau-bord {
-  margin-top: 32px;
-  text-align: left;
-}
-
-#titre-produits {
-  margin:
-    0 0 22px;
-
-  text-align:
-    center;
-}
-
-.produit-admin {
-  margin-bottom:
-    14px;
-
-  padding:
-    18px;
-
-  border:
-    1px solid
-    rgba(
-      255,
-      255,
-      255,
-      0.25
-    );
-
-  border-radius:
-    7px;
-
-  background:
-    rgba(
-      0,
-      0,
-      0,
-      0.18
-    );
-}
-
-.produit-admin:last-child {
-  margin-bottom: 0;
-}
-
-.produit-admin h3 {
-  margin:
-    0 0 12px;
-
-  font-size:
-    1.2rem;
-}
-
-.produit-admin p {
-  margin:
-    6px 0;
-}
-
-.stock-faible {
-  font-weight: bold;
-}
-
-.stock-nul {
-  font-weight: bold;
-}
-    
     @media (
       max-width: 700px
     ) {
@@ -564,24 +522,15 @@
       }
     }
   </style>
-
-  <link
-    href="langues.css"
-    rel="stylesheet"
-  >
 </head>
 
 <body>
 
   <header class="entete">
 
-    <div class="bloc-titre">
-
-      <h1 id="titre-page">
-        Administration
-      </h1>
-
-    </div>
+    <h1>
+      Administration
+    </h1>
 
   </header>
 
@@ -596,10 +545,7 @@
       class="bloc"
     >
 
-      <p
-        id="introduction"
-        class="introduction"
-      >
+      <p class="introduction">
         Identifiez-vous pour accéder à
         l’administration de la boutique.
       </p>
@@ -607,6 +553,7 @@
       <form
         id="formulaire-connexion"
         method="post"
+        target="_top"
       >
 
         <input
@@ -619,22 +566,12 @@
           id="retour-admin"
           type="hidden"
           name="retourAdmin"
-          value=""
-        >
-        
-        <input
-          id="origine-admin"
-          type="hidden"
-          name="origine"
-          value=""
+          value="https://herriabihotzean.github.io/herriabihotzean-site/admin.html"
         >
 
         <div class="champ">
 
-          <label
-            id="label-identifiant"
-            for="identifiant"
-          >
+          <label for="identifiant">
             Identifiant
           </label>
 
@@ -650,10 +587,7 @@
 
         <div class="champ">
 
-          <label
-            id="label-mot-de-passe"
-            for="mot-de-passe"
-          >
+          <label for="mot-de-passe">
             Mot de passe
           </label>
 
@@ -685,8 +619,9 @@
 
     </section>
 
+
     <!-- =========================
-         SESSION OUVERTE
+         ADMINISTRATION OUVERTE
          ========================= -->
 
     <section
@@ -695,63 +630,60 @@
       hidden
     >
 
-      <h2 id="titre-connecte">
+      <h2>
         Administration ouverte
       </h2>
 
-      <p id="texte-connecte">
+      <p>
         La connexion administrateur a réussi.
       </p>
 
       <div class="info-session">
 
-        <p id="texte-session">
-          Votre session restera active tant
-          qu’elle n’aura pas expiré ou que vous
-          ne vous serez pas déconnecté.
+        <p>
+          Votre session administrateur est active.
         </p>
 
       </div>
 
-      <!--
-        Le futur tableau de bord sera inséré ici.
-      -->
 
       <div id="tableau-bord">
 
-  <h2 id="titre-produits">
-    Produits et stocks
-  </h2>
+        <h2>
+          Produits et stocks
+        </h2>
 
-  <p
-    id="chargement-produits"
-    class="message"
-  >
-    Chargement des produits…
-  </p>
+        <p class="introduction">
+          La connexion est opérationnelle.
+          Nous raccorderons ici la gestion des
+          produits, stocks et mouvements.
+        </p>
 
-  <div
-    id="liste-produits"
-  ></div>
+        <div
+          id="liste-produits"
+        ></div>
 
-</div>
+      </div>
 
-      <button
-        id="bouton-deconnexion"
-        class="bouton-deconnexion"
-        type="button"
-      >
-        Se déconnecter
-      </button>
+
+      <div class="outils-admin">
+
+        <button
+          id="bouton-deconnexion"
+          class="bouton-secondaire"
+          type="button"
+        >
+          Se déconnecter
+        </button>
+
+      </div>
 
     </section>
 
+
     <div class="retour">
 
-      <a
-        id="lien-retour"
-        href="index.html"
-      >
+      <a href="index.html">
         ← Retour à l'accueil
       </a>
 
@@ -759,17 +691,13 @@
 
   </main>
 
-  <!--
-    Apps Script répond dans cette iframe.
-    Elle reste invisible.
-  -->
 
   <footer>
     © Herria Bihotzean
   </footer>
 
+
   <script src="config.js"></script>
-  <script src="langues.js"></script>
   <script src="admin.js"></script>
 
 </body>
