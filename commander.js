@@ -311,13 +311,14 @@
       "titre-mondial-relay",
       "explication-mondial-relay",
       "bouton-carte-mondial-relay",
+      "indication-recherche-mondial",
       "label-point-relais-nom",
       "label-point-relais-adresse",
       "label-point-relais-code-postal",
       "label-point-relais-ville",
       "label-point-relais-numero",
       "note-point-relais-numero",
-
+      
       "titre-observation",
       "label-observation",
 
@@ -443,6 +444,81 @@
         "submit",
         traiterValidation
       );
+      const boutonCarte =
+  elements[
+    "bouton-carte-mondial-relay"
+  ];
+
+if (boutonCarte) {
+  boutonCarte.addEventListener(
+    "click",
+    function (evenement) {
+      const champCodePostal =
+        document.getElementById(
+          "code-postal"
+        );
+
+      const champVille =
+        document.getElementById(
+          "ville"
+        );
+
+      const codePostal =
+        nettoyerTexte(
+          champCodePostal
+            ? champCodePostal.value
+            : ""
+        );
+
+      const ville =
+        nettoyerTexte(
+          champVille
+            ? champVille.value
+            : ""
+        );
+
+      if (!codePostal) {
+        evenement.preventDefault();
+
+        alert(
+          langue === "eu"
+            ? "Lehenik, bete posta kodea."
+            : "Veuillez d’abord renseigner le code postal."
+        );
+
+        if (champCodePostal) {
+          champCodePostal.focus();
+        }
+
+        return;
+      }
+
+      const recherche =
+        ville
+          ? codePostal +
+            " " +
+            ville.toUpperCase()
+          : codePostal;
+
+      const indication =
+        elements[
+          "indication-recherche-mondial"
+        ];
+
+      if (indication) {
+        indication.textContent =
+          langue === "eu"
+            ? "Bilatu Mondial Relay-ren orrian : " +
+              recherche
+            : "Recherchez sur la page Mondial Relay : " +
+              recherche;
+
+        indication.hidden =
+          false;
+      }
+    }
+  );
+}
     }
   }
 
