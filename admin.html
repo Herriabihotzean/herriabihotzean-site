@@ -55,6 +55,7 @@
     button,
     input,
     textarea,
+    select,
     a {
       font: inherit;
     }
@@ -185,7 +186,8 @@
     }
 
     input,
-    textarea {
+    textarea,
+    select {
 
       width: 100%;
 
@@ -208,7 +210,8 @@
     }
 
     input:focus,
-    textarea:focus {
+    textarea:focus,
+    select:focus {
 
       outline:
         2px solid
@@ -921,6 +924,135 @@
             type="submit"
           >
             Valider le réapprovisionnement
+          </button>
+        </div>
+
+      </form>
+
+    </section>
+
+  </div>
+
+
+  <!-- =========================
+       SORTIE MANUELLE
+       ========================= -->
+
+  <div
+    id="fond-sortie-manuelle"
+    class="fond-modal"
+    hidden
+  >
+
+    <section
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titre-sortie-manuelle"
+    >
+
+      <h2 id="titre-sortie-manuelle">
+        Sortie manuelle
+      </h2>
+
+      <p
+        id="nom-produit-sortie-manuelle"
+        class="nom-produit-modal"
+      ></p>
+
+      <p
+        id="stock-produit-sortie-manuelle"
+        class="stock-modal"
+      ></p>
+
+      <form id="formulaire-sortie-manuelle">
+
+        <div class="champ">
+          <label for="quantite-sortie-manuelle">
+            Quantité sortie *
+          </label>
+          <input
+            id="quantite-sortie-manuelle"
+            type="number"
+            min="1"
+            step="1"
+            required
+          >
+        </div>
+
+        <div class="champ">
+          <label for="type-sortie-manuelle">
+            Type de sortie *
+          </label>
+          <select
+            id="type-sortie-manuelle"
+            required
+          >
+            <option value="">
+              — Choisir —
+            </option>
+            <option value="Vente directe">
+              Vente directe
+            </option>
+            <option value="Don">
+              Don
+            </option>
+            <option value="Perte / détérioration">
+              Perte / détérioration
+            </option>
+            <option value="Correction de stock">
+              Correction de stock
+            </option>
+            <option value="Autre">
+              Autre
+            </option>
+          </select>
+        </div>
+
+        <div class="champ">
+          <label for="montant-sortie-manuelle">
+            Montant encaissé (€)
+          </label>
+          <input
+            id="montant-sortie-manuelle"
+            type="number"
+            min="0"
+            step="0.01"
+            value="0"
+          >
+        </div>
+
+        <div class="champ">
+          <label for="observation-sortie-manuelle">
+            Observation
+          </label>
+          <textarea
+            id="observation-sortie-manuelle"
+            placeholder="Ex. : vente en main propre, exemplaire offert, produit détérioré…"
+          ></textarea>
+        </div>
+
+        <p
+          id="message-sortie-manuelle"
+          class="message"
+          aria-live="polite"
+        ></p>
+
+        <div class="actions-modal">
+          <button
+            id="annuler-sortie-manuelle"
+            class="bouton-secondaire"
+            type="button"
+          >
+            Annuler
+          </button>
+
+          <button
+            id="valider-sortie-manuelle"
+            class="bouton-principal"
+            type="submit"
+          >
+            Valider la sortie
           </button>
         </div>
 
