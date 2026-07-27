@@ -475,6 +475,76 @@
         center;
     }
 
+    /* =========================
+   PRODUITS
+   ========================= */
+
+#tableau-bord {
+  margin-top: 32px;
+  text-align: left;
+}
+
+#titre-produits {
+  margin:
+    0 0 22px;
+
+  text-align:
+    center;
+}
+
+.produit-admin {
+  margin-bottom:
+    14px;
+
+  padding:
+    18px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.25
+    );
+
+  border-radius:
+    7px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.18
+    );
+}
+
+.produit-admin:last-child {
+  margin-bottom: 0;
+}
+
+.produit-admin h3 {
+  margin:
+    0 0 12px;
+
+  font-size:
+    1.2rem;
+}
+
+.produit-admin p {
+  margin:
+    6px 0;
+}
+
+.stock-faible {
+  font-weight: bold;
+}
+
+.stock-nul {
+  font-weight: bold;
+}
+    
     @media (
       max-width: 700px
     ) {
@@ -647,10 +717,24 @@
         Le futur tableau de bord sera inséré ici.
       -->
 
-      <div
-        id="tableau-bord"
-        hidden
-      ></div>
+      <div id="tableau-bord">
+
+  <h2 id="titre-produits">
+    Produits et stocks
+  </h2>
+
+  <p
+    id="chargement-produits"
+    class="message"
+  >
+    Chargement des produits…
+  </p>
+
+  <div
+    id="liste-produits"
+  ></div>
+
+</div>
 
       <button
         id="bouton-deconnexion"
