@@ -76,7 +76,28 @@
 
       delaiDepasse:
         "Apps Script n’a pas répondu. Veuillez réessayer."
-    },
+
+      produits:
+        "Produits et stocks",
+
+      chargementProduits:
+        "Chargement des produits…",
+
+      aucunProduit:
+        "Aucun produit n’a été trouvé.",
+
+      stock:
+        "Stock",
+
+      statut:
+        "Statut",
+
+      prix:
+        "Prix",
+
+      poids:
+        "Poids"
+          },
 
     eu: {
       titreDocument:
@@ -129,6 +150,27 @@
 
       delaiDepasse:
         "Apps Script-ek ez du erantzun. Saia zaitez berriz."
+
+      produits:
+        "Salgaiak eta stockak",
+
+      chargementProduits:
+        "Salgaiak kargatzen…",
+
+      aucunProduit:
+        "Ez da salgairik aurkitu.",
+
+      stock:
+        "Stocka",
+
+      statut:
+        "Egoera",
+
+      prix:
+        "Prezioa",
+
+      poids:
+        "Pisua"
     }
   };
 
@@ -227,6 +269,17 @@ if (champOrigine) {
      * d'administration.
      */
 
+    elements.titreProduits.textContent =
+      t.produits;
+
+    if (
+      elements.chargementProduits &&
+      !elements.chargementProduits.hidden
+    ) {
+      elements.chargementProduits.textContent =
+        t.chargementProduits;
+    }
+    
     const jeton =
       lireJeton();
 
@@ -318,6 +371,26 @@ if (champOrigine) {
       document.getElementById(
         "lien-retour"
       );
+
+    elements.tableauBord =
+  document.getElementById(
+    "tableau-bord"
+  );
+
+elements.titreProduits =
+  document.getElementById(
+    "titre-produits"
+  );
+
+elements.chargementProduits =
+  document.getElementById(
+    "chargement-produits"
+  );
+
+elements.listeProduits =
+  document.getElementById(
+    "liste-produits"
+  );
   }
 
   /*
@@ -632,6 +705,122 @@ if (champOrigine) {
       false;
   }
 
+    if (
+      !elements.listeProduits.dataset.charge
+    ) {
+      demanderProduits();
+    }
+
+function demanderProduits() {
+
+  const jeton =
+    lireJeton();
+
+  if (!jeton) {
+    afficherConnexion();
+    return;
+  }
+
+  const apiUrl =
+    window.HB_CONFIG &&
+    window.HB_CONFIG.API_URL
+      ? nettoyerTexte(
+          window.HB_CONFIG.API_URL
+        )
+      : "";
+
+  if (!apiUrl) {
+    elements.chargementProduits.textContent =
+      traductions[
+        langue
+      ].apiAbsente;
+
+    return;
+  }
+
+  elements.chargementProduits.hidden =
+    false;
+
+  elements.chargementProduits.textContent =
+    traductions[
+      langue
+    ].chargementProduits;
+
+  /*
+   * Création d'un formulaire POST temporaire.
+   */
+
+  const formulaire =
+    document.createElement(
+      "form"
+    );
+
+  formulaire.method =
+    "POST";
+
+  formulaire.action =
+    apiUrl;
+
+  formulaire.style.display =
+    "none";
+
+  ajouterChamp(
+    formulaire,
+    "type",
+    "admin-produits"
+  );
+
+  ajouterChamp(
+    formulaire,
+    "jeton",
+    jeton
+  );
+
+  ajouterChamp(
+    formulaire,
+    "retourAdmin",
+    window.location.origin +
+      window.location.pathname +
+      "?lang=" +
+      encodeURIComponent(
+        langue
+      )
+  );
+
+  document.body.appendChild(
+    formulaire
+  );
+
+  formulaire.submit();
+}
+
+function ajouterChamp(
+  formulaire,
+  nom,
+  valeur
+) {
+
+  const champ =
+    document.createElement(
+      "input"
+    );
+
+  champ.type =
+    "hidden";
+
+  champ.name =
+    nom;
+
+  champ.value =
+    valeur;
+
+  formulaire.appendChild(
+    champ
+  );
+}
+
+
+
   function afficherMessage(
     message,
     erreur
@@ -663,6 +852,232 @@ function traiterRetourConnexion() {
   if (!fragment) {
     return;
   }
+
+  const parametresAdmin =
+  new URLSearchParams(
+    fragment
+  );
+
+const donneesAdmin =
+  parametresAdmin.get(
+    "admin"
+  );
+
+if (donneesAdmin) {
+
+  window.history.replaceState(
+    {},
+    "",
+    window.location.pathname +
+    window.location.search
+  );
+
+  traiterRetourAdministration(
+    donneesAdmin
+  );
+
+  return;
+}
+
+function traiterRetourAdministration(
+  texte
+) {
+
+  try {
+
+    const json =
+      decoderBase64WebSafe(
+        texte
+      );
+
+    const donnees =
+      JSON.parse(
+        json
+      );
+
+    if (
+      donnees.succes !== true
+    ) {
+
+      elements.chargementProduits.hidden =
+        false;
+
+      elements.chargementProduits.textContent =
+        donnees.message ||
+        "Erreur.";
+
+      return;
+    }
+
+    if (
+      donnees.type ===
+      "admin-produits"
+    ) {
+      afficherProduits(
+        donnees.produits || []
+      );
+    }
+
+  } catch (erreur) {
+
+    elements.chargementProduits.hidden =
+      false;
+
+    elements.chargementProduits.textContent =
+      "Impossible de lire les données d’administration.";
+  }
+}
+
+function decoderBase64WebSafe(
+  texte
+) {
+
+  let base64 =
+    String(
+      texte || ""
+    )
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+
+  while (
+    base64.length % 4
+  ) {
+    base64 += "=";
+  }
+
+  const binaire =
+    atob(
+      base64
+    );
+
+  const octets =
+    Uint8Array.from(
+      binaire,
+      function (caractere) {
+        return caractere.charCodeAt(0);
+      }
+    );
+
+  return new TextDecoder()
+    .decode(
+      octets
+    );
+}
+
+function afficherProduits(
+  produits
+) {
+
+  elements.chargementProduits.hidden =
+    true;
+
+  elements.listeProduits.innerHTML =
+    "";
+
+  elements.listeProduits.dataset.charge =
+    "1";
+
+  if (
+    !Array.isArray(
+      produits
+    ) ||
+    produits.length === 0
+  ) {
+
+    elements.listeProduits.textContent =
+      traductions[
+        langue
+      ].aucunProduit;
+
+    return;
+  }
+
+  produits.forEach(
+    function (produit) {
+
+      const bloc =
+        document.createElement(
+          "article"
+        );
+
+      bloc.className =
+        "produit-admin";
+
+      const titre =
+        document.createElement(
+          "h3"
+        );
+
+      titre.textContent =
+        produit.titre ||
+        produit.id ||
+        "Produit";
+
+      bloc.appendChild(
+        titre
+      );
+
+      const stock =
+        Number(
+          produit.stockActuel || 0
+        );
+
+      const lignes = [
+        traductions[langue].stock +
+          " : " +
+          stock,
+
+        traductions[langue].statut +
+          " : " +
+          (
+            produit.statut ||
+            "—"
+          ),
+
+        traductions[langue].prix +
+          " : " +
+          Number(
+            produit.prix || 0
+          ).toLocaleString(
+            "fr-FR",
+            {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            }
+          ) +
+          " €",
+
+        traductions[langue].poids +
+          " : " +
+          Number(
+            produit.poids || 0
+          ) +
+          " g"
+      ];
+
+      lignes.forEach(
+        function (texte) {
+
+          const p =
+            document.createElement(
+              "p"
+            );
+
+          p.textContent =
+            texte;
+
+          bloc.appendChild(
+            p
+          );
+        }
+      );
+
+      elements.listeProduits.appendChild(
+        bloc
+      );
+    }
+  );
+}
 
   const parametres =
     new URLSearchParams(
