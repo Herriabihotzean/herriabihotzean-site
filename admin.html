@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html
+  lang="fr"
+  data-title-fr="Administration — Herria Bihotzean"
+  data-title-eu="Kudeaketa — Herria Bihotzean"
+>
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Administration — Herria Bihotzean
+  </title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      color: white;
+
+      background-image:
+        linear-gradient(
+          rgba(0, 0, 0, 0.52),
+          rgba(0, 0, 0, 0.70)
+        ),
+        url("fond-herriabihotzean.jpg");
+
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
+    button,
+    input,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width:
+        min(
+          760px,
+          calc(100% - 28px)
+        );
+
+      margin:
+        0 auto;
+    }
+
+    /* =========================
+       EN-TÊTE
+       ========================= */
+
+    .entete {
+      padding:
+        46px 16px 26px;
+
+      text-align:
+        center;
+    }
+
+    .bloc-titre {
+      padding:
+        30px 24px;
+    }
+
+    h1 {
+      margin: 0;
+
+      font-size:
+        clamp(
+          2rem,
+          6vw,
+          3.8rem
+        );
+
+      letter-spacing:
+        0.05em;
+
+      text-transform:
+        uppercase;
+    }
+
+    main {
+      padding-bottom:
+        40px;
+    }
+
+    /* =========================
+       BLOCS
+       ========================= */
+
+    .bloc {
+      margin-bottom:
+        24px;
+
+      padding:
+        30px;
+
+      border:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.55
+        );
+
+      border-radius:
+        8px;
+
+      background:
+        rgba(
+          20,
+          55,
+          32,
+          0.92
+        );
+
+      box-shadow:
+        0 8px 28px
+        rgba(
+          0,
+          0,
+          0,
+          0.28
+        );
+    }
+
+    .introduction {
+      margin:
+        0 0 26px;
+
+      line-height:
+        1.6;
+
+      text-align:
+        center;
+    }
+
+    /* =========================
+       FORMULAIRE
+       ========================= */
+
+    .champ {
+      margin-bottom:
+        19px;
+    }
+
+    label {
+      display:
+        block;
+
+      margin-bottom:
+        7px;
+
+      font-weight:
+        bold;
+    }
+
+    input {
+      width:
+        100%;
+
+      padding:
+        12px 13px;
+
+      border:
+        1px solid #ddd;
+
+      border-radius:
+        6px;
+
+      background:
+        white;
+
+      color:
+        #222;
+    }
+
+    input:focus {
+      outline:
+        2px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.65
+        );
+
+      outline-offset:
+        2px;
+    }
+
+    .bouton-principal {
+      display:
+        block;
+
+      width:
+        100%;
+
+      min-height:
+        52px;
+
+      margin-top:
+        10px;
+
+      padding:
+        13px 18px;
+
+      border:
+        1px solid white;
+
+      border-radius:
+        7px;
+
+      background:
+        rgba(
+          0,
+          0,
+          0,
+          0.32
+        );
+
+      color:
+        white;
+
+      font-weight:
+        bold;
+
+      cursor:
+        pointer;
+    }
+
+    .bouton-principal:hover,
+    .bouton-principal:focus-visible {
+      background:
+        white;
+
+      color:
+        #222;
+
+      outline:
+        none;
+    }
+
+    .bouton-principal:disabled {
+      opacity:
+        0.55;
+
+      cursor:
+        not-allowed;
+    }
+
+    /* =========================
+       MESSAGE
+       ========================= */
+
+    .message {
+      min-height:
+        24px;
+
+      margin:
+        18px 0 0;
+
+      line-height:
+        1.45;
+
+      text-align:
+        center;
+
+      font-weight:
+        bold;
+    }
+
+    .message-erreur {
+      color:
+        #ffd8d8;
+    }
+
+    .message-succes {
+      color:
+        #dcffdf;
+    }
+
+    /* =========================
+       CONNEXION RÉUSSIE
+       ========================= */
+
+    .administration-ouverte {
+      text-align:
+        center;
+    }
+
+    .administration-ouverte h2 {
+      margin:
+        0 0 20px;
+
+      font-size:
+        1.7rem;
+    }
+
+    .administration-ouverte p {
+      line-height:
+        1.6;
+    }
+
+    .info-session {
+      margin:
+        25px 0;
+
+      padding:
+        17px;
+
+      border:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.25
+        );
+
+      border-radius:
+        7px;
+
+      background:
+        rgba(
+          0,
+          0,
+          0,
+          0.18
+        );
+    }
+
+    .bouton-deconnexion {
+      display:
+        inline-block;
+
+      padding:
+        11px 18px;
+
+      border:
+        1px solid white;
+
+      border-radius:
+        7px;
+
+      background:
+        rgba(
+          0,
+          0,
+          0,
+          0.32
+        );
+
+      color:
+        white;
+
+      font-weight:
+        bold;
+
+      cursor:
+        pointer;
+    }
+
+    .bouton-deconnexion:hover {
+      background:
+        white;
+
+      color:
+        #222;
+    }
+
+    /* =========================
+       RETOUR
+       ========================= */
+
+    .retour {
+      margin:
+        30px 0;
+
+      text-align:
+        center;
+    }
+
+    .retour a {
+      display:
+        inline-block;
+
+      padding:
+        11px 18px;
+
+      border:
+        1px solid white;
+
+      border-radius:
+        7px;
+
+      background:
+        rgba(
+          0,
+          0,
+          0,
+          0.32
+        );
+
+      color:
+        white;
+
+      font-weight:
+        bold;
+
+      text-decoration:
+        none;
+    }
+
+    .retour a:hover {
+      background:
+        white;
+
+      color:
+        #222;
+    }
+
+    footer {
+      padding:
+        22px 14px 28px;
+
+      border-top:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.25
+        );
+
+      background:
+        rgba(
+          0,
+          0,
+          0,
+          0.58
+        );
+
+      text-align:
+        center;
+    }
+
+    @media (
+      max-width: 700px
+    ) {
+      body {
+        background-attachment:
+          scroll;
+      }
+
+      .entete {
+        padding:
+          28px 8px 18px;
+      }
+
+      .bloc {
+        padding:
+          22px 16px;
+      }
+    }
+  </style>
+
+  <link
+    href="langues.css"
+    rel="stylesheet"
+  >
+</head>
+
+<body>
+
+  <header class="entete">
+
+    <div class="bloc-titre">
+
+      <h1 id="titre-page">
+        Administration
+      </h1>
+
+    </div>
+
+  </header>
+
+  <main class="page">
+
+    <!-- =========================
+         CONNEXION
+         ========================= -->
+
+    <section
+      id="bloc-connexion"
+      class="bloc"
+    >
+
+      <p
+        id="introduction"
+        class="introduction"
+      >
+        Identifiez-vous pour accéder à
+        l’administration de la boutique.
+      </p>
+
+      <form
+        id="formulaire-connexion"
+        method="post"
+        target="reponse-admin"
+      >
+
+        <input
+          type="hidden"
+          name="type"
+          value="admin-login"
+        >
+
+        <div class="champ">
+
+          <label
+            id="label-identifiant"
+            for="identifiant"
+          >
+            Identifiant
+          </label>
+
+          <input
+            id="identifiant"
+            name="identifiant"
+            type="text"
+            autocomplete="username"
+            required
+          >
+
+        </div>
+
+        <div class="champ">
+
+          <label
+            id="label-mot-de-passe"
+            for="mot-de-passe"
+          >
+            Mot de passe
+          </label>
+
+          <input
+            id="mot-de-passe"
+            name="motDePasse"
+            type="password"
+            autocomplete="current-password"
+            required
+          >
+
+        </div>
+
+        <button
+          id="bouton-connexion"
+          class="bouton-principal"
+          type="submit"
+        >
+          Se connecter
+        </button>
+
+        <p
+          id="message-connexion"
+          class="message"
+          aria-live="polite"
+        ></p>
+
+      </form>
+
+    </section>
+
+    <!-- =========================
+         SESSION OUVERTE
+         ========================= -->
+
+    <section
+      id="bloc-administration"
+      class="bloc administration-ouverte"
+      hidden
+    >
+
+      <h2 id="titre-connecte">
+        Administration ouverte
+      </h2>
+
+      <p id="texte-connecte">
+        La connexion administrateur a réussi.
+      </p>
+
+      <div class="info-session">
+
+        <p id="texte-session">
+          Votre session restera active tant
+          qu’elle n’aura pas expiré ou que vous
+          ne vous serez pas déconnecté.
+        </p>
+
+      </div>
+
+      <!--
+        Le futur tableau de bord sera inséré ici.
+      -->
+
+      <div
+        id="tableau-bord"
+        hidden
+      ></div>
+
+      <button
+        id="bouton-deconnexion"
+        class="bouton-deconnexion"
+        type="button"
+      >
+        Se déconnecter
+      </button>
+
+    </section>
+
+    <div class="retour">
+
+      <a
+        id="lien-retour"
+        href="index.html"
+      >
+        ← Retour à l'accueil
+      </a>
+
+    </div>
+
+  </main>
+
+  <!--
+    Apps Script répond dans cette iframe.
+    Elle reste invisible.
+  -->
+
+  <iframe
+    id="reponse-admin"
+    name="reponse-admin"
+    title="Réponse de connexion"
+    hidden
+  ></iframe>
+
+  <footer>
+    © Herria Bihotzean
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="langues.js"></script>
+  <script src="admin.js"></script>
+
+</body>
+</html>
