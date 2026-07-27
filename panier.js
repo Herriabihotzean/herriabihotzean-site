@@ -111,7 +111,7 @@
         "Saskia hustu",
 
       retour:
-        "← Saltokirat itzuli",
+        "← Saltokiarat itzuli",
 
       confirmationVider:
         "Saskia osoki hustu nahi duzu ?"
