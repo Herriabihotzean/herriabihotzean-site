@@ -11,8 +11,19 @@
   const URL_ADMIN =
     "https://herriabihotzean.github.io/herriabihotzean-site/admin.html";
 
+
   const CLE_SESSION_ADMIN =
     "herria_admin_session";
+
+
+  /*
+   * ========================================
+   * ÉTAT
+   * ========================================
+   */
+
+  let demandeProduitsEnCours =
+    false;
 
 
   /*
@@ -41,48 +52,58 @@
 
     memoriserElements();
 
+
     /*
      * Adresse de retour fixe.
-     *
-     * Plus aucun paramètre de langue.
      */
     if (
       elements.retourAdmin
     ) {
+
       elements.retourAdmin.value =
         URL_ADMIN;
     }
+
 
     installerEvenements();
 
 
     /*
-     * Apps Script peut nous renvoyer :
+     * On traite d'abord un éventuel retour
+     * d'Apps Script :
      *
      * #jeton=...
-     *
-     * ou
-     *
      * #erreur=...
+     * #admin=...
+     *
+     * Si un retour est traité,
+     * on NE poursuit PAS l'initialisation.
      */
     const retourTraite =
-      traiterRetourConnexion();
+      traiterRetourAppsScript();
 
-    if (retourTraite) {
+
+    if (
+      retourTraite
+    ) {
+
       return;
     }
 
 
     /*
-     * Si la session existe déjà dans
-     * cet onglet, on ouvre directement
-     * l'administration.
+     * Si la page est ouverte normalement
+     * et qu'un jeton existe déjà,
+     * on ouvre l'administration et
+     * recharge les produits.
      */
     if (
       lireJeton()
     ) {
 
-      afficherAdministration();
+      afficherAdministration(
+        true
+      );
 
     } else {
 
@@ -98,54 +119,65 @@
         "bloc-connexion"
       );
 
+
     elements.formulaire =
       document.getElementById(
         "formulaire-connexion"
       );
+
 
     elements.retourAdmin =
       document.getElementById(
         "retour-admin"
       );
 
+
     elements.identifiant =
       document.getElementById(
         "identifiant"
       );
+
 
     elements.motDePasse =
       document.getElementById(
         "mot-de-passe"
       );
 
+
     elements.boutonConnexion =
       document.getElementById(
         "bouton-connexion"
       );
+
 
     elements.messageConnexion =
       document.getElementById(
         "message-connexion"
       );
 
+
     elements.blocAdministration =
       document.getElementById(
         "bloc-administration"
       );
+
 
     elements.boutonDeconnexion =
       document.getElementById(
         "bouton-deconnexion"
       );
 
+
+    elements.chargementProduits =
+      document.getElementById(
+        "chargement-produits"
+      );
+
+
     elements.listeProduits =
       document.getElementById(
         "liste-produits"
       );
-    elements.chargementProduits =
-  document.getElementById(
-    "chargement-produits"
-  );
   }
 
 
@@ -205,10 +237,12 @@
         elements.formulaire.reportValidity();
       }
 
+
       afficherMessage(
         "Veuillez renseigner votre identifiant et votre mot de passe.",
         true
       );
+
 
       return;
     }
@@ -225,35 +259,38 @@
         true
       );
 
+
       return;
     }
 
 
-    /*
-     * Toujours la même adresse de retour.
-     */
     elements.retourAdmin.value =
       URL_ADMIN;
 
 
-    /*
-     * POST vers Apps Script.
-     */
     elements.formulaire.action =
       apiUrl;
 
+
     elements.formulaire.method =
       "POST";
+
 
     elements.formulaire.target =
       "_top";
 
 
-    elements.boutonConnexion.disabled =
-      true;
+    if (
+      elements.boutonConnexion
+    ) {
 
-    elements.boutonConnexion.textContent =
-      "Connexion en cours…";
+      elements.boutonConnexion.disabled =
+        true;
+
+
+      elements.boutonConnexion.textContent =
+        "Connexion en cours…";
+    }
 
 
     afficherMessage(
@@ -263,19 +300,7 @@
 
 
     /*
-     * Envoi natif.
-     *
-     * Le navigateur quitte admin.html
-     * pour Apps Script.
-     *
-     * Après identification, Apps Script
-     * affiche la page :
-     *
-     * « Connexion réussie »
-     *
-     * avec le bouton :
-     *
-     * « Accéder à l’administration »
+     * Envoi POST vers Apps Script.
      */
     HTMLFormElement
       .prototype
@@ -288,11 +313,11 @@
 
   /*
    * ========================================
-   * RETOUR DE CONNEXION
+   * RETOUR D'APPS SCRIPT
    * ========================================
    */
 
-  function traiterRetourConnexion() {
+  function traiterRetourAppsScript() {
 
     const fragment =
       window.location.hash
@@ -303,6 +328,7 @@
 
 
     if (!fragment) {
+
       return false;
     }
 
@@ -328,31 +354,35 @@
         )
       );
 
+
     const donneesAdmin =
-  nettoyerTexte(
-    parametres.get(
-      "admin"
-    )
-  );
+      nettoyerTexte(
+        parametres.get(
+          "admin"
+        )
+      );
+
 
     /*
-     * On retire immédiatement le fragment
+     * On retire immédiatement les données
      * de la barre d'adresse.
+     *
+     * IMPORTANT :
+     * cela est fait APRÈS avoir lu
+     * jeton / erreur / admin.
      */
-    window.history.replaceState(
-      {},
-      "",
-      URL_ADMIN
-    );
+    nettoyerAdresse();
 
 
     /*
      * ========================================
-     * SUCCÈS
+     * RETOUR DE CONNEXION RÉUSSIE
      * ========================================
      */
 
-    if (jeton) {
+    if (
+      jeton
+    ) {
 
       enregistrerJeton(
         jeton
@@ -368,7 +398,15 @@
       }
 
 
-      afficherAdministration();
+      /*
+       * Connexion réussie :
+       * on ouvre l'administration
+       * ET on demande les produits.
+       */
+      afficherAdministration(
+        true
+      );
+
 
       return true;
     }
@@ -376,11 +414,13 @@
 
     /*
      * ========================================
-     * ÉCHEC
+     * RETOUR DE CONNEXION REFUSÉE
      * ========================================
      */
 
-    if (erreur) {
+    if (
+      erreur
+    ) {
 
       supprimerJeton();
 
@@ -435,6 +475,7 @@
         elements.motDePasse.value =
           "";
 
+
         elements.motDePasse.focus();
       }
 
@@ -442,224 +483,67 @@
       return true;
     }
 
-    if (donneesAdmin) {
 
-  afficherAdministration();
+    /*
+     * ========================================
+     * RETOUR DES PRODUITS
+     * ========================================
+     */
 
-  traiterRetourAdministration(
-    donneesAdmin
-  );
+    if (
+      donneesAdmin
+    ) {
 
-  return true;
-}
+      /*
+       * On doit toujours posséder
+       * le jeton enregistré lors
+       * de la connexion.
+       */
+      if (
+        !lireJeton()
+      ) {
+
+        afficherConnexion();
+
+
+        afficherMessage(
+          "Votre session administrateur n’est plus active. Veuillez vous reconnecter.",
+          true
+        );
+
+
+        return true;
+      }
+
+
+      /*
+       * IMPORTANT :
+       *
+       * false signifie :
+       * NE PAS demander les produits,
+       * puisqu'ils viennent justement
+       * d'arriver.
+       *
+       * C'est ce qui empêche la boucle.
+       */
+      afficherAdministration(
+        false
+      );
+
+
+      traiterRetourProduits(
+        donneesAdmin
+      );
+
+
+      return true;
+    }
+
 
     return false;
   }
 
-function traiterRetourAdministration(
-  texte
-) {
 
-  try {
-
-    const json =
-      decoderBase64WebSafe(
-        texte
-      );
-
-    const donnees =
-      JSON.parse(
-        json
-      );
-
-    if (
-      donnees.succes !== true
-    ) {
-
-      if (
-        elements.chargementProduits
-      ) {
-        elements.chargementProduits.textContent =
-          donnees.message ||
-          "Impossible de charger les produits.";
-      }
-
-      return;
-    }
-
-    if (
-      donnees.type ===
-      "admin-produits"
-    ) {
-
-      afficherProduits(
-        donnees.produits || []
-      );
-    }
-
-  } catch (_) {
-
-    if (
-      elements.chargementProduits
-    ) {
-      elements.chargementProduits.textContent =
-        "Impossible de lire les données d’administration.";
-    }
-  }
-}
-
-
-function decoderBase64WebSafe(
-  texte
-) {
-
-  let base64 =
-    String(
-      texte || ""
-    )
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
-
-  while (
-    base64.length % 4
-  ) {
-    base64 += "=";
-  }
-
-  const binaire =
-    atob(
-      base64
-    );
-
-  const octets =
-    Uint8Array.from(
-      binaire,
-      function (caractere) {
-        return caractere.charCodeAt(0);
-      }
-    );
-
-  return new TextDecoder(
-    "utf-8"
-  ).decode(
-    octets
-  );
-}
-
-
-function afficherProduits(
-  produits
-) {
-
-  if (
-    elements.chargementProduits
-  ) {
-    elements.chargementProduits.hidden =
-      true;
-  }
-
-  if (
-    !elements.listeProduits
-  ) {
-    return;
-  }
-
-  elements.listeProduits.innerHTML =
-    "";
-
-  if (
-    !Array.isArray(
-      produits
-    ) ||
-    produits.length === 0
-  ) {
-
-    elements.listeProduits.textContent =
-      "Aucun produit trouvé.";
-
-    return;
-  }
-
-  produits.forEach(
-    function (produit) {
-
-      const bloc =
-        document.createElement(
-          "article"
-        );
-
-      bloc.className =
-        "produit-admin";
-
-      const titre =
-        document.createElement(
-          "h3"
-        );
-
-      titre.textContent =
-        produit.titre ||
-        produit.id ||
-        "Produit";
-
-      bloc.appendChild(
-        titre
-      );
-
-      const lignes = [
-        "Stock : " +
-          Number(
-            produit.stockActuel || 0
-          ),
-
-        "Statut : " +
-          (
-            produit.statut ||
-            "—"
-          ),
-
-        "Prix : " +
-          Number(
-            produit.prix || 0
-          ).toLocaleString(
-            "fr-FR",
-            {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
-            }
-          ) +
-          " €",
-
-        "Poids : " +
-          Number(
-            produit.poids || 0
-          ) +
-          " g"
-      ];
-
-      lignes.forEach(
-        function (texte) {
-
-          const p =
-            document.createElement(
-              "p"
-            );
-
-          p.textContent =
-            texte;
-
-          bloc.appendChild(
-            p
-          );
-        }
-      );
-
-      elements.listeProduits.appendChild(
-        bloc
-      );
-    }
-  );
-}
-  
   /*
    * ========================================
    * AFFICHAGE
@@ -667,6 +551,10 @@ function afficherProduits(
    */
 
   function afficherConnexion() {
+
+    demandeProduitsEnCours =
+      false;
+
 
     if (
       elements.blocConnexion
@@ -693,63 +581,129 @@ function afficherProduits(
       elements.boutonConnexion.disabled =
         false;
 
+
       elements.boutonConnexion.textContent =
         "Se connecter";
     }
   }
 
 
-  function afficherAdministration() {
-
-  if (
-    elements.blocConnexion
-  ) {
-    elements.blocConnexion.hidden =
-      true;
-  }
-
-  if (
-    elements.blocAdministration
-  ) {
-    elements.blocAdministration.hidden =
-      false;
-  }
-
-  afficherMessage(
-    "",
-    false
-  );
-
-  demanderProduits();
-}
-
-
   /*
-   * ========================================
-   * DÉCONNEXION
-   * ========================================
+   * chargerProduits :
+   *
+   * true :
+   * on affiche puis on interroge Apps Script.
+   *
+   * false :
+   * on affiche seulement l'administration.
+   *
+   * Au retour #admin=..., il faut IMPÉRATIVEMENT
+   * utiliser false.
    */
-
-  function deconnecter() {
-
-    supprimerJeton();
-
+  function afficherAdministration(
+    chargerProduits
+  ) {
 
     if (
-      elements.identifiant
+      elements.blocConnexion
     ) {
 
-      elements.identifiant.value =
-        "";
+      elements.blocConnexion.hidden =
+        true;
     }
 
 
     if (
-      elements.motDePasse
+      elements.blocAdministration
     ) {
 
-      elements.motDePasse.value =
-        "";
+      elements.blocAdministration.hidden =
+        false;
+    }
+
+
+    afficherMessage(
+      "",
+      false
+    );
+
+
+    if (
+      chargerProduits === true
+    ) {
+
+      demanderProduits();
+    }
+  }
+
+
+  /*
+   * ========================================
+   * DEMANDE DES PRODUITS
+   * ========================================
+   */
+
+  function demanderProduits() {
+
+    /*
+     * Empêche deux demandes simultanées.
+     */
+    if (
+      demandeProduitsEnCours
+    ) {
+
+      return;
+    }
+
+
+    const jeton =
+      lireJeton();
+
+
+    if (!jeton) {
+
+      afficherConnexion();
+
+
+      afficherMessage(
+        "Votre session administrateur n’est plus active. Veuillez vous reconnecter.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    const apiUrl =
+      obtenirApiUrl();
+
+
+    if (!apiUrl) {
+
+      afficherErreurProduits(
+        "L’adresse de l’API Apps Script est absente de config.js."
+      );
+
+
+      return;
+    }
+
+
+    demandeProduitsEnCours =
+      true;
+
+
+    if (
+      elements.chargementProduits
+    ) {
+
+      elements.chargementProduits.hidden =
+        false;
+
+
+      elements.chargementProduits.textContent =
+        "Chargement des produits…";
     }
 
 
@@ -762,127 +716,458 @@ function afficherProduits(
     }
 
 
-    afficherConnexion();
+    /*
+     * Formulaire temporaire.
+     */
+    const formulaire =
+      document.createElement(
+        "form"
+      );
 
 
-    afficherMessage(
-      "",
-      false
+    formulaire.method =
+      "POST";
+
+
+    formulaire.action =
+      apiUrl;
+
+
+    formulaire.target =
+      "_top";
+
+
+    formulaire.style.display =
+      "none";
+
+
+    ajouterChamp(
+      formulaire,
+      "type",
+      "admin-produits"
     );
 
 
-    if (
-      elements.identifiant
-    ) {
+    ajouterChamp(
+      formulaire,
+      "jeton",
+      jeton
+    );
 
-      elements.identifiant.focus();
+
+    ajouterChamp(
+      formulaire,
+      "retourAdmin",
+      URL_ADMIN
+    );
+
+
+    document.body.appendChild(
+      formulaire
+    );
+
+
+    /*
+     * Envoi natif.
+     */
+    HTMLFormElement
+      .prototype
+      .submit
+      .call(
+        formulaire
+      );
+  }
+
+
+  /*
+   * ========================================
+   * RETOUR DES PRODUITS
+   * ========================================
+   */
+
+  function traiterRetourProduits(
+    texte
+  ) {
+
+    demandeProduitsEnCours =
+      false;
+
+
+    try {
+
+      const json =
+        decoderBase64WebSafe(
+          texte
+        );
+
+
+      const donnees =
+        JSON.parse(
+          json
+        );
+
+
+      /*
+       * Apps Script a refusé la requête.
+       */
+      if (
+        !donnees ||
+        donnees.succes !== true
+      ) {
+
+        const message =
+          donnees &&
+          donnees.message
+            ? String(
+                donnees.message
+              )
+            : "Impossible de charger les produits.";
+
+
+        afficherErreurProduits(
+          message
+        );
+
+
+        /*
+         * Si la session serveur a expiré,
+         * le jeton local n'est plus valable.
+         */
+        if (
+          message
+            .toLowerCase()
+            .includes(
+              "session"
+            )
+        ) {
+
+          supprimerJeton();
+        }
+
+
+        return;
+      }
+
+
+      /*
+       * Nous attendons uniquement
+       * admin-produits.
+       */
+      if (
+        donnees.type !==
+        "admin-produits"
+      ) {
+
+        afficherErreurProduits(
+          "La réponse reçue n’est pas une liste de produits."
+        );
+
+
+        return;
+      }
+
+
+      afficherProduits(
+        donnees.produits || []
+      );
+
+
+    } catch (erreur) {
+
+      console.error(
+        erreur
+      );
+
+
+      afficherErreurProduits(
+        "Impossible de lire les données reçues d’Apps Script."
+      );
     }
   }
 
-  function demanderProduits() {
 
-  const jeton =
-    lireJeton();
+  /*
+   * ========================================
+   * AFFICHAGE DES PRODUITS
+   * ========================================
+   */
 
-  if (!jeton) {
-    afficherConnexion();
-    return;
-  }
+  function afficherProduits(
+    produits
+  ) {
 
-  const apiUrl =
-    obtenirApiUrl();
+    demandeProduitsEnCours =
+      false;
 
-  if (!apiUrl) {
 
     if (
       elements.chargementProduits
     ) {
-      elements.chargementProduits.textContent =
-        "L’adresse de l’API Apps Script est absente.";
+
+      elements.chargementProduits.hidden =
+        true;
     }
 
-    return;
+
+    if (
+      !elements.listeProduits
+    ) {
+
+      return;
+    }
+
+
+    elements.listeProduits.innerHTML =
+      "";
+
+
+    if (
+      !Array.isArray(
+        produits
+      ) ||
+      produits.length === 0
+    ) {
+
+      elements.listeProduits.textContent =
+        "Aucun produit n’a été trouvé.";
+
+
+      return;
+    }
+
+
+    produits.forEach(
+      function (produit) {
+
+        const bloc =
+          document.createElement(
+            "article"
+          );
+
+
+        bloc.className =
+          "produit-admin";
+
+
+        /*
+         * TITRE
+         */
+        const titre =
+          document.createElement(
+            "h3"
+          );
+
+
+        titre.textContent =
+          nettoyerTexte(
+            produit.titre
+          ) ||
+          nettoyerTexte(
+            produit.id
+          ) ||
+          "Produit";
+
+
+        bloc.appendChild(
+          titre
+        );
+
+
+        /*
+         * STOCK
+         */
+        const stock =
+          convertirNombre(
+            produit.stockActuel,
+            0
+          );
+
+
+        const ligneStock =
+          document.createElement(
+            "p"
+          );
+
+
+        ligneStock.textContent =
+          "Stock : " +
+          stock;
+
+
+        if (
+          stock <= 0
+        ) {
+
+          ligneStock.classList.add(
+            "stock-nul"
+          );
+
+        } else if (
+          stock <= 5
+        ) {
+
+          ligneStock.classList.add(
+            "stock-faible"
+          );
+        }
+
+
+        bloc.appendChild(
+          ligneStock
+        );
+
+
+        /*
+         * STATUT
+         */
+        ajouterLigneProduit(
+          bloc,
+          "Statut",
+          nettoyerTexte(
+            produit.statut
+          ) || "—"
+        );
+
+
+        /*
+         * PRIX
+         */
+        ajouterLigneProduit(
+          bloc,
+          "Prix",
+          formaterPrix(
+            convertirNombre(
+              produit.prix,
+              0
+            )
+          )
+        );
+
+
+        /*
+         * POIDS
+         */
+        const poids =
+          convertirNombre(
+            produit.poids,
+            0
+          );
+
+
+        ajouterLigneProduit(
+          bloc,
+          "Poids",
+          poids > 0
+            ? poids + " g"
+            : "—"
+        );
+
+
+        /*
+         * ID
+         */
+        ajouterLigneProduit(
+          bloc,
+          "Identifiant",
+          nettoyerTexte(
+            produit.id
+          ) || "—"
+        );
+
+
+        elements.listeProduits.appendChild(
+          bloc
+        );
+      }
+    );
   }
 
-  if (
-    elements.chargementProduits
+
+  function ajouterLigneProduit(
+    bloc,
+    etiquette,
+    valeur
   ) {
-    elements.chargementProduits.hidden =
+
+    const ligne =
+      document.createElement(
+        "p"
+      );
+
+
+    ligne.textContent =
+      etiquette +
+      " : " +
+      valeur;
+
+
+    bloc.appendChild(
+      ligne
+    );
+  }
+
+
+  function afficherErreurProduits(
+    message
+  ) {
+
+    demandeProduitsEnCours =
       false;
 
-    elements.chargementProduits.textContent =
-      "Chargement des produits…";
+
+    if (
+      elements.chargementProduits
+    ) {
+
+      elements.chargementProduits.hidden =
+        false;
+
+
+      elements.chargementProduits.textContent =
+        message;
+    }
   }
 
-  const formulaire =
-    document.createElement(
-      "form"
+
+  /*
+   * ========================================
+   * FORMULAIRE TEMPORAIRE
+   * ========================================
+   */
+
+  function ajouterChamp(
+    formulaire,
+    nom,
+    valeur
+  ) {
+
+    const champ =
+      document.createElement(
+        "input"
+      );
+
+
+    champ.type =
+      "hidden";
+
+
+    champ.name =
+      nom;
+
+
+    champ.value =
+      String(
+        valeur == null
+          ? ""
+          : valeur
+      );
+
+
+    formulaire.appendChild(
+      champ
     );
+  }
 
-  formulaire.method =
-    "POST";
-
-  formulaire.action =
-    apiUrl;
-
-  formulaire.target =
-    "_top";
-
-  formulaire.style.display =
-    "none";
-
-  ajouterChamp(
-    formulaire,
-    "type",
-    "admin-produits"
-  );
-
-  ajouterChamp(
-    formulaire,
-    "jeton",
-    jeton
-  );
-
-  ajouterChamp(
-    formulaire,
-    "retourAdmin",
-    URL_ADMIN
-  );
-
-  document.body.appendChild(
-    formulaire
-  );
-
-  formulaire.submit();
-}
-
-
-function ajouterChamp(
-  formulaire,
-  nom,
-  valeur
-) {
-
-  const champ =
-    document.createElement(
-      "input"
-    );
-
-  champ.type =
-    "hidden";
-
-  champ.name =
-    nom;
-
-  champ.value =
-    valeur;
-
-  formulaire.appendChild(
-    champ
-  );
-}
-
-  
 
   /*
    * ========================================
@@ -936,7 +1221,80 @@ function ajouterChamp(
 
   /*
    * ========================================
-   * MESSAGES
+   * DÉCONNEXION
+   * ========================================
+   */
+
+  function deconnecter() {
+
+    supprimerJeton();
+
+
+    demandeProduitsEnCours =
+      false;
+
+
+    if (
+      elements.identifiant
+    ) {
+
+      elements.identifiant.value =
+        "";
+    }
+
+
+    if (
+      elements.motDePasse
+    ) {
+
+      elements.motDePasse.value =
+        "";
+    }
+
+
+    if (
+      elements.listeProduits
+    ) {
+
+      elements.listeProduits.innerHTML =
+        "";
+    }
+
+
+    if (
+      elements.chargementProduits
+    ) {
+
+      elements.chargementProduits.hidden =
+        false;
+
+
+      elements.chargementProduits.textContent =
+        "Chargement des produits…";
+    }
+
+
+    afficherConnexion();
+
+
+    afficherMessage(
+      "",
+      false
+    );
+
+
+    if (
+      elements.identifiant
+    ) {
+
+      elements.identifiant.focus();
+    }
+  }
+
+
+  /*
+   * ========================================
+   * MESSAGES DE CONNEXION
    * ========================================
    */
 
@@ -961,6 +1319,7 @@ function ajouterChamp(
 
       elements.messageConnexion.className =
         "message";
+
 
       return;
     }
@@ -993,6 +1352,106 @@ function ajouterChamp(
     return nettoyerTexte(
       window.HB_CONFIG.API_URL
     );
+  }
+
+
+  function nettoyerAdresse() {
+
+    window.history.replaceState(
+      {},
+      "",
+      URL_ADMIN
+    );
+  }
+
+
+  function decoderBase64WebSafe(
+    texte
+  ) {
+
+    let base64 =
+      String(
+        texte || ""
+      )
+        .replace(
+          /-/g,
+          "+"
+        )
+        .replace(
+          /_/g,
+          "/"
+        );
+
+
+    while (
+      base64.length % 4
+    ) {
+
+      base64 += "=";
+    }
+
+
+    const binaire =
+      atob(
+        base64
+      );
+
+
+    const octets =
+      Uint8Array.from(
+        binaire,
+        function (caractere) {
+
+          return caractere.charCodeAt(
+            0
+          );
+        }
+      );
+
+
+    return new TextDecoder(
+      "utf-8"
+    ).decode(
+      octets
+    );
+  }
+
+
+  function formaterPrix(
+    valeur
+  ) {
+
+    return new Intl.NumberFormat(
+      "fr-FR",
+      {
+        style:
+          "currency",
+
+        currency:
+          "EUR"
+      }
+    ).format(
+      valeur
+    );
+  }
+
+
+  function convertirNombre(
+    valeur,
+    valeurParDefaut
+  ) {
+
+    const nombre =
+      Number(
+        valeur
+      );
+
+
+    return Number.isFinite(
+      nombre
+    )
+      ? nombre
+      : valeurParDefaut;
   }
 
 
