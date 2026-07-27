@@ -25,6 +25,8 @@
 
   let produitReapprovisionnement = null;
 
+  let produitSortieManuelle = null;
+
 
   /*
    * =========================================================
@@ -58,15 +60,6 @@
 
     installerEvenements();
 
-    /*
-     * La connexion continue à revenir avec :
-     *
-     * #jeton=...
-     * #erreur=...
-     *
-     * On conserve aussi la lecture de #admin=...
-     * pour compatibilité avec l'ancien système.
-     */
     const retourTraite =
       traiterRetourAppsScript();
 
@@ -144,18 +137,18 @@
         "liste-produits"
       );
 
-    /*
-     * Iframe invisible utilisée pour les opérations
-     * d'administration sans quitter admin.html.
-     */
     elements.adminIframe =
       document.getElementById(
         "admin-iframe"
       );
 
+
     /*
-     * Fenêtre de réapprovisionnement.
+     * =========================================================
+     * RÉAPPROVISIONNEMENT
+     * =========================================================
      */
+
     elements.fondReapprovisionnement =
       document.getElementById(
         "fond-reapprovisionnement"
@@ -205,6 +198,68 @@
       document.getElementById(
         "valider-reapprovisionnement"
       );
+
+
+    /*
+     * =========================================================
+     * SORTIE MANUELLE
+     * =========================================================
+     */
+
+    elements.fondSortieManuelle =
+      document.getElementById(
+        "fond-sortie-manuelle"
+      );
+
+    elements.formulaireSortieManuelle =
+      document.getElementById(
+        "formulaire-sortie-manuelle"
+      );
+
+    elements.nomProduitSortieManuelle =
+      document.getElementById(
+        "nom-produit-sortie-manuelle"
+      );
+
+    elements.stockProduitSortieManuelle =
+      document.getElementById(
+        "stock-produit-sortie-manuelle"
+      );
+
+    elements.quantiteSortieManuelle =
+      document.getElementById(
+        "quantite-sortie-manuelle"
+      );
+
+    elements.typeSortieManuelle =
+      document.getElementById(
+        "type-sortie-manuelle"
+      );
+
+    elements.montantSortieManuelle =
+      document.getElementById(
+        "montant-sortie-manuelle"
+      );
+
+    elements.observationSortieManuelle =
+      document.getElementById(
+        "observation-sortie-manuelle"
+      );
+
+    elements.messageSortieManuelle =
+      document.getElementById(
+        "message-sortie-manuelle"
+      );
+
+    elements.annulerSortieManuelle =
+      document.getElementById(
+        "annuler-sortie-manuelle"
+      );
+
+    elements.validerSortieManuelle =
+      document.getElementById(
+        "valider-sortie-manuelle"
+      );
   }
 
 
@@ -234,6 +289,10 @@
     }
 
 
+    /*
+     * RÉAPPROVISIONNEMENT
+     */
+
     if (
       elements.annulerReapprovisionnement
     ) {
@@ -257,9 +316,36 @@
 
 
     /*
-     * Clic sur le fond sombre :
-     * ferme la fenêtre.
+     * SORTIE MANUELLE
      */
+
+    if (
+      elements.annulerSortieManuelle
+    ) {
+
+      elements.annulerSortieManuelle.addEventListener(
+        "click",
+        fermerSortieManuelle
+      );
+    }
+
+
+    if (
+      elements.formulaireSortieManuelle
+    ) {
+
+      elements.formulaireSortieManuelle.addEventListener(
+        "submit",
+        envoyerSortieManuelle
+      );
+    }
+
+
+    /*
+     * Clic sur le fond sombre du
+     * réapprovisionnement.
+     */
+
     if (
       elements.fondReapprovisionnement
     ) {
@@ -281,27 +367,74 @@
 
 
     /*
-     * Échap ferme également la fenêtre.
+     * Clic sur le fond sombre de
+     * la sortie manuelle.
      */
+
+    if (
+      elements.fondSortieManuelle
+    ) {
+
+      elements.fondSortieManuelle.addEventListener(
+        "click",
+        function (evenement) {
+
+          if (
+            evenement.target ===
+            elements.fondSortieManuelle
+          ) {
+
+            fermerSortieManuelle();
+          }
+        }
+      );
+    }
+
+
+    /*
+     * Échap ferme la fenêtre ouverte.
+     */
+
     document.addEventListener(
       "keydown",
       function (evenement) {
 
         if (
-          evenement.key === "Escape" &&
+          evenement.key !==
+          "Escape"
+        ) {
+
+          return;
+        }
+
+
+        if (
           elements.fondReapprovisionnement &&
           !elements.fondReapprovisionnement.hidden
         ) {
 
           fermerReapprovisionnement();
+
+          return;
+        }
+
+
+        if (
+          elements.fondSortieManuelle &&
+          !elements.fondSortieManuelle.hidden
+        ) {
+
+          fermerSortieManuelle();
         }
       }
     );
 
 
     /*
-     * Réponses provenant de l'iframe Apps Script.
+     * Réponses provenant de l'iframe
+     * Apps Script.
      */
+
     window.addEventListener(
       "message",
       traiterMessageAdministration
@@ -319,13 +452,11 @@
     evenement
   ) {
 
-    /*
-     * On n'accepte que les réponses Google.
-     */
     const origine =
       String(
         evenement.origin || ""
       );
+
 
     const origineGoogle =
       origine ===
@@ -334,13 +465,16 @@
         ".googleusercontent.com"
       );
 
+
     if (!origineGoogle) {
+
       return;
     }
 
 
     const donnees =
       evenement.data;
+
 
     if (
       !donnees ||
@@ -352,9 +486,9 @@
 
 
     /*
-     * ---------------------------------------------------------
+     * =========================================================
      * LISTE DES PRODUITS
-     * ---------------------------------------------------------
+     * =========================================================
      */
 
     if (
@@ -409,9 +543,9 @@
 
 
     /*
-     * ---------------------------------------------------------
+     * =========================================================
      * RÉAPPROVISIONNEMENT
-     * ---------------------------------------------------------
+     * =========================================================
      */
 
     if (
@@ -419,9 +553,6 @@
       "admin-reapprovisionnement"
     ) {
 
-      /*
-       * Erreur.
-       */
       if (
         donnees.succes !== true
       ) {
@@ -447,6 +578,7 @@
           elements.validerReapprovisionnement.disabled =
             false;
 
+
           elements.validerReapprovisionnement.textContent =
             "Valider le réapprovisionnement";
         }
@@ -468,9 +600,6 @@
       }
 
 
-      /*
-       * Succès.
-       */
       const resultat =
         donnees.resultat || {};
 
@@ -509,19 +638,116 @@
       );
 
 
-      /*
-       * On relit immédiatement RESSOURCES
-       * pour afficher le nouveau stock.
-       */
+      demanderProduits();
+
+
+      return;
+    }
+
+
+    /*
+     * =========================================================
+     * SORTIE MANUELLE
+     * =========================================================
+     */
+
+    if (
+      donnees.type ===
+      "admin-sortie-manuelle"
+    ) {
+
+      if (
+        donnees.succes !== true
+      ) {
+
+        const message =
+          donnees.message
+            ? String(
+                donnees.message
+              )
+            : "La sortie manuelle n’a pas pu être enregistrée.";
+
+
+        afficherMessageSortieManuelle(
+          message,
+          true
+        );
+
+
+        if (
+          elements.validerSortieManuelle
+        ) {
+
+          elements.validerSortieManuelle.disabled =
+            false;
+
+
+          elements.validerSortieManuelle.textContent =
+            "Valider la sortie";
+        }
+
+
+        if (
+          message
+            .toLowerCase()
+            .includes(
+              "session"
+            )
+        ) {
+
+          supprimerJeton();
+        }
+
+
+        return;
+      }
+
+
+      const resultat =
+        donnees.resultat || {};
+
+
+      const produit =
+        nettoyerTexte(
+          resultat.produit
+        ) ||
+        "Produit";
+
+
+      const stockAvant =
+        convertirNombre(
+          resultat.stockAvant,
+          0
+        );
+
+
+      const stockApres =
+        convertirNombre(
+          resultat.stockApres,
+          stockAvant
+        );
+
+
+      fermerSortieManuelle();
+
+
+      alert(
+        "Sortie manuelle enregistrée.\n\n" +
+        produit +
+        "\nStock : " +
+        stockAvant +
+        " → " +
+        stockApres
+      );
+
+
       demanderProduits();
 
 
       return;
     }
   }
-
-
-  /*
+    /*
    * =========================================================
    * CONNEXION
    * =========================================================
@@ -577,16 +803,18 @@
       URL_ADMIN;
 
 
-    /*
-     * La CONNEXION reste envoyée dans la fenêtre principale.
-     * Ne pas remplacer _top par admin-iframe ici.
-     */
     elements.formulaire.action =
       apiUrl;
+
 
     elements.formulaire.method =
       "POST";
 
+
+    /*
+     * La connexion reste envoyée
+     * dans la fenêtre principale.
+     */
     elements.formulaire.target =
       "_top";
 
@@ -597,6 +825,7 @@
 
       elements.boutonConnexion.disabled =
         true;
+
 
       elements.boutonConnexion.textContent =
         "Connexion en cours…";
@@ -663,8 +892,8 @@
 
 
     /*
-     * Conservé seulement pour compatibilité
-     * avec les anciennes réponses.
+     * Conservé pour compatibilité
+     * avec l'ancien retour #admin=...
      */
     const donneesAdmin =
       nettoyerTexte(
@@ -674,10 +903,6 @@
       );
 
 
-    /*
-     * On retire le fragment de la barre
-     * d'adresse après l'avoir lu.
-     */
     nettoyerAdresse();
 
 
@@ -728,7 +953,8 @@
 
 
       if (
-        erreur === "identifiants"
+        erreur ===
+        "identifiants"
       ) {
 
         message =
@@ -737,7 +963,8 @@
 
 
       if (
-        erreur === "configuration"
+        erreur ===
+        "configuration"
       ) {
 
         message =
@@ -746,7 +973,8 @@
 
 
       if (
-        erreur === "champs"
+        erreur ===
+        "champs"
       ) {
 
         message =
@@ -770,6 +998,7 @@
         elements.motDePasse.value =
           "";
 
+
         elements.motDePasse.focus();
       }
 
@@ -782,14 +1011,13 @@
      * ---------------------------------------------------------
      * ANCIEN RETOUR #admin=
      * ---------------------------------------------------------
-     *
-     * Normalement plus utilisé depuis le passage à l'iframe.
-     * On le conserve par sécurité.
      */
 
     if (donneesAdmin) {
 
-      if (!lireJeton()) {
+      if (
+        !lireJeton()
+      ) {
 
         afficherConnexion();
 
@@ -858,6 +1086,7 @@
 
       elements.boutonConnexion.disabled =
         false;
+
 
       elements.boutonConnexion.textContent =
         "Se connecter";
@@ -976,6 +1205,7 @@
       elements.chargementProduits.hidden =
         false;
 
+
       elements.chargementProduits.textContent =
         "Chargement des produits…";
     }
@@ -999,15 +1229,14 @@
     formulaire.method =
       "POST";
 
+
     formulaire.action =
       apiUrl;
 
-    /*
-     * Très important :
-     * la demande est envoyée dans l'iframe invisible.
-     */
+
     formulaire.target =
       "admin-iframe";
+
 
     formulaire.style.display =
       "none";
@@ -1034,10 +1263,6 @@
     );
 
 
-    /*
-     * Apps Script doit connaître l'origine
-     * à laquelle envoyer postMessage.
-     */
     ajouterChamp(
       formulaire,
       "origine",
@@ -1058,10 +1283,6 @@
       );
 
 
-    /*
-     * On peut supprimer le formulaire
-     * après son envoi.
-     */
     window.setTimeout(
       function () {
 
@@ -1077,8 +1298,6 @@
    * =========================================================
    * ANCIEN RETOUR DES PRODUITS
    * =========================================================
-   *
-   * Conservé seulement pour compatibilité.
    */
 
   function traiterRetourProduitsAncien(
@@ -1220,10 +1439,6 @@
       );
 
 
-    /*
-     * Ni A ni B ne sont des drapeaux :
-     * livres par ordre alphabétique.
-     */
     if (
       indexA === -1 &&
       indexB === -1
@@ -1239,9 +1454,6 @@
     }
 
 
-    /*
-     * Livre avant drapeau.
-     */
     if (
       indexA === -1
     ) {
@@ -1258,10 +1470,6 @@
     }
 
 
-    /*
-     * Deux drapeaux :
-     * ordre imposé.
-     */
     return indexA - indexB;
   }
 
@@ -1376,6 +1584,7 @@
         /*
          * TITRE
          */
+
         const titre =
           document.createElement(
             "h3"
@@ -1400,6 +1609,7 @@
         /*
          * STOCK
          */
+
         const stock =
           convertirNombre(
             produit.stockActuel,
@@ -1444,6 +1654,7 @@
         /*
          * STATUT
          */
+
         ajouterLigneProduit(
           bloc,
           "Statut",
@@ -1456,6 +1667,7 @@
         /*
          * PRIX
          */
+
         ajouterLigneProduit(
           bloc,
           "Prix",
@@ -1471,6 +1683,7 @@
         /*
          * POIDS
          */
+
         const poids =
           convertirNombre(
             produit.poids,
@@ -1490,6 +1703,7 @@
         /*
          * IDENTIFIANT
          */
+
         ajouterLigneProduit(
           bloc,
           "Identifiant",
@@ -1500,9 +1714,7 @@
 
 
         /*
-         * -----------------------------------------------------
          * ACTIONS
-         * -----------------------------------------------------
          */
 
         const actions =
@@ -1517,8 +1729,8 @@
 
         /*
          * MODIFIER
-         * Sera activé ultérieurement.
          */
+
         const boutonModifier =
           creerBoutonAction(
             "Modifier"
@@ -1531,8 +1743,8 @@
 
         /*
          * RÉAPPROVISIONNER
-         * Actif dès maintenant.
          */
+
         const boutonReapprovisionner =
           creerBoutonAction(
             "Réapprovisionner"
@@ -1552,16 +1764,37 @@
 
         /*
          * SORTIE MANUELLE
-         * Sera activée ultérieurement.
          */
+
         const boutonSortie =
           creerBoutonAction(
             "Sortie manuelle"
           );
 
 
-        boutonSortie.disabled =
-          true;
+        boutonSortie.addEventListener(
+          "click",
+          function () {
+
+            ouvrirSortieManuelle(
+              produit
+            );
+          }
+        );
+
+
+        /*
+         * Il est inutile d'autoriser une sortie
+         * lorsque le stock est déjà nul.
+         */
+
+        if (
+          stock <= 0
+        ) {
+
+          boutonSortie.disabled =
+            true;
+        }
 
 
         actions.append(
@@ -1632,9 +1865,7 @@
 
     return bouton;
   }
-
-
-  /*
+    /*
    * =========================================================
    * OUVERTURE DU RÉAPPROVISIONNEMENT
    * =========================================================
@@ -1791,9 +2022,6 @@
     }
 
 
-    /*
-     * Quantité.
-     */
     const quantite =
       convertirNombre(
         elements.quantiteReapprovisionnement.value,
@@ -1801,9 +2029,6 @@
       );
 
 
-    /*
-     * Coût total.
-     */
     const cout =
       convertirNombre(
         elements.coutReapprovisionnement.value,
@@ -1897,10 +2122,6 @@
     }
 
 
-    /*
-     * Formulaire temporaire envoyé vers
-     * Apps Script DANS L'IFRAME INVISIBLE.
-     */
     const formulaire =
       document.createElement(
         "form"
@@ -1923,9 +2144,6 @@
       "none";
 
 
-    /*
-     * Type d'action.
-     */
     ajouterChamp(
       formulaire,
       "type",
@@ -1933,9 +2151,6 @@
     );
 
 
-    /*
-     * Jeton administrateur.
-     */
     ajouterChamp(
       formulaire,
       "jeton",
@@ -1943,9 +2158,6 @@
     );
 
 
-    /*
-     * Produit.
-     */
     ajouterChamp(
       formulaire,
       "produitId",
@@ -1953,9 +2165,6 @@
     );
 
 
-    /*
-     * Quantité reçue.
-     */
     ajouterChamp(
       formulaire,
       "quantite",
@@ -1963,9 +2172,6 @@
     );
 
 
-    /*
-     * Coût total.
-     */
     ajouterChamp(
       formulaire,
       "cout",
@@ -1973,9 +2179,6 @@
     );
 
 
-    /*
-     * Observation facultative.
-     */
     ajouterChamp(
       formulaire,
       "observation",
@@ -1983,9 +2186,6 @@
     );
 
 
-    /*
-     * Conservé pour compatibilité.
-     */
     ajouterChamp(
       formulaire,
       "retourAdmin",
@@ -1993,9 +2193,6 @@
     );
 
 
-    /*
-     * Indispensable pour postMessage.
-     */
     ajouterChamp(
       formulaire,
       "origine",
@@ -2003,10 +2200,6 @@
     );
 
 
-    /*
-     * On bloque le bouton pendant
-     * le traitement.
-     */
     elements.validerReapprovisionnement.disabled =
       true;
 
@@ -2079,6 +2272,494 @@
 
 
     elements.messageReapprovisionnement.className =
+      erreur
+        ? "message message-erreur"
+        : "message message-succes";
+  }
+
+
+  /*
+   * =========================================================
+   * OUVERTURE DE LA SORTIE MANUELLE
+   * =========================================================
+   */
+
+  function ouvrirSortieManuelle(
+    produit
+  ) {
+
+    if (
+      !elements.fondSortieManuelle
+    ) {
+
+      alert(
+        "La fenêtre de sortie manuelle est absente de admin.html."
+      );
+
+      return;
+    }
+
+
+    const stock =
+      convertirNombre(
+        produit.stockActuel,
+        0
+      );
+
+
+    if (
+      stock <= 0
+    ) {
+
+      alert(
+        "Le stock de ce produit est déjà nul."
+      );
+
+      return;
+    }
+
+
+    produitSortieManuelle =
+      produit;
+
+
+    elements.nomProduitSortieManuelle.textContent =
+      nettoyerTexte(
+        produit.titre
+      ) ||
+      nettoyerTexte(
+        produit.id
+      ) ||
+      "Produit";
+
+
+    elements.stockProduitSortieManuelle.textContent =
+      "Stock actuel : " +
+      stock;
+
+
+    elements.quantiteSortieManuelle.value =
+      "";
+
+
+    elements.quantiteSortieManuelle.max =
+      String(
+        stock
+      );
+
+
+    elements.typeSortieManuelle.value =
+      "";
+
+
+    elements.montantSortieManuelle.value =
+      "0";
+
+
+    elements.observationSortieManuelle.value =
+      "";
+
+
+    afficherMessageSortieManuelle(
+      "",
+      false
+    );
+
+
+    elements.validerSortieManuelle.disabled =
+      false;
+
+
+    elements.validerSortieManuelle.textContent =
+      "Valider la sortie";
+
+
+    elements.fondSortieManuelle.hidden =
+      false;
+
+
+    elements.quantiteSortieManuelle.focus();
+  }
+
+
+  /*
+   * =========================================================
+   * FERMETURE DE LA SORTIE MANUELLE
+   * =========================================================
+   */
+
+  function fermerSortieManuelle() {
+
+    produitSortieManuelle =
+      null;
+
+
+    if (
+      elements.fondSortieManuelle
+    ) {
+
+      elements.fondSortieManuelle.hidden =
+        true;
+    }
+
+
+    afficherMessageSortieManuelle(
+      "",
+      false
+    );
+
+
+    if (
+      elements.validerSortieManuelle
+    ) {
+
+      elements.validerSortieManuelle.disabled =
+        false;
+
+
+      elements.validerSortieManuelle.textContent =
+        "Valider la sortie";
+    }
+  }
+
+
+  /*
+   * =========================================================
+   * ENVOI DE LA SORTIE MANUELLE
+   * =========================================================
+   */
+
+  function envoyerSortieManuelle(
+    evenement
+  ) {
+
+    evenement.preventDefault();
+
+
+    if (
+      !produitSortieManuelle
+    ) {
+
+      return;
+    }
+
+
+    if (
+      !elements.formulaireSortieManuelle ||
+      !elements.formulaireSortieManuelle.checkValidity()
+    ) {
+
+      if (
+        elements.formulaireSortieManuelle
+      ) {
+
+        elements.formulaireSortieManuelle.reportValidity();
+      }
+
+
+      return;
+    }
+
+
+    const quantite =
+      convertirNombre(
+        elements.quantiteSortieManuelle.value,
+        0
+      );
+
+
+    const stockActuel =
+      convertirNombre(
+        produitSortieManuelle.stockActuel,
+        0
+      );
+
+
+    const typeSortie =
+      nettoyerTexte(
+        elements.typeSortieManuelle.value
+      );
+
+
+    const montant =
+      convertirNombre(
+        elements.montantSortieManuelle.value,
+        0
+      );
+
+
+    if (
+      !Number.isInteger(
+        quantite
+      ) ||
+      quantite <= 0
+    ) {
+
+      afficherMessageSortieManuelle(
+        "La quantité sortie doit être un nombre entier supérieur à zéro.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    if (
+      quantite >
+      stockActuel
+    ) {
+
+      afficherMessageSortieManuelle(
+        "La quantité sortie ne peut pas dépasser le stock disponible (" +
+        stockActuel +
+        ").",
+        true
+      );
+
+
+      return;
+    }
+
+
+    if (!typeSortie) {
+
+      afficherMessageSortieManuelle(
+        "Veuillez choisir un type de sortie.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    if (
+      !Number.isFinite(
+        montant
+      ) ||
+      montant < 0
+    ) {
+
+      afficherMessageSortieManuelle(
+        "Le montant encaissé ne peut pas être négatif.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    const jeton =
+      lireJeton();
+
+
+    if (!jeton) {
+
+      fermerSortieManuelle();
+
+
+      afficherConnexion();
+
+
+      afficherMessage(
+        "Votre session administrateur n’est plus active. Veuillez vous reconnecter.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    const apiUrl =
+      obtenirApiUrl();
+
+
+    if (!apiUrl) {
+
+      afficherMessageSortieManuelle(
+        "L’adresse de l’API Apps Script est absente de config.js.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    if (
+      !elements.adminIframe
+    ) {
+
+      afficherMessageSortieManuelle(
+        "L’iframe d’administration est absente de admin.html.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    const formulaire =
+      document.createElement(
+        "form"
+      );
+
+
+    formulaire.method =
+      "POST";
+
+
+    formulaire.action =
+      apiUrl;
+
+
+    formulaire.target =
+      "admin-iframe";
+
+
+    formulaire.style.display =
+      "none";
+
+
+    ajouterChamp(
+      formulaire,
+      "type",
+      "admin-sortie-manuelle"
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "jeton",
+      jeton
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "produitId",
+      produitSortieManuelle.id
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "quantite",
+      quantite
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "typeSortie",
+      typeSortie
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "montant",
+      montant
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "observation",
+      elements.observationSortieManuelle.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "retourAdmin",
+      URL_ADMIN
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "origine",
+      window.location.origin
+    );
+
+
+    elements.validerSortieManuelle.disabled =
+      true;
+
+
+    elements.validerSortieManuelle.textContent =
+      "Enregistrement…";
+
+
+    afficherMessageSortieManuelle(
+      "Enregistrement de la sortie…",
+      false
+    );
+
+
+    document.body.appendChild(
+      formulaire
+    );
+
+
+    HTMLFormElement
+      .prototype
+      .submit
+      .call(
+        formulaire
+      );
+
+
+    window.setTimeout(
+      function () {
+
+        formulaire.remove();
+
+      },
+      1000
+    );
+  }
+
+
+  /*
+   * =========================================================
+   * MESSAGE SORTIE MANUELLE
+   * =========================================================
+   */
+
+  function afficherMessageSortieManuelle(
+    message,
+    erreur
+  ) {
+
+    if (
+      !elements.messageSortieManuelle
+    ) {
+
+      return;
+    }
+
+
+    elements.messageSortieManuelle.textContent =
+      message || "";
+
+
+    if (!message) {
+
+      elements.messageSortieManuelle.className =
+        "message";
+
+
+      return;
+    }
+
+
+    elements.messageSortieManuelle.className =
       erreur
         ? "message message-erreur"
         : "message message-succes";
@@ -2170,12 +2851,7 @@
         jeton
       );
 
-    } catch (_) {
-
-      /*
-       * Rien.
-       */
-    }
+    } catch (_) {}
   }
 
 
@@ -2204,12 +2880,7 @@
         CLE_SESSION_ADMIN
       );
 
-    } catch (_) {
-
-      /*
-       * Rien.
-       */
-    }
+    } catch (_) {}
   }
 
 
@@ -2229,6 +2900,10 @@
 
 
     produitReapprovisionnement =
+      null;
+
+
+    produitSortieManuelle =
       null;
 
 
@@ -2277,6 +2952,15 @@
     ) {
 
       elements.fondReapprovisionnement.hidden =
+        true;
+    }
+
+
+    if (
+      elements.fondSortieManuelle
+    ) {
+
+      elements.fondSortieManuelle.hidden =
         true;
     }
 
@@ -2431,11 +3115,8 @@
     return new Intl.NumberFormat(
       "fr-FR",
       {
-        style:
-          "currency",
-
-        currency:
-          "EUR"
+        style: "currency",
+        currency: "EUR"
       }
     ).format(
       valeur
