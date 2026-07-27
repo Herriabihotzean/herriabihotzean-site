@@ -3,37 +3,36 @@
 (function () {
 
   /*
-   * ========================================
+   * =========================================================
    * CONFIGURATION
-   * ========================================
+   * =========================================================
    */
 
   const URL_ADMIN =
     "https://herriabihotzean.github.io/herriabihotzean-site/admin.html";
-
 
   const CLE_SESSION_ADMIN =
     "herria_admin_session";
 
 
   /*
-   * ========================================
+   * =========================================================
    * ÉTAT
-   * ========================================
+   * =========================================================
    */
 
-  let demandeProduitsEnCours =
-    false;
+  let demandeProduitsEnCours = false;
+
+  let produitReapprovisionnement = null;
 
 
   /*
-   * ========================================
+   * =========================================================
    * ÉLÉMENTS
-   * ========================================
+   * =========================================================
    */
 
-  const elements =
-    {};
+  const elements = {};
 
 
   document.addEventListener(
@@ -43,63 +42,39 @@
 
 
   /*
-   * ========================================
+   * =========================================================
    * INITIALISATION
-   * ========================================
+   * =========================================================
    */
 
   function initialiser() {
 
     memoriserElements();
 
-
-    /*
-     * Adresse de retour fixe.
-     */
-    if (
-      elements.retourAdmin
-    ) {
-
+    if (elements.retourAdmin) {
       elements.retourAdmin.value =
         URL_ADMIN;
     }
 
-
     installerEvenements();
 
-
     /*
-     * On traite d'abord un éventuel retour
-     * d'Apps Script :
+     * La connexion continue à revenir avec :
      *
      * #jeton=...
      * #erreur=...
-     * #admin=...
      *
-     * Si un retour est traité,
-     * on NE poursuit PAS l'initialisation.
+     * On conserve aussi la lecture de #admin=...
+     * pour compatibilité avec l'ancien système.
      */
     const retourTraite =
       traiterRetourAppsScript();
 
-
-    if (
-      retourTraite
-    ) {
-
+    if (retourTraite) {
       return;
     }
 
-
-    /*
-     * Si la page est ouverte normalement
-     * et qu'un jeton existe déjà,
-     * on ouvre l'administration et
-     * recharge les produits.
-     */
-    if (
-      lireJeton()
-    ) {
+    if (lireJeton()) {
 
       afficherAdministration(
         true
@@ -119,84 +94,129 @@
         "bloc-connexion"
       );
 
-
     elements.formulaire =
       document.getElementById(
         "formulaire-connexion"
       );
-
 
     elements.retourAdmin =
       document.getElementById(
         "retour-admin"
       );
 
-
     elements.identifiant =
       document.getElementById(
         "identifiant"
       );
-
 
     elements.motDePasse =
       document.getElementById(
         "mot-de-passe"
       );
 
-
     elements.boutonConnexion =
       document.getElementById(
         "bouton-connexion"
       );
-
 
     elements.messageConnexion =
       document.getElementById(
         "message-connexion"
       );
 
-
     elements.blocAdministration =
       document.getElementById(
         "bloc-administration"
       );
-
 
     elements.boutonDeconnexion =
       document.getElementById(
         "bouton-deconnexion"
       );
 
-
     elements.chargementProduits =
       document.getElementById(
         "chargement-produits"
       );
-
 
     elements.listeProduits =
       document.getElementById(
         "liste-produits"
       );
 
+    /*
+     * Iframe invisible utilisée pour les opérations
+     * d'administration sans quitter admin.html.
+     */
     elements.adminIframe =
       document.getElementById(
         "admin-iframe"
+      );
+
+    /*
+     * Fenêtre de réapprovisionnement.
+     */
+    elements.fondReapprovisionnement =
+      document.getElementById(
+        "fond-reapprovisionnement"
+      );
+
+    elements.formulaireReapprovisionnement =
+      document.getElementById(
+        "formulaire-reapprovisionnement"
+      );
+
+    elements.nomProduitReapprovisionnement =
+      document.getElementById(
+        "nom-produit-reapprovisionnement"
+      );
+
+    elements.stockProduitReapprovisionnement =
+      document.getElementById(
+        "stock-produit-reapprovisionnement"
+      );
+
+    elements.quantiteReapprovisionnement =
+      document.getElementById(
+        "quantite-reapprovisionnement"
+      );
+
+    elements.coutReapprovisionnement =
+      document.getElementById(
+        "cout-reapprovisionnement"
+      );
+
+    elements.observationReapprovisionnement =
+      document.getElementById(
+        "observation-reapprovisionnement"
+      );
+
+    elements.messageReapprovisionnement =
+      document.getElementById(
+        "message-reapprovisionnement"
+      );
+
+    elements.annulerReapprovisionnement =
+      document.getElementById(
+        "annuler-reapprovisionnement"
+      );
+
+    elements.validerReapprovisionnement =
+      document.getElementById(
+        "valider-reapprovisionnement"
       );
   }
 
 
   /*
-   * ========================================
+   * =========================================================
    * ÉVÉNEMENTS
-   * ========================================
+   * =========================================================
    */
 
   function installerEvenements() {
 
-    if (
-      elements.formulaire
-    ) {
+    if (elements.formulaire) {
 
       elements.formulaire.addEventListener(
         "submit",
@@ -205,118 +225,306 @@
     }
 
 
-    if (
-      elements.boutonDeconnexion
-    ) {
+    if (elements.boutonDeconnexion) {
 
       elements.boutonDeconnexion.addEventListener(
         "click",
         deconnecter
       );
     }
+
+
+    if (
+      elements.annulerReapprovisionnement
+    ) {
+
+      elements.annulerReapprovisionnement.addEventListener(
+        "click",
+        fermerReapprovisionnement
+      );
+    }
+
+
+    if (
+      elements.formulaireReapprovisionnement
+    ) {
+
+      elements.formulaireReapprovisionnement.addEventListener(
+        "submit",
+        envoyerReapprovisionnement
+      );
+    }
+
+
+    /*
+     * Clic sur le fond sombre :
+     * ferme la fenêtre.
+     */
+    if (
+      elements.fondReapprovisionnement
+    ) {
+
+      elements.fondReapprovisionnement.addEventListener(
+        "click",
+        function (evenement) {
+
+          if (
+            evenement.target ===
+            elements.fondReapprovisionnement
+          ) {
+
+            fermerReapprovisionnement();
+          }
+        }
+      );
+    }
+
+
+    /*
+     * Échap ferme également la fenêtre.
+     */
+    document.addEventListener(
+      "keydown",
+      function (evenement) {
+
+        if (
+          evenement.key === "Escape" &&
+          elements.fondReapprovisionnement &&
+          !elements.fondReapprovisionnement.hidden
+        ) {
+
+          fermerReapprovisionnement();
+        }
+      }
+    );
+
+
+    /*
+     * Réponses provenant de l'iframe Apps Script.
+     */
     window.addEventListener(
       "message",
       traiterMessageAdministration
     );
   }
 
+
+  /*
+   * =========================================================
+   * RÉPONSES DE L'IFRAME APPS SCRIPT
+   * =========================================================
+   */
+
   function traiterMessageAdministration(
-  evenement
-) {
-
-  /*
-   * Les réponses HtmlService d'Apps Script
-   * proviennent des domaines Google.
-   */
-  const origine =
-    String(
-      evenement.origin || ""
-    );
-
-  const origineGoogle =
-    origine ===
-      "https://script.google.com" ||
-    origine.endsWith(
-      ".googleusercontent.com"
-    );
-
-  if (!origineGoogle) {
-    return;
-  }
-
-
-  const donnees =
-    evenement.data;
-
-
-  if (
-    !donnees ||
-    typeof donnees !==
-      "object"
-  ) {
-    return;
-  }
-
-
-  /*
-   * Pour l'instant nous recevons
-   * seulement admin-produits.
-   */
-  if (
-    donnees.type !==
-    "admin-produits"
-  ) {
-    return;
-  }
-
-
-  demandeProduitsEnCours =
-    false;
-
-
-  if (
-    donnees.succes !== true
+    evenement
   ) {
 
-    const message =
-      donnees.message
-        ? String(
-            donnees.message
-          )
-        : "Impossible de charger les produits.";
+    /*
+     * On n'accepte que les réponses Google.
+     */
+    const origine =
+      String(
+        evenement.origin || ""
+      );
 
+    const origineGoogle =
+      origine ===
+        "https://script.google.com" ||
+      origine.endsWith(
+        ".googleusercontent.com"
+      );
 
-    afficherErreurProduits(
-      message
-    );
-
-
-    if (
-      message
-        .toLowerCase()
-        .includes(
-          "session"
-        )
-    ) {
-
-      supprimerJeton();
+    if (!origineGoogle) {
+      return;
     }
 
 
-    return;
+    const donnees =
+      evenement.data;
+
+    if (
+      !donnees ||
+      typeof donnees !== "object"
+    ) {
+
+      return;
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * LISTE DES PRODUITS
+     * ---------------------------------------------------------
+     */
+
+    if (
+      donnees.type ===
+      "admin-produits"
+    ) {
+
+      demandeProduitsEnCours =
+        false;
+
+
+      if (
+        donnees.succes !== true
+      ) {
+
+        const message =
+          donnees.message
+            ? String(
+                donnees.message
+              )
+            : "Impossible de charger les produits.";
+
+
+        afficherErreurProduits(
+          message
+        );
+
+
+        if (
+          message
+            .toLowerCase()
+            .includes(
+              "session"
+            )
+        ) {
+
+          supprimerJeton();
+        }
+
+
+        return;
+      }
+
+
+      afficherProduits(
+        donnees.produits || []
+      );
+
+
+      return;
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * RÉAPPROVISIONNEMENT
+     * ---------------------------------------------------------
+     */
+
+    if (
+      donnees.type ===
+      "admin-reapprovisionnement"
+    ) {
+
+      /*
+       * Erreur.
+       */
+      if (
+        donnees.succes !== true
+      ) {
+
+        const message =
+          donnees.message
+            ? String(
+                donnees.message
+              )
+            : "Le réapprovisionnement n’a pas pu être enregistré.";
+
+
+        afficherMessageReapprovisionnement(
+          message,
+          true
+        );
+
+
+        if (
+          elements.validerReapprovisionnement
+        ) {
+
+          elements.validerReapprovisionnement.disabled =
+            false;
+
+          elements.validerReapprovisionnement.textContent =
+            "Valider le réapprovisionnement";
+        }
+
+
+        if (
+          message
+            .toLowerCase()
+            .includes(
+              "session"
+            )
+        ) {
+
+          supprimerJeton();
+        }
+
+
+        return;
+      }
+
+
+      /*
+       * Succès.
+       */
+      const resultat =
+        donnees.resultat || {};
+
+
+      const produit =
+        nettoyerTexte(
+          resultat.produit
+        ) ||
+        "Produit";
+
+
+      const stockAvant =
+        convertirNombre(
+          resultat.stockAvant,
+          0
+        );
+
+
+      const stockApres =
+        convertirNombre(
+          resultat.stockApres,
+          stockAvant
+        );
+
+
+      fermerReapprovisionnement();
+
+
+      alert(
+        "Réapprovisionnement enregistré.\n\n" +
+        produit +
+        "\nStock : " +
+        stockAvant +
+        " → " +
+        stockApres
+      );
+
+
+      /*
+       * On relit immédiatement RESSOURCES
+       * pour afficher le nouveau stock.
+       */
+      demanderProduits();
+
+
+      return;
+    }
   }
 
 
-  afficherProduits(
-    donnees.produits || []
-  );
-}
-
-
   /*
-   * ========================================
+   * =========================================================
    * CONNEXION
-   * ========================================
+   * =========================================================
    */
 
   function traiterConnexion(
@@ -369,13 +577,15 @@
       URL_ADMIN;
 
 
+    /*
+     * La CONNEXION reste envoyée dans la fenêtre principale.
+     * Ne pas remplacer _top par admin-iframe ici.
+     */
     elements.formulaire.action =
       apiUrl;
 
-
     elements.formulaire.method =
       "POST";
-
 
     elements.formulaire.target =
       "_top";
@@ -388,7 +598,6 @@
       elements.boutonConnexion.disabled =
         true;
 
-
       elements.boutonConnexion.textContent =
         "Connexion en cours…";
     }
@@ -400,9 +609,6 @@
     );
 
 
-    /*
-     * Envoi POST vers Apps Script.
-     */
     HTMLFormElement
       .prototype
       .submit
@@ -413,9 +619,9 @@
 
 
   /*
-   * ========================================
-   * RETOUR D'APPS SCRIPT
-   * ========================================
+   * =========================================================
+   * RETOUR DE CONNEXION
+   * =========================================================
    */
 
   function traiterRetourAppsScript() {
@@ -456,6 +662,10 @@
       );
 
 
+    /*
+     * Conservé seulement pour compatibilité
+     * avec les anciennes réponses.
+     */
     const donneesAdmin =
       nettoyerTexte(
         parametres.get(
@@ -465,25 +675,19 @@
 
 
     /*
-     * On retire immédiatement les données
-     * de la barre d'adresse.
-     *
-     * IMPORTANT :
-     * cela est fait APRÈS avoir lu
-     * jeton / erreur / admin.
+     * On retire le fragment de la barre
+     * d'adresse après l'avoir lu.
      */
     nettoyerAdresse();
 
 
     /*
-     * ========================================
-     * RETOUR DE CONNEXION RÉUSSIE
-     * ========================================
+     * ---------------------------------------------------------
+     * CONNEXION RÉUSSIE
+     * ---------------------------------------------------------
      */
 
-    if (
-      jeton
-    ) {
+    if (jeton) {
 
       enregistrerJeton(
         jeton
@@ -499,11 +703,6 @@
       }
 
 
-      /*
-       * Connexion réussie :
-       * on ouvre l'administration
-       * ET on demande les produits.
-       */
       afficherAdministration(
         true
       );
@@ -514,14 +713,12 @@
 
 
     /*
-     * ========================================
-     * RETOUR DE CONNEXION REFUSÉE
-     * ========================================
+     * ---------------------------------------------------------
+     * CONNEXION REFUSÉE
+     * ---------------------------------------------------------
      */
 
-    if (
-      erreur
-    ) {
+    if (erreur) {
 
       supprimerJeton();
 
@@ -531,8 +728,7 @@
 
 
       if (
-        erreur ===
-        "identifiants"
+        erreur === "identifiants"
       ) {
 
         message =
@@ -541,8 +737,7 @@
 
 
       if (
-        erreur ===
-        "configuration"
+        erreur === "configuration"
       ) {
 
         message =
@@ -551,8 +746,7 @@
 
 
       if (
-        erreur ===
-        "champs"
+        erreur === "champs"
       ) {
 
         message =
@@ -576,7 +770,6 @@
         elements.motDePasse.value =
           "";
 
-
         elements.motDePasse.focus();
       }
 
@@ -586,23 +779,17 @@
 
 
     /*
-     * ========================================
-     * RETOUR DES PRODUITS
-     * ========================================
+     * ---------------------------------------------------------
+     * ANCIEN RETOUR #admin=
+     * ---------------------------------------------------------
+     *
+     * Normalement plus utilisé depuis le passage à l'iframe.
+     * On le conserve par sécurité.
      */
 
-    if (
-      donneesAdmin
-    ) {
+    if (donneesAdmin) {
 
-      /*
-       * On doit toujours posséder
-       * le jeton enregistré lors
-       * de la connexion.
-       */
-      if (
-        !lireJeton()
-      ) {
+      if (!lireJeton()) {
 
         afficherConnexion();
 
@@ -617,22 +804,12 @@
       }
 
 
-      /*
-       * IMPORTANT :
-       *
-       * false signifie :
-       * NE PAS demander les produits,
-       * puisqu'ils viennent justement
-       * d'arriver.
-       *
-       * C'est ce qui empêche la boucle.
-       */
       afficherAdministration(
         false
       );
 
 
-      traiterRetourProduits(
+      traiterRetourProduitsAncien(
         donneesAdmin
       );
 
@@ -646,9 +823,9 @@
 
 
   /*
-   * ========================================
-   * AFFICHAGE
-   * ========================================
+   * =========================================================
+   * AFFICHAGE CONNEXION / ADMINISTRATION
+   * =========================================================
    */
 
   function afficherConnexion() {
@@ -682,25 +859,12 @@
       elements.boutonConnexion.disabled =
         false;
 
-
       elements.boutonConnexion.textContent =
         "Se connecter";
     }
   }
 
 
-  /*
-   * chargerProduits :
-   *
-   * true :
-   * on affiche puis on interroge Apps Script.
-   *
-   * false :
-   * on affiche seulement l'administration.
-   *
-   * Au retour #admin=..., il faut IMPÉRATIVEMENT
-   * utiliser false.
-   */
   function afficherAdministration(
     chargerProduits
   ) {
@@ -739,16 +903,13 @@
 
 
   /*
-   * ========================================
+   * =========================================================
    * DEMANDE DES PRODUITS
-   * ========================================
+   * =========================================================
    */
 
   function demanderProduits() {
 
-    /*
-     * Empêche deux demandes simultanées.
-     */
     if (
       demandeProduitsEnCours
     ) {
@@ -791,6 +952,19 @@
     }
 
 
+    if (
+      !elements.adminIframe
+    ) {
+
+      afficherErreurProduits(
+        "L’iframe d’administration est absente de admin.html."
+      );
+
+
+      return;
+    }
+
+
     demandeProduitsEnCours =
       true;
 
@@ -801,7 +975,6 @@
 
       elements.chargementProduits.hidden =
         false;
-
 
       elements.chargementProduits.textContent =
         "Chargement des produits…";
@@ -817,9 +990,6 @@
     }
 
 
-    /*
-     * Formulaire temporaire.
-     */
     const formulaire =
       document.createElement(
         "form"
@@ -829,14 +999,15 @@
     formulaire.method =
       "POST";
 
-
     formulaire.action =
       apiUrl;
 
-
+    /*
+     * Très important :
+     * la demande est envoyée dans l'iframe invisible.
+     */
     formulaire.target =
       "admin-iframe";
-
 
     formulaire.style.display =
       "none";
@@ -862,6 +1033,11 @@
       URL_ADMIN
     );
 
+
+    /*
+     * Apps Script doit connaître l'origine
+     * à laquelle envoyer postMessage.
+     */
     ajouterChamp(
       formulaire,
       "origine",
@@ -874,25 +1050,38 @@
     );
 
 
-    /*
-     * Envoi natif.
-     */
     HTMLFormElement
       .prototype
       .submit
       .call(
         formulaire
       );
+
+
+    /*
+     * On peut supprimer le formulaire
+     * après son envoi.
+     */
+    window.setTimeout(
+      function () {
+
+        formulaire.remove();
+
+      },
+      1000
+    );
   }
 
 
   /*
-   * ========================================
-   * RETOUR DES PRODUITS
-   * ========================================
+   * =========================================================
+   * ANCIEN RETOUR DES PRODUITS
+   * =========================================================
+   *
+   * Conservé seulement pour compatibilité.
    */
 
-  function traiterRetourProduits(
+  function traiterRetourProduitsAncien(
     texte
   ) {
 
@@ -914,9 +1103,6 @@
         );
 
 
-      /*
-       * Apps Script a refusé la requête.
-       */
       if (
         !donnees ||
         donnees.succes !== true
@@ -936,10 +1122,6 @@
         );
 
 
-        /*
-         * Si la session serveur a expiré,
-         * le jeton local n'est plus valable.
-         */
         if (
           message
             .toLowerCase()
@@ -956,10 +1138,6 @@
       }
 
 
-      /*
-       * Nous attendons uniquement
-       * admin-produits.
-       */
       if (
         donnees.type !==
         "admin-produits"
@@ -993,150 +1171,143 @@
   }
 
 
-  function comparerProduitsAdmin(
-  a,
-  b
-) {
-
-  const titreA =
-    nettoyerTexte(
-      a.titre
-    );
-
-  const titreB =
-    nettoyerTexte(
-      b.titre
-    );
-
-  const ordreDrapeaux = [
-    "navarre 150",
-    "navarre 100",
-    "labourd 130",
-    "labourd 100",
-    "soule 130",
-    "soule 100",
-    "béarn 150",
-    "béarn 100"
-  ];
-
-
-  const indexA =
-    trouverDrapeau(
-      titreA,
-      ordreDrapeaux
-    );
-
-  const indexB =
-    trouverDrapeau(
-      titreB,
-      ordreDrapeaux
-    );
-
-
   /*
-   * Aucun des deux n'est un drapeau :
-   * ce sont les livres.
-   * Classement alphabétique.
+   * =========================================================
+   * ORDRE DES PRODUITS
+   * =========================================================
    */
-  if (
-    indexA === -1 &&
-    indexB === -1
+
+  function comparerProduitsAdmin(
+    a,
+    b
   ) {
 
-    return titreA.localeCompare(
-      titreB,
-      "fr",
-      {
-        sensitivity: "base"
-      }
-    );
+    const titreA =
+      nettoyerTexte(
+        a.titre
+      );
+
+
+    const titreB =
+      nettoyerTexte(
+        b.titre
+      );
+
+
+    const ordreDrapeaux = [
+      "navarre 150",
+      "navarre 100",
+      "labourd 130",
+      "labourd 100",
+      "soule 130",
+      "soule 100",
+      "béarn 150",
+      "béarn 100"
+    ];
+
+
+    const indexA =
+      trouverDrapeau(
+        titreA,
+        ordreDrapeaux
+      );
+
+
+    const indexB =
+      trouverDrapeau(
+        titreB,
+        ordreDrapeaux
+      );
+
+
+    /*
+     * Ni A ni B ne sont des drapeaux :
+     * livres par ordre alphabétique.
+     */
+    if (
+      indexA === -1 &&
+      indexB === -1
+    ) {
+
+      return titreA.localeCompare(
+        titreB,
+        "fr",
+        {
+          sensitivity: "base"
+        }
+      );
+    }
+
+
+    /*
+     * Livre avant drapeau.
+     */
+    if (
+      indexA === -1
+    ) {
+
+      return -1;
+    }
+
+
+    if (
+      indexB === -1
+    ) {
+
+      return 1;
+    }
+
+
+    /*
+     * Deux drapeaux :
+     * ordre imposé.
+     */
+    return indexA - indexB;
   }
 
 
-  /*
-   * A est un livre et B un drapeau :
-   * A passe avant.
-   */
-  if (
-    indexA === -1
+  function trouverDrapeau(
+    titre,
+    ordre
   ) {
+
+    const texte =
+      normaliserTexte(
+        titre
+      );
+
+
+    for (
+      let i = 0;
+      i < ordre.length;
+      i++
+    ) {
+
+      const recherche =
+        normaliserTexte(
+          ordre[i]
+        );
+
+
+      if (
+        texte.includes(
+          recherche
+        )
+      ) {
+
+        return i;
+      }
+    }
+
+
     return -1;
   }
 
 
   /*
-   * B est un livre et A un drapeau :
-   * B passe avant.
-   */
-  if (
-    indexB === -1
-  ) {
-    return 1;
-  }
-
-
-  /*
-   * Les deux sont des drapeaux :
-   * ordre imposé ci-dessus.
-   */
-  return indexA - indexB;
-}
-
-
-function trouverDrapeau(
-  titre,
-  ordre
-) {
-
-  const texte =
-    titre
-      .toLocaleLowerCase(
-        "fr"
-      )
-      .normalize(
-        "NFD"
-      )
-      .replace(
-        /[\u0300-\u036f]/g,
-        ""
-      );
-
-
-  for (
-    let i = 0;
-    i < ordre.length;
-    i++
-  ) {
-
-    const recherche =
-      ordre[i]
-        .normalize(
-          "NFD"
-        )
-        .replace(
-          /[\u0300-\u036f]/g,
-          ""
-        );
-
-
-    if (
-      texte.includes(
-        recherche
-      )
-    ) {
-      return i;
-    }
-  }
-
-
-  return -1;
-}
-  
-
-  /*
-   * ========================================
+   * =========================================================
    * AFFICHAGE DES PRODUITS
-   * ========================================
+   * =========================================================
    */
 
   function afficherProduits(
@@ -1182,14 +1353,14 @@ function trouverDrapeau(
       return;
     }
 
-    
-const produitsTries =
-  [...produits].sort(
-    comparerProduitsAdmin
-  );
+
+    const produitsTries =
+      [...produits].sort(
+        comparerProduitsAdmin
+      );
 
 
-produitsTries.forEach(
+    produitsTries.forEach(
       function (produit) {
 
         const bloc =
@@ -1317,7 +1488,7 @@ produitsTries.forEach(
 
 
         /*
-         * ID
+         * IDENTIFIANT
          */
         ajouterLigneProduit(
           bloc,
@@ -1325,6 +1496,83 @@ produitsTries.forEach(
           nettoyerTexte(
             produit.id
           ) || "—"
+        );
+
+
+        /*
+         * -----------------------------------------------------
+         * ACTIONS
+         * -----------------------------------------------------
+         */
+
+        const actions =
+          document.createElement(
+            "div"
+          );
+
+
+        actions.className =
+          "actions-produit";
+
+
+        /*
+         * MODIFIER
+         * Sera activé ultérieurement.
+         */
+        const boutonModifier =
+          creerBoutonAction(
+            "Modifier"
+          );
+
+
+        boutonModifier.disabled =
+          true;
+
+
+        /*
+         * RÉAPPROVISIONNER
+         * Actif dès maintenant.
+         */
+        const boutonReapprovisionner =
+          creerBoutonAction(
+            "Réapprovisionner"
+          );
+
+
+        boutonReapprovisionner.addEventListener(
+          "click",
+          function () {
+
+            ouvrirReapprovisionnement(
+              produit
+            );
+          }
+        );
+
+
+        /*
+         * SORTIE MANUELLE
+         * Sera activée ultérieurement.
+         */
+        const boutonSortie =
+          creerBoutonAction(
+            "Sortie manuelle"
+          );
+
+
+        boutonSortie.disabled =
+          true;
+
+
+        actions.append(
+          boutonModifier,
+          boutonReapprovisionner,
+          boutonSortie
+        );
+
+
+        bloc.appendChild(
+          actions
         );
 
 
@@ -1360,6 +1608,489 @@ produitsTries.forEach(
   }
 
 
+  function creerBoutonAction(
+    texte
+  ) {
+
+    const bouton =
+      document.createElement(
+        "button"
+      );
+
+
+    bouton.type =
+      "button";
+
+
+    bouton.className =
+      "bouton-action";
+
+
+    bouton.textContent =
+      texte;
+
+
+    return bouton;
+  }
+
+
+  /*
+   * =========================================================
+   * OUVERTURE DU RÉAPPROVISIONNEMENT
+   * =========================================================
+   */
+
+  function ouvrirReapprovisionnement(
+    produit
+  ) {
+
+    if (
+      !elements.fondReapprovisionnement
+    ) {
+
+      alert(
+        "La fenêtre de réapprovisionnement est absente de admin.html."
+      );
+
+      return;
+    }
+
+
+    produitReapprovisionnement =
+      produit;
+
+
+    elements.nomProduitReapprovisionnement.textContent =
+      nettoyerTexte(
+        produit.titre
+      ) ||
+      nettoyerTexte(
+        produit.id
+      ) ||
+      "Produit";
+
+
+    elements.stockProduitReapprovisionnement.textContent =
+      "Stock actuel : " +
+      convertirNombre(
+        produit.stockActuel,
+        0
+      );
+
+
+    elements.quantiteReapprovisionnement.value =
+      "";
+
+
+    elements.coutReapprovisionnement.value =
+      "0";
+
+
+    elements.observationReapprovisionnement.value =
+      "";
+
+
+    afficherMessageReapprovisionnement(
+      "",
+      false
+    );
+
+
+    elements.validerReapprovisionnement.disabled =
+      false;
+
+
+    elements.validerReapprovisionnement.textContent =
+      "Valider le réapprovisionnement";
+
+
+    elements.fondReapprovisionnement.hidden =
+      false;
+
+
+    elements.quantiteReapprovisionnement.focus();
+  }
+
+
+  /*
+   * =========================================================
+   * FERMETURE DU RÉAPPROVISIONNEMENT
+   * =========================================================
+   */
+
+  function fermerReapprovisionnement() {
+
+    produitReapprovisionnement =
+      null;
+
+
+    if (
+      elements.fondReapprovisionnement
+    ) {
+
+      elements.fondReapprovisionnement.hidden =
+        true;
+    }
+
+
+    afficherMessageReapprovisionnement(
+      "",
+      false
+    );
+
+
+    if (
+      elements.validerReapprovisionnement
+    ) {
+
+      elements.validerReapprovisionnement.disabled =
+        false;
+
+
+      elements.validerReapprovisionnement.textContent =
+        "Valider le réapprovisionnement";
+    }
+  }
+
+
+  /*
+   * =========================================================
+   * ENVOI DU RÉAPPROVISIONNEMENT
+   * =========================================================
+   */
+
+  function envoyerReapprovisionnement(
+    evenement
+  ) {
+
+    evenement.preventDefault();
+
+
+    if (
+      !produitReapprovisionnement
+    ) {
+
+      return;
+    }
+
+
+    if (
+      !elements.formulaireReapprovisionnement ||
+      !elements.formulaireReapprovisionnement.checkValidity()
+    ) {
+
+      if (
+        elements.formulaireReapprovisionnement
+      ) {
+
+        elements.formulaireReapprovisionnement.reportValidity();
+      }
+
+
+      return;
+    }
+
+
+    /*
+     * Quantité.
+     */
+    const quantite =
+      convertirNombre(
+        elements.quantiteReapprovisionnement.value,
+        0
+      );
+
+
+    /*
+     * Coût total.
+     */
+    const cout =
+      convertirNombre(
+        elements.coutReapprovisionnement.value,
+        0
+      );
+
+
+    if (
+      !Number.isInteger(
+        quantite
+      ) ||
+      quantite <= 0
+    ) {
+
+      afficherMessageReapprovisionnement(
+        "La quantité reçue doit être un nombre entier supérieur à zéro.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    if (
+      !Number.isFinite(
+        cout
+      ) ||
+      cout < 0
+    ) {
+
+      afficherMessageReapprovisionnement(
+        "Le coût total ne peut pas être négatif.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    const jeton =
+      lireJeton();
+
+
+    if (!jeton) {
+
+      fermerReapprovisionnement();
+
+
+      afficherConnexion();
+
+
+      afficherMessage(
+        "Votre session administrateur n’est plus active. Veuillez vous reconnecter.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    const apiUrl =
+      obtenirApiUrl();
+
+
+    if (!apiUrl) {
+
+      afficherMessageReapprovisionnement(
+        "L’adresse de l’API Apps Script est absente de config.js.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    if (
+      !elements.adminIframe
+    ) {
+
+      afficherMessageReapprovisionnement(
+        "L’iframe d’administration est absente de admin.html.",
+        true
+      );
+
+
+      return;
+    }
+
+
+    /*
+     * Formulaire temporaire envoyé vers
+     * Apps Script DANS L'IFRAME INVISIBLE.
+     */
+    const formulaire =
+      document.createElement(
+        "form"
+      );
+
+
+    formulaire.method =
+      "POST";
+
+
+    formulaire.action =
+      apiUrl;
+
+
+    formulaire.target =
+      "admin-iframe";
+
+
+    formulaire.style.display =
+      "none";
+
+
+    /*
+     * Type d'action.
+     */
+    ajouterChamp(
+      formulaire,
+      "type",
+      "admin-reapprovisionnement"
+    );
+
+
+    /*
+     * Jeton administrateur.
+     */
+    ajouterChamp(
+      formulaire,
+      "jeton",
+      jeton
+    );
+
+
+    /*
+     * Produit.
+     */
+    ajouterChamp(
+      formulaire,
+      "produitId",
+      produitReapprovisionnement.id
+    );
+
+
+    /*
+     * Quantité reçue.
+     */
+    ajouterChamp(
+      formulaire,
+      "quantite",
+      quantite
+    );
+
+
+    /*
+     * Coût total.
+     */
+    ajouterChamp(
+      formulaire,
+      "cout",
+      cout
+    );
+
+
+    /*
+     * Observation facultative.
+     */
+    ajouterChamp(
+      formulaire,
+      "observation",
+      elements.observationReapprovisionnement.value
+    );
+
+
+    /*
+     * Conservé pour compatibilité.
+     */
+    ajouterChamp(
+      formulaire,
+      "retourAdmin",
+      URL_ADMIN
+    );
+
+
+    /*
+     * Indispensable pour postMessage.
+     */
+    ajouterChamp(
+      formulaire,
+      "origine",
+      window.location.origin
+    );
+
+
+    /*
+     * On bloque le bouton pendant
+     * le traitement.
+     */
+    elements.validerReapprovisionnement.disabled =
+      true;
+
+
+    elements.validerReapprovisionnement.textContent =
+      "Enregistrement…";
+
+
+    afficherMessageReapprovisionnement(
+      "Enregistrement du réapprovisionnement…",
+      false
+    );
+
+
+    document.body.appendChild(
+      formulaire
+    );
+
+
+    HTMLFormElement
+      .prototype
+      .submit
+      .call(
+        formulaire
+      );
+
+
+    window.setTimeout(
+      function () {
+
+        formulaire.remove();
+
+      },
+      1000
+    );
+  }
+
+
+  /*
+   * =========================================================
+   * MESSAGE RÉAPPROVISIONNEMENT
+   * =========================================================
+   */
+
+  function afficherMessageReapprovisionnement(
+    message,
+    erreur
+  ) {
+
+    if (
+      !elements.messageReapprovisionnement
+    ) {
+
+      return;
+    }
+
+
+    elements.messageReapprovisionnement.textContent =
+      message || "";
+
+
+    if (!message) {
+
+      elements.messageReapprovisionnement.className =
+        "message";
+
+
+      return;
+    }
+
+
+    elements.messageReapprovisionnement.className =
+      erreur
+        ? "message message-erreur"
+        : "message message-succes";
+  }
+
+
+  /*
+   * =========================================================
+   * ERREURS DE CHARGEMENT DES PRODUITS
+   * =========================================================
+   */
+
   function afficherErreurProduits(
     message
   ) {
@@ -1383,9 +2114,9 @@ produitsTries.forEach(
 
 
   /*
-   * ========================================
-   * FORMULAIRE TEMPORAIRE
-   * ========================================
+   * =========================================================
+   * CHAMP DE FORMULAIRE INVISIBLE
+   * =========================================================
    */
 
   function ajouterChamp(
@@ -1423,9 +2154,9 @@ produitsTries.forEach(
 
 
   /*
-   * ========================================
+   * =========================================================
    * SESSION
-   * ========================================
+   * =========================================================
    */
 
   function enregistrerJeton(
@@ -1439,7 +2170,12 @@ produitsTries.forEach(
         jeton
       );
 
-    } catch (_) {}
+    } catch (_) {
+
+      /*
+       * Rien.
+       */
+    }
   }
 
 
@@ -1468,14 +2204,19 @@ produitsTries.forEach(
         CLE_SESSION_ADMIN
       );
 
-    } catch (_) {}
+    } catch (_) {
+
+      /*
+       * Rien.
+       */
+    }
   }
 
 
   /*
-   * ========================================
+   * =========================================================
    * DÉCONNEXION
-   * ========================================
+   * =========================================================
    */
 
   function deconnecter() {
@@ -1485,6 +2226,10 @@ produitsTries.forEach(
 
     demandeProduitsEnCours =
       false;
+
+
+    produitReapprovisionnement =
+      null;
 
 
     if (
@@ -1527,6 +2272,15 @@ produitsTries.forEach(
     }
 
 
+    if (
+      elements.fondReapprovisionnement
+    ) {
+
+      elements.fondReapprovisionnement.hidden =
+        true;
+    }
+
+
     afficherConnexion();
 
 
@@ -1546,9 +2300,9 @@ produitsTries.forEach(
 
 
   /*
-   * ========================================
+   * =========================================================
    * MESSAGES DE CONNEXION
-   * ========================================
+   * =========================================================
    */
 
   function afficherMessage(
@@ -1586,9 +2340,9 @@ produitsTries.forEach(
 
 
   /*
-   * ========================================
+   * =========================================================
    * OUTILS
-   * ========================================
+   * =========================================================
    */
 
   function obtenirApiUrl() {
@@ -1717,6 +2471,26 @@ produitsTries.forEach(
         ? ""
         : valeur
     ).trim();
+  }
+
+
+  function normaliserTexte(
+    valeur
+  ) {
+
+    return nettoyerTexte(
+      valeur
+    )
+      .toLocaleLowerCase(
+        "fr"
+      )
+      .normalize(
+        "NFD"
+      )
+      .replace(
+        /[\u0300-\u036f]/g,
+        ""
+      );
   }
 
 })();
