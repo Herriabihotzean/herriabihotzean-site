@@ -537,7 +537,6 @@
       <form
         id="formulaire-connexion"
         method="post"
-        target="reponse-admin"
       >
 
         <input
@@ -545,6 +544,14 @@
           name="type"
           value="admin-login"
         >
+
+        <input
+          id="retour-admin"
+          type="hidden"
+          name="retourAdmin"
+          value=""
+        >
+        
         <input
           id="origine-admin"
           type="hidden"
@@ -672,13 +679,6 @@
     Apps Script répond dans cette iframe.
     Elle reste invisible.
   -->
-
-  <iframe
-    id="reponse-admin"
-    name="reponse-admin"
-    title="Réponse de connexion"
-    hidden
-  ></iframe>
 
   <footer>
     © Herria Bihotzean
