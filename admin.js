@@ -214,7 +214,103 @@
         deconnecter
       );
     }
+    window.addEventListener(
+      "message",
+      traiterMessageAdministration
+    );
   }
+
+  function traiterMessageAdministration(
+  evenement
+) {
+
+  /*
+   * Les réponses HtmlService d'Apps Script
+   * proviennent des domaines Google.
+   */
+  const origine =
+    String(
+      evenement.origin || ""
+    );
+
+  const origineGoogle =
+    origine ===
+      "https://script.google.com" ||
+    origine.endsWith(
+      ".googleusercontent.com"
+    );
+
+  if (!origineGoogle) {
+    return;
+  }
+
+
+  const donnees =
+    evenement.data;
+
+
+  if (
+    !donnees ||
+    typeof donnees !==
+      "object"
+  ) {
+    return;
+  }
+
+
+  /*
+   * Pour l'instant nous recevons
+   * seulement admin-produits.
+   */
+  if (
+    donnees.type !==
+    "admin-produits"
+  ) {
+    return;
+  }
+
+
+  demandeProduitsEnCours =
+    false;
+
+
+  if (
+    donnees.succes !== true
+  ) {
+
+    const message =
+      donnees.message
+        ? String(
+            donnees.message
+          )
+        : "Impossible de charger les produits.";
+
+
+    afficherErreurProduits(
+      message
+    );
+
+
+    if (
+      message
+        .toLowerCase()
+        .includes(
+          "session"
+        )
+    ) {
+
+      supprimerJeton();
+    }
+
+
+    return;
+  }
+
+
+  afficherProduits(
+    donnees.produits || []
+  );
+}
 
 
   /*
@@ -739,7 +835,7 @@
 
 
     formulaire.target =
-      "_top";
+      "admin-iframe";
 
 
     formulaire.style.display =
@@ -764,6 +860,12 @@
       formulaire,
       "retourAdmin",
       URL_ADMIN
+    );
+
+    ajouterChamp(
+      formulaire,
+      "origine",
+      window.location.origin
     );
 
 
