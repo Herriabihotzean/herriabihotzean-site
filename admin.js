@@ -886,6 +886,146 @@
   }
 
 
+  function comparerProduitsAdmin(
+  a,
+  b
+) {
+
+  const titreA =
+    nettoyerTexte(
+      a.titre
+    );
+
+  const titreB =
+    nettoyerTexte(
+      b.titre
+    );
+
+  const ordreDrapeaux = [
+    "navarre 150",
+    "navarre 100",
+    "labourd 130",
+    "labourd 100",
+    "soule 130",
+    "soule 100",
+    "béarn 150",
+    "béarn 100"
+  ];
+
+
+  const indexA =
+    trouverDrapeau(
+      titreA,
+      ordreDrapeaux
+    );
+
+  const indexB =
+    trouverDrapeau(
+      titreB,
+      ordreDrapeaux
+    );
+
+
+  /*
+   * Aucun des deux n'est un drapeau :
+   * ce sont les livres.
+   * Classement alphabétique.
+   */
+  if (
+    indexA === -1 &&
+    indexB === -1
+  ) {
+
+    return titreA.localeCompare(
+      titreB,
+      "fr",
+      {
+        sensitivity: "base"
+      }
+    );
+  }
+
+
+  /*
+   * A est un livre et B un drapeau :
+   * A passe avant.
+   */
+  if (
+    indexA === -1
+  ) {
+    return -1;
+  }
+
+
+  /*
+   * B est un livre et A un drapeau :
+   * B passe avant.
+   */
+  if (
+    indexB === -1
+  ) {
+    return 1;
+  }
+
+
+  /*
+   * Les deux sont des drapeaux :
+   * ordre imposé ci-dessus.
+   */
+  return indexA - indexB;
+}
+
+
+function trouverDrapeau(
+  titre,
+  ordre
+) {
+
+  const texte =
+    titre
+      .toLocaleLowerCase(
+        "fr"
+      )
+      .normalize(
+        "NFD"
+      )
+      .replace(
+        /[\u0300-\u036f]/g,
+        ""
+      );
+
+
+  for (
+    let i = 0;
+    i < ordre.length;
+    i++
+  ) {
+
+    const recherche =
+      ordre[i]
+        .normalize(
+          "NFD"
+        )
+        .replace(
+          /[\u0300-\u036f]/g,
+          ""
+        );
+
+
+    if (
+      texte.includes(
+        recherche
+      )
+    ) {
+      return i;
+    }
+  }
+
+
+  return -1;
+}
+  
+
   /*
    * ========================================
    * AFFICHAGE DES PRODUITS
@@ -935,8 +1075,14 @@
       return;
     }
 
+    
+const produitsTries =
+  [...produits].sort(
+    comparerProduitsAdmin
+  );
 
-    produits.forEach(
+
+produitsTries.forEach(
       function (produit) {
 
         const bloc =
