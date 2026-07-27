@@ -14,7 +14,6 @@
     Administration — Herria Bihotzean
   </title>
 
-
   <style>
 
     * {
@@ -28,7 +27,6 @@
     [hidden] {
       display: none !important;
     }
-
 
     body {
       margin: 0;
@@ -54,14 +52,11 @@
       background-repeat: no-repeat;
     }
 
-
     button,
     input,
-    textarea,
     a {
       font: inherit;
     }
-
 
     a {
       color: inherit;
@@ -73,9 +68,10 @@
        ========================= */
 
     .page {
+
       width:
         min(
-          850px,
+          800px,
           calc(100% - 28px)
         );
 
@@ -85,18 +81,19 @@
 
 
     /* =========================
-       EN-TÊTE
+       TITRE
        ========================= */
 
     .entete {
+
       padding:
         46px 16px 28px;
 
       text-align: center;
     }
 
-
     h1 {
+
       margin: 0;
 
       font-size:
@@ -113,7 +110,6 @@
         uppercase;
     }
 
-
     main {
       padding-bottom: 40px;
     }
@@ -124,6 +120,7 @@
        ========================= */
 
     .bloc {
+
       margin-bottom: 24px;
 
       padding: 30px;
@@ -157,8 +154,8 @@
         );
     }
 
-
     .introduction {
+
       margin:
         0 0 26px;
 
@@ -173,11 +170,12 @@
        ========================= */
 
     .champ {
+
       margin-bottom: 19px;
     }
 
-
     label {
+
       display: block;
 
       margin-bottom: 7px;
@@ -185,9 +183,8 @@
       font-weight: bold;
     }
 
+    input {
 
-    input,
-    textarea {
       width: 100%;
 
       padding:
@@ -203,16 +200,8 @@
       color: #222;
     }
 
+    input:focus {
 
-    textarea {
-      min-height: 95px;
-
-      resize: vertical;
-    }
-
-
-    input:focus,
-    textarea:focus {
       outline:
         2px solid
         rgba(
@@ -231,12 +220,12 @@
        ========================= */
 
     .bouton-principal,
-    .bouton-secondaire,
-    .bouton-action {
-      min-height: 46px;
+    .bouton-secondaire {
+
+      min-height: 50px;
 
       padding:
-        11px 16px;
+        12px 18px;
 
       border:
         1px solid white;
@@ -258,20 +247,18 @@
       cursor: pointer;
     }
 
-
     .bouton-principal {
+
       display: block;
 
       width: 100%;
     }
 
-
     .bouton-principal:hover,
     .bouton-secondaire:hover,
-    .bouton-action:hover,
     .bouton-principal:focus-visible,
-    .bouton-secondaire:focus-visible,
-    .bouton-action:focus-visible {
+    .bouton-secondaire:focus-visible {
+
       background: white;
 
       color: #222;
@@ -279,11 +266,10 @@
       outline: none;
     }
 
-
     .bouton-principal:disabled,
-    .bouton-secondaire:disabled,
-    .bouton-action:disabled {
-      opacity: 0.45;
+    .bouton-secondaire:disabled {
+
+      opacity: 0.55;
 
       cursor: not-allowed;
     }
@@ -294,6 +280,7 @@
        ========================= */
 
     .message {
+
       min-height: 24px;
 
       margin:
@@ -306,13 +293,13 @@
       font-weight: bold;
     }
 
-
     .message-erreur {
+
       color: #ffd8d8;
     }
 
-
     .message-succes {
+
       color: #dcffdf;
     }
 
@@ -322,17 +309,23 @@
        ========================= */
 
     .administration-ouverte {
+
       text-align: center;
     }
 
-
     .administration-ouverte h2 {
+
       margin:
         0 0 18px;
     }
 
+    .administration-ouverte p {
+
+      line-height: 1.6;
+    }
 
     .info-session {
+
       margin:
         24px 0;
 
@@ -359,41 +352,33 @@
     }
 
 
-    #message-administration {
-      margin-bottom: 24px;
-    }
-
-
     /* =========================
-       TABLEAU DE BORD
+       PRODUITS
        ========================= */
 
     #tableau-bord {
+
       margin-top: 32px;
 
       text-align: left;
     }
 
-
     #titre-produits {
+
       margin:
         0 0 18px;
 
       text-align: center;
     }
 
-
     #chargement-produits {
+
       margin:
         16px 0 22px;
     }
 
-
-    /* =========================
-       PRODUITS
-       ========================= */
-
     .produit-admin {
+
       margin-bottom: 14px;
 
       padding: 18px;
@@ -418,40 +403,33 @@
         );
     }
 
-
     .produit-admin:last-child {
+
       margin-bottom: 0;
     }
 
-
     .produit-admin h3 {
+
       margin:
         0 0 12px;
 
       font-size: 1.2rem;
     }
 
-
     .produit-admin p {
+
       margin:
         6px 0;
     }
 
+    .stock-nul {
 
-    .stock-nul,
-    .stock-faible {
       font-weight: bold;
     }
 
+    .stock-faible {
 
-    .actions-produit {
-      display: flex;
-
-      flex-wrap: wrap;
-
-      gap: 8px;
-
-      margin-top: 17px;
+      font-weight: bold;
     }
 
 
@@ -460,6 +438,7 @@
        ========================= */
 
     .outils-admin {
+
       display: flex;
 
       justify-content: center;
@@ -473,118 +452,19 @@
 
 
     /* =========================
-       MODALE
-       ========================= */
-
-    .fond-modal {
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 1000;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      padding: 20px;
-
-      background:
-        rgba(
-          0,
-          0,
-          0,
-          0.78
-        );
-    }
-
-
-    .modal {
-      width:
-        min(
-          560px,
-          100%
-        );
-
-      max-height:
-        calc(100vh - 40px);
-
-      overflow-y: auto;
-
-      padding: 28px;
-
-      border:
-        1px solid white;
-
-      border-radius: 8px;
-
-      background:
-        #173620;
-
-      box-shadow:
-        0 10px 40px
-        rgba(
-          0,
-          0,
-          0,
-          0.5
-        );
-    }
-
-
-    .modal h2 {
-      margin-top: 0;
-
-      text-align: center;
-    }
-
-
-    .nom-produit-modal {
-      margin:
-        18px 0 8px;
-
-      text-align: center;
-
-      font-size: 1.2rem;
-
-      font-weight: bold;
-    }
-
-
-    .stock-modal {
-      margin:
-        0 0 25px;
-
-      text-align: center;
-    }
-
-
-    .actions-modal {
-      display: flex;
-
-      justify-content: flex-end;
-
-      gap: 10px;
-
-      margin-top: 25px;
-    }
-
-
-    /* =========================
        RETOUR
        ========================= */
 
     .retour {
+
       margin:
         30px 0;
 
       text-align: center;
     }
 
-
     .retour a {
+
       display: inline-block;
 
       padding:
@@ -610,8 +490,8 @@
       text-decoration: none;
     }
 
-
     .retour a:hover {
+
       background: white;
 
       color: #222;
@@ -623,6 +503,7 @@
        ========================= */
 
     footer {
+
       padding:
         22px 14px 28px;
 
@@ -652,34 +533,20 @@
     ) {
 
       body {
+
         background-attachment: scroll;
       }
 
-
       .entete {
+
         padding:
           28px 8px 18px;
       }
 
-
       .bloc {
+
         padding:
           22px 16px;
-      }
-
-
-      .actions-produit {
-        display: grid;
-      }
-
-
-      .bouton-action {
-        width: 100%;
-      }
-
-
-      .actions-modal {
-        display: grid;
       }
     }
 
@@ -796,7 +663,7 @@
 
 
     <!-- =========================
-         ADMINISTRATION
+         ADMINISTRATION OUVERTE
          ========================= -->
 
     <section
@@ -817,17 +684,11 @@
 
       <div class="info-session">
 
-        Votre session administrateur est active.
+        <p>
+          Votre session administrateur est active.
+        </p>
 
       </div>
-
-
-      <p
-        id="message-administration"
-        class="message"
-        hidden
-        aria-live="polite"
-      ></p>
 
 
 
@@ -870,6 +731,7 @@
 
       </div>
 
+
     </section>
 
 
@@ -884,135 +746,6 @@
 
 
   </main>
-
-
-
-  <!-- =========================
-       RÉAPPROVISIONNEMENT
-       ========================= -->
-
-  <div
-    id="fond-reapprovisionnement"
-    class="fond-modal"
-    hidden
-  >
-
-    <section
-      class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="titre-reapprovisionnement"
-    >
-
-      <h2 id="titre-reapprovisionnement">
-        Réapprovisionnement
-      </h2>
-
-
-      <p
-        id="nom-produit-reapprovisionnement"
-        class="nom-produit-modal"
-      ></p>
-
-
-      <p
-        id="stock-produit-reapprovisionnement"
-        class="stock-modal"
-      ></p>
-
-
-      <form
-        id="formulaire-reapprovisionnement"
-      >
-
-        <div class="champ">
-
-          <label
-            for="quantite-reapprovisionnement"
-          >
-            Quantité reçue *
-          </label>
-
-          <input
-            id="quantite-reapprovisionnement"
-            type="number"
-            min="1"
-            step="1"
-            required
-          >
-
-        </div>
-
-
-        <div class="champ">
-
-          <label
-            for="cout-reapprovisionnement"
-          >
-            Coût total (€)
-          </label>
-
-          <input
-            id="cout-reapprovisionnement"
-            type="number"
-            min="0"
-            step="0.01"
-            value="0"
-          >
-
-        </div>
-
-
-        <div class="champ">
-
-          <label
-            for="observation-reapprovisionnement"
-          >
-            Observation
-          </label>
-
-          <textarea
-            id="observation-reapprovisionnement"
-            placeholder="Ex. : nouvelle impression, livraison fournisseur…"
-          ></textarea>
-
-        </div>
-
-
-        <p
-          id="message-reapprovisionnement"
-          class="message"
-          aria-live="polite"
-        ></p>
-
-
-        <div class="actions-modal">
-
-          <button
-            id="annuler-reapprovisionnement"
-            class="bouton-secondaire"
-            type="button"
-          >
-            Annuler
-          </button>
-
-
-          <button
-            id="valider-reapprovisionnement"
-            class="bouton-principal"
-            type="submit"
-          >
-            Valider le réapprovisionnement
-          </button>
-
-        </div>
-
-      </form>
-
-    </section>
-
-  </div>
-
 
 
   <footer>
