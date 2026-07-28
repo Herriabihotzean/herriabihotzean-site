@@ -497,309 +497,252 @@ let modeEditionProduit = "";
 
   function installerEvenements() {
 
-    if (elements.formulaire) {
+  /*
+   * CONNEXION
+   */
 
-      elements.formulaire.addEventListener(
-        "submit",
-        traiterConnexion
-      );
-    }
+  if (elements.formulaire) {
+
+    elements.formulaire.addEventListener(
+      "submit",
+      traiterConnexion
+    );
+  }
 
 
-    if (elements.boutonDeconnexion) {
+  /*
+   * DÉCONNEXION
+   */
 
-      elements.boutonDeconnexion.addEventListener(
-        "click",
-        deconnecter
-      );
-    }
+  if (elements.boutonDeconnexion) {
 
-        /*
-     * =========================================================
-     * CRÉER / MODIFIER UN PRODUIT
-     * =========================================================
-     */
+    elements.boutonDeconnexion.addEventListener(
+      "click",
+      deconnecter
+    );
+  }
 
-    const boutonNouveauProduit =
-      document.getElementById(
-        "bouton-nouveau-produit"
-      );
 
-    if (boutonNouveauProduit) {
+  /*
+   * ========================================
+   * RÉAPPROVISIONNEMENT
+   * ========================================
+   */
 
-      boutonNouveauProduit.addEventListener(
-        "click",
-        function () {
+  if (
+    elements.annulerReapprovisionnement
+  ) {
 
-          ouvrirNouveauProduit();
+    elements.annulerReapprovisionnement.addEventListener(
+      "click",
+      fermerReapprovisionnement
+    );
+  }
+
+
+  if (
+    elements.formulaireReapprovisionnement
+  ) {
+
+    elements.formulaireReapprovisionnement.addEventListener(
+      "submit",
+      envoyerReapprovisionnement
+    );
+  }
+
+
+  if (
+    elements.fondReapprovisionnement
+  ) {
+
+    elements.fondReapprovisionnement.addEventListener(
+      "click",
+      function (evenement) {
+
+        if (
+          evenement.target ===
+          elements.fondReapprovisionnement
+        ) {
+
+          fermerReapprovisionnement();
         }
-      );
-    }
+      }
+    );
+  }
 
 
-    const boutonAnnulerProduit =
-      document.getElementById(
-        "annuler-produit"
-      );
+  /*
+   * ========================================
+   * SORTIE MANUELLE
+   * ========================================
+   */
 
-    if (boutonAnnulerProduit) {
+  if (
+    elements.annulerSortieManuelle
+  ) {
 
-      boutonAnnulerProduit.addEventListener(
-        "click",
-        function () {
+    elements.annulerSortieManuelle.addEventListener(
+      "click",
+      fermerSortieManuelle
+    );
+  }
+
+
+  if (
+    elements.formulaireSortieManuelle
+  ) {
+
+    elements.formulaireSortieManuelle.addEventListener(
+      "submit",
+      envoyerSortieManuelle
+    );
+  }
+
+
+  if (
+    elements.fondSortieManuelle
+  ) {
+
+    elements.fondSortieManuelle.addEventListener(
+      "click",
+      function (evenement) {
+
+        if (
+          evenement.target ===
+          elements.fondSortieManuelle
+        ) {
+
+          fermerSortieManuelle();
+        }
+      }
+    );
+  }
+
+
+  /*
+   * ========================================
+   * CRÉER / MODIFIER PRODUIT
+   * ========================================
+   */
+
+  if (
+    elements.boutonNouveauProduit
+  ) {
+
+    elements.boutonNouveauProduit.addEventListener(
+      "click",
+      ouvrirNouveauProduit
+    );
+  }
+
+
+  if (
+    elements.annulerProduit
+  ) {
+
+    elements.annulerProduit.addEventListener(
+      "click",
+      fermerProduit
+    );
+  }
+
+
+  /*
+   * C'est CE branchement qui déclenche
+   * réellement envoyerProduit().
+   */
+
+  if (
+    elements.formulaireProduit
+  ) {
+
+    elements.formulaireProduit.addEventListener(
+      "submit",
+      envoyerProduit
+    );
+  }
+
+
+  if (
+    elements.fondProduit
+  ) {
+
+    elements.fondProduit.addEventListener(
+      "click",
+      function (evenement) {
+
+        if (
+          evenement.target ===
+          elements.fondProduit
+        ) {
 
           fermerProduit();
         }
-      );
-    }
-
-
-    /*
-     * RÉAPPROVISIONNEMENT
-     */
-
-    if (
-      elements.annulerReapprovisionnement
-    ) {
-
-      elements.annulerReapprovisionnement.addEventListener(
-        "click",
-        fermerReapprovisionnement
-      );
-    }
-
-
-    if (
-      elements.formulaireReapprovisionnement
-    ) {
-
-      elements.formulaireReapprovisionnement.addEventListener(
-        "submit",
-        envoyerReapprovisionnement
-      );
-    }
-
-
-    /*
-     * SORTIE MANUELLE
-     */
-
-    if (
-      elements.annulerSortieManuelle
-    ) {
-
-      elements.annulerSortieManuelle.addEventListener(
-        "click",
-        fermerSortieManuelle
-      );
-    }
-
-
-    if (
-      elements.formulaireSortieManuelle
-    ) {
-
-      elements.formulaireSortieManuelle.addEventListener(
-        "submit",
-        envoyerSortieManuelle
-      );
-    }
-
-
-    /*
-     * Clic sur le fond sombre du
-     * réapprovisionnement.
-     */
-
-    if (
-      elements.fondReapprovisionnement
-    ) {
-
-      elements.fondReapprovisionnement.addEventListener(
-        "click",
-        function (evenement) {
-
-          if (
-            evenement.target ===
-            elements.fondReapprovisionnement
-          ) {
-
-            fermerReapprovisionnement();
-          }
-
-          /*
-     * NOUVEAU PRODUIT
-     */
-
-    if (
-      elements.boutonNouveauProduit
-    ) {
-
-      elements.boutonNouveauProduit.addEventListener(
-        "click",
-        ouvrirNouveauProduit
-      );
-    }
-
-
-    /*
-     * ANNULER CRÉATION / MODIFICATION
-     */
-
-    if (
-      elements.annulerProduit
-    ) {
-
-      elements.annulerProduit.addEventListener(
-        "click",
-        fermerProduit
-      );
-    }
-
-
-    /*
-     * ENREGISTRER PRODUIT
-     */
-
-    if (
-      elements.formulaireProduit
-    ) {
-
-      elements.formulaireProduit.addEventListener(
-        "submit",
-        envoyerProduit
-      );
-    }
-
-
-    /*
-     * Clic sur le fond sombre.
-     */
-
-    if (
-      elements.fondProduit
-    ) {
-
-      elements.fondProduit.addEventListener(
-        "click",
-        function (evenement) {
-
-          if (
-            evenement.target ===
-            elements.fondProduit
-          ) {
-
-            fermerProduit();
-          }
-        }
-      );
-    }
-          
-        }
-      );
-    }
-
-
-    /*
-     * Clic sur le fond sombre de
-     * la sortie manuelle.
-     */
-
-    if (
-      elements.fondSortieManuelle
-    ) {
-
-      elements.fondSortieManuelle.addEventListener(
-        "click",
-        function (evenement) {
-
-          if (
-            evenement.target ===
-            elements.fondSortieManuelle
-          ) {
-
-            fermerSortieManuelle();
-          }
-        }
-      );
-    }
-
-
-    /*
-     * Échap ferme la fenêtre ouverte.
-     */
-
-    document.addEventListener(
-  "keydown",
-  function (evenement) {
-
-    if (
-      evenement.key !== "Escape"
-    ) {
-      return;
-    }
-
-
-    /*
-     * Fenêtre produit
-     */
-    if (
-      elements.fondProduit &&
-      !elements.fondProduit.hidden
-    ) {
-
-      fermerProduit();
-      return;
-    }
-
-
-    /*
-     * Réapprovisionnement
-     */
-    if (
-      elements.fondReapprovisionnement &&
-      !elements.fondReapprovisionnement.hidden
-    ) {
-
-      fermerReapprovisionnement();
-      return;
-    }
-
-
-    /*
-     * Sortie manuelle
-     */
-    if (
-      elements.fondSortieManuelle &&
-      !elements.fondSortieManuelle.hidden
-    ) {
-
-      fermerSortieManuelle();
-      return;
-    }
-  }
-);
-
-
-    /*
-     * Réponses provenant de l'iframe
-     * Apps Script.
-     */
-
-    window.addEventListener(
-      "message",
-      traiterMessageAdministration
+      }
     );
-  
-      /*
-     * =========================================================
-     * CLICS CRÉER / MODIFIER PRODUIT
-     * =========================================================
-     */
-
-    
-  
   }
+
+
+  /*
+   * ========================================
+   * TOUCHE ÉCHAP
+   * ========================================
+   */
+
+  document.addEventListener(
+    "keydown",
+    function (evenement) {
+
+      if (
+        evenement.key !== "Escape"
+      ) {
+
+        return;
+      }
+
+
+      if (
+        elements.fondProduit &&
+        !elements.fondProduit.hidden
+      ) {
+
+        fermerProduit();
+        return;
+      }
+
+
+      if (
+        elements.fondReapprovisionnement &&
+        !elements.fondReapprovisionnement.hidden
+      ) {
+
+        fermerReapprovisionnement();
+        return;
+      }
+
+
+      if (
+        elements.fondSortieManuelle &&
+        !elements.fondSortieManuelle.hidden
+      ) {
+
+        fermerSortieManuelle();
+      }
+    }
+  );
+
+
+  /*
+   * ========================================
+   * RÉPONSES APPS SCRIPT
+   * ========================================
+   */
+
+  window.addEventListener(
+    "message",
+    traiterMessageAdministration
+  );
+}
 
 
   /*
