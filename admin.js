@@ -3911,6 +3911,11 @@ function afficherGraphiqueFinances(
         "13"
       );
 
+      texte.setAttribute(
+        "fill",
+        "#ffffff"
+      );
+
 
       texte.textContent =
         Math.round(
@@ -4063,6 +4068,11 @@ function afficherGraphiqueFinances(
       texte.setAttribute(
         "font-size",
         "12"
+      );
+
+      texte.setAttribute(
+        "fill",
+        "#ffffff"
       );
 
 
