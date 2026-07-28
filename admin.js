@@ -27,6 +27,10 @@
 
   let produitSortieManuelle = null;
 
+  let produitEdition = null;
+
+let modeEditionProduit = "";
+
 
   /*
    * =========================================================
@@ -260,6 +264,228 @@
       document.getElementById(
         "valider-sortie-manuelle"
       );
+
+    /*
+     * =========================================================
+     * CRÉER / MODIFIER UN PRODUIT
+     * =========================================================
+     */
+
+    elements.boutonNouveauProduit =
+      document.getElementById(
+        "bouton-nouveau-produit"
+      );
+
+    elements.fondProduit =
+      document.getElementById(
+        "fond-produit"
+      );
+
+    elements.formulaireProduit =
+      document.getElementById(
+        "formulaire-produit"
+      );
+
+    elements.titreModalProduit =
+      document.getElementById(
+        "titre-modal-produit"
+      );
+
+    elements.produitId =
+      document.getElementById(
+        "produit-id"
+      );
+
+    elements.categorieProduit =
+      document.getElementById(
+        "categorie-produit"
+      );
+
+    elements.categorieBasqueProduit =
+      document.getElementById(
+        "categorie-basque-produit"
+      );
+
+    elements.sousCategorieProduit =
+      document.getElementById(
+        "sous-categorie-produit"
+      );
+
+    elements.sousCategorieBasqueProduit =
+      document.getElementById(
+        "sous-categorie-basque-produit"
+      );
+
+    elements.ordreAffichageProduit =
+      document.getElementById(
+        "ordre-affichage-produit"
+      );
+
+    elements.visibleBoutiqueProduit =
+      document.getElementById(
+        "visible-boutique-produit"
+      );
+
+    elements.titreProduit =
+      document.getElementById(
+        "titre-produit"
+      );
+
+    elements.titreBasqueProduit =
+      document.getElementById(
+        "titre-basque-produit"
+      );
+
+    elements.sousTitreProduit =
+      document.getElementById(
+        "sous-titre-produit"
+      );
+
+    elements.sousTitreBasqueProduit =
+      document.getElementById(
+        "sous-titre-basque-produit"
+      );
+
+    elements.descriptionFrancaiseProduit =
+      document.getElementById(
+        "description-francaise-produit"
+      );
+
+    elements.descriptionBasqueProduit =
+      document.getElementById(
+        "description-basque-produit"
+      );
+
+    elements.prixProduit =
+      document.getElementById(
+        "prix-produit"
+      );
+
+    elements.beneficiairePayPalProduit =
+      document.getElementById(
+        "beneficiaire-paypal-produit"
+      );
+
+    elements.poidsProduit =
+      document.getElementById(
+        "poids-produit"
+      );
+
+    elements.statutProduit =
+      document.getElementById(
+        "statut-produit"
+      );
+
+    elements.modeExpeditionProduit =
+      document.getElementById(
+        "mode-expedition-produit"
+      );
+
+    elements.fraisLivraisonProduit =
+      document.getElementById(
+        "frais-livraison-produit"
+      );
+
+    elements.blocStockActuelProduit =
+      document.getElementById(
+        "bloc-stock-actuel-produit"
+      );
+
+    elements.stockActuelProduit =
+      document.getElementById(
+        "stock-actuel-produit"
+      );
+
+    elements.blocStockInitialProduit =
+      document.getElementById(
+        "bloc-stock-initial-produit"
+      );
+
+    elements.stockInitialProduit =
+      document.getElementById(
+        "stock-initial-produit"
+      );
+
+    elements.prixRevientUnitaireProduit =
+      document.getElementById(
+        "prix-revient-unitaire-produit"
+      );
+
+    elements.seuilAlerteProduit =
+      document.getElementById(
+        "seuil-alerte-produit"
+      );
+
+    elements.stockCritiqueProduit =
+      document.getElementById(
+        "stock-critique-produit"
+      );
+
+    elements.cout10Produit =
+      document.getElementById(
+        "cout10-produit"
+      );
+
+    elements.cout20Produit =
+      document.getElementById(
+        "cout20-produit"
+      );
+
+    elements.cout50Produit =
+      document.getElementById(
+        "cout50-produit"
+      );
+
+    elements.cout100Produit =
+      document.getElementById(
+        "cout100-produit"
+      );
+
+    elements.photoPrincipaleProduit =
+      document.getElementById(
+        "photo-principale-produit"
+      );
+
+    elements.photo2Produit =
+      document.getElementById(
+        "photo2-produit"
+      );
+
+    elements.photo3Produit =
+      document.getElementById(
+        "photo3-produit"
+      );
+
+    elements.photo4Produit =
+      document.getElementById(
+        "photo4-produit"
+      );
+
+    elements.photo5Produit =
+      document.getElementById(
+        "photo5-produit"
+      );
+
+    elements.urlPageDetailleeProduit =
+      document.getElementById(
+        "url-page-detaillee-produit"
+      );
+
+    elements.messageProduit =
+      document.getElementById(
+        "message-produit"
+      );
+
+    elements.annulerProduit =
+      document.getElementById(
+        "annuler-produit"
+      );
+
+    elements.validerProduit =
+      document.getElementById(
+        "valider-produit"
+      );
+    
   }
 
 
@@ -361,6 +587,75 @@
 
             fermerReapprovisionnement();
           }
+
+          /*
+     * NOUVEAU PRODUIT
+     */
+
+    if (
+      elements.boutonNouveauProduit
+    ) {
+
+      elements.boutonNouveauProduit.addEventListener(
+        "click",
+        ouvrirNouveauProduit
+      );
+    }
+
+
+    /*
+     * ANNULER CRÉATION / MODIFICATION
+     */
+
+    if (
+      elements.annulerProduit
+    ) {
+
+      elements.annulerProduit.addEventListener(
+        "click",
+        fermerProduit
+      );
+    }
+
+
+    /*
+     * ENREGISTRER PRODUIT
+     */
+
+    if (
+      elements.formulaireProduit
+    ) {
+
+      elements.formulaireProduit.addEventListener(
+        "submit",
+        envoyerProduit
+      );
+    }
+
+
+    /*
+     * Clic sur le fond sombre.
+     */
+
+    if (
+      elements.fondProduit
+    ) {
+
+      elements.fondProduit.addEventListener(
+        "click",
+        function (evenement) {
+
+          if (
+            evenement.target ===
+            elements.fondProduit
+          ) {
+
+            fermerProduit();
+          }
+        }
+      );
+    }
+          
         }
       );
     }
@@ -396,38 +691,55 @@
      */
 
     document.addEventListener(
-      "keydown",
-      function (evenement) {
+  "keydown",
+  function (evenement) {
 
-        if (
-          evenement.key !==
-          "Escape"
-        ) {
-
-          return;
-        }
+    if (
+      evenement.key !== "Escape"
+    ) {
+      return;
+    }
 
 
-        if (
-          elements.fondReapprovisionnement &&
-          !elements.fondReapprovisionnement.hidden
-        ) {
+    /*
+     * Fenêtre produit
+     */
+    if (
+      elements.fondProduit &&
+      !elements.fondProduit.hidden
+    ) {
 
-          fermerReapprovisionnement();
+      fermerProduit();
+      return;
+    }
 
-          return;
-        }
+
+    /*
+     * Réapprovisionnement
+     */
+    if (
+      elements.fondReapprovisionnement &&
+      !elements.fondReapprovisionnement.hidden
+    ) {
+
+      fermerReapprovisionnement();
+      return;
+    }
 
 
-        if (
-          elements.fondSortieManuelle &&
-          !elements.fondSortieManuelle.hidden
-        ) {
+    /*
+     * Sortie manuelle
+     */
+    if (
+      elements.fondSortieManuelle &&
+      !elements.fondSortieManuelle.hidden
+    ) {
 
-          fermerSortieManuelle();
-        }
-      }
-    );
+      fermerSortieManuelle();
+      return;
+    }
+  }
+);
 
 
     /*
@@ -746,6 +1058,135 @@
 
       return;
     }
+
+        /*
+     * =========================================================
+     * MODIFIER PRODUIT
+     * =========================================================
+     */
+
+    if (
+      donnees.type ===
+      "admin-modifier-produit"
+    ) {
+
+      if (
+        donnees.succes !== true
+      ) {
+
+        const message =
+          donnees.message
+            ? String(
+                donnees.message
+              )
+            : "Le produit n’a pas pu être modifié.";
+
+
+        afficherMessageProduit(
+          message,
+          true
+        );
+
+
+        reactiverBoutonProduit();
+
+
+        return;
+      }
+
+
+      const resultat =
+        donnees.resultat || {};
+
+
+      fermerProduit();
+
+
+      alert(
+        "Produit modifié.\n\n" +
+        (
+          nettoyerTexte(
+            resultat.titre
+          ) ||
+          nettoyerTexte(
+            resultat.produitId
+          ) ||
+          "Produit"
+        )
+      );
+
+
+      demanderProduits();
+
+
+      return;
+    }
+
+
+    /*
+     * =========================================================
+     * CRÉER PRODUIT
+     * =========================================================
+     */
+
+    if (
+      donnees.type ===
+      "admin-creer-produit"
+    ) {
+
+      if (
+        donnees.succes !== true
+      ) {
+
+        const message =
+          donnees.message
+            ? String(
+                donnees.message
+              )
+            : "Le produit n’a pas pu être créé.";
+
+
+        afficherMessageProduit(
+          message,
+          true
+        );
+
+
+        reactiverBoutonProduit();
+
+
+        return;
+      }
+
+
+      const resultat =
+        donnees.resultat || {};
+
+
+      fermerProduit();
+
+
+      alert(
+        "Nouveau produit créé.\n\n" +
+        (
+          nettoyerTexte(
+            resultat.titre
+          ) ||
+          nettoyerTexte(
+            resultat.produitId
+          ) ||
+          "Produit"
+        )
+      );
+
+
+      demanderProduits();
+
+
+      return;
+    }
+
+    
   }
     /*
    * =========================================================
@@ -1732,13 +2173,19 @@
          */
 
         const boutonModifier =
-          creerBoutonAction(
-            "Modifier"
-          );
+  creerBoutonAction(
+    "Modifier"
+  );
 
+boutonModifier.addEventListener(
+  "click",
+  function () {
 
-        boutonModifier.disabled =
-          true;
+    ouvrirModificationProduit(
+      produit
+    );
+  }
+);
 
 
         /*
@@ -3022,7 +3469,965 @@
         : "message message-succes";
   }
 
+  /*
+   * =========================================================
+   * NOUVEAU PRODUIT
+   * =========================================================
+   */
 
+  function ouvrirNouveauProduit() {
+
+    modeEditionProduit =
+      "creation";
+
+
+    produitEdition =
+      null;
+
+
+    viderFormulaireProduit();
+
+
+    elements.titreModalProduit.textContent =
+      "Nouveau produit";
+
+
+    /*
+     * En création, produitId est modifiable.
+     */
+
+    elements.produitId.readOnly =
+      false;
+
+
+    /*
+     * Pas de stock actuel.
+     * On affiche stock initial.
+     */
+
+    elements.blocStockActuelProduit.hidden =
+      true;
+
+
+    elements.blocStockInitialProduit.hidden =
+      false;
+
+
+    elements.stockInitialProduit.required =
+      true;
+
+
+    /*
+     * Valeurs par défaut.
+     */
+
+    elements.visibleBoutiqueProduit.value =
+      "OUI";
+
+
+    elements.statutProduit.value =
+      "EN VENTE";
+
+
+    elements.ordreAffichageProduit.value =
+      "0";
+
+
+    elements.fraisLivraisonProduit.value =
+      "0";
+
+
+    elements.prixRevientUnitaireProduit.value =
+      "0";
+
+
+    elements.seuilAlerteProduit.value =
+      "0";
+
+
+    elements.stockCritiqueProduit.value =
+      "0";
+
+
+    elements.cout10Produit.value =
+      "0";
+
+
+    elements.cout20Produit.value =
+      "0";
+
+
+    elements.cout50Produit.value =
+      "0";
+
+
+    elements.cout100Produit.value =
+      "0";
+
+
+    elements.stockInitialProduit.value =
+      "0";
+
+
+    elements.validerProduit.textContent =
+      "Créer le produit";
+
+
+    afficherMessageProduit(
+      "",
+      false
+    );
+
+
+    elements.fondProduit.hidden =
+      false;
+
+
+    elements.produitId.focus();
+  }
+
+
+  /*
+   * =========================================================
+   * MODIFIER PRODUIT
+   * =========================================================
+   */
+
+  function ouvrirModificationProduit(
+    produit
+  ) {
+
+    modeEditionProduit =
+      "modification";
+
+
+    produitEdition =
+      produit;
+
+
+    remplirFormulaireProduit(
+      produit
+    );
+
+
+    elements.titreModalProduit.textContent =
+      "Modifier le produit";
+
+
+    /*
+     * L'identifiant est la clé du produit.
+     */
+
+    elements.produitId.readOnly =
+      true;
+
+
+    elements.blocStockActuelProduit.hidden =
+      false;
+
+
+    elements.blocStockInitialProduit.hidden =
+      true;
+
+
+    elements.stockInitialProduit.required =
+      false;
+
+
+    elements.validerProduit.textContent =
+      "Enregistrer les modifications";
+
+
+    afficherMessageProduit(
+      "",
+      false
+    );
+
+
+    elements.fondProduit.hidden =
+      false;
+
+
+    elements.titreProduit.focus();
+  }
+
+    function remplirFormulaireProduit(
+    produit
+  ) {
+
+    elements.produitId.value =
+      nettoyerTexte(
+        produit.id
+      );
+
+
+    elements.categorieProduit.value =
+      nettoyerTexte(
+        produit.categorie
+      );
+
+
+    elements.categorieBasqueProduit.value =
+      nettoyerTexte(
+        produit.categorieBasque
+      );
+
+
+    elements.sousCategorieProduit.value =
+      nettoyerTexte(
+        produit.sousCategorie
+      );
+
+
+    elements.sousCategorieBasqueProduit.value =
+      nettoyerTexte(
+        produit.sousCategorieBasque
+      );
+
+
+    elements.titreProduit.value =
+      nettoyerTexte(
+        produit.titre
+      );
+
+
+    elements.titreBasqueProduit.value =
+      nettoyerTexte(
+        produit.titreBasque
+      );
+
+
+    elements.sousTitreProduit.value =
+      nettoyerTexte(
+        produit.sousTitre
+      );
+
+
+    elements.sousTitreBasqueProduit.value =
+      nettoyerTexte(
+        produit.sousTitreBasque
+      );
+
+
+    elements.prixProduit.value =
+      convertirNombre(
+        produit.prix,
+        0
+      );
+
+
+    elements.modeExpeditionProduit.value =
+      nettoyerTexte(
+        produit.modeExpedition
+      );
+
+
+    elements.fraisLivraisonProduit.value =
+      convertirNombre(
+        produit.fraisLivraison,
+        0
+      );
+
+
+    elements.prixRevientUnitaireProduit.value =
+      convertirNombre(
+        produit.prixRevientUnitaire,
+        0
+      );
+
+
+    elements.beneficiairePayPalProduit.value =
+      nettoyerTexte(
+        produit.beneficiairePayPal
+      ).toUpperCase();
+
+
+    elements.poidsProduit.value =
+      convertirNombre(
+        produit.poids,
+        0
+      );
+
+
+    elements.stockActuelProduit.value =
+      convertirNombre(
+        produit.stockActuel,
+        0
+      );
+
+
+    elements.seuilAlerteProduit.value =
+      convertirNombre(
+        produit.seuilAlerte,
+        0
+      );
+
+
+    elements.stockCritiqueProduit.value =
+      convertirNombre(
+        produit.stockCritique,
+        0
+      );
+
+
+    elements.cout10Produit.value =
+      convertirNombre(
+        produit.cout10,
+        0
+      );
+
+
+    elements.cout20Produit.value =
+      convertirNombre(
+        produit.cout20,
+        0
+      );
+
+
+    elements.cout50Produit.value =
+      convertirNombre(
+        produit.cout50,
+        0
+      );
+
+
+    elements.cout100Produit.value =
+      convertirNombre(
+        produit.cout100,
+        0
+      );
+
+
+    elements.statutProduit.value =
+      nettoyerTexte(
+        produit.statut
+      ) ||
+      "RÉAPPROVISIONNEMENT";
+
+
+    elements.descriptionFrancaiseProduit.value =
+      nettoyerTexte(
+        produit.descriptionFrancaise
+      );
+
+
+    elements.descriptionBasqueProduit.value =
+      nettoyerTexte(
+        produit.descriptionBasque
+      );
+
+
+    elements.photoPrincipaleProduit.value =
+      nettoyerTexte(
+        produit.photoPrincipale
+      );
+
+
+    elements.photo2Produit.value =
+      nettoyerTexte(
+        produit.photo2
+      );
+
+
+    elements.photo3Produit.value =
+      nettoyerTexte(
+        produit.photo3
+      );
+
+
+    elements.photo4Produit.value =
+      nettoyerTexte(
+        produit.photo4
+      );
+
+
+    elements.photo5Produit.value =
+      nettoyerTexte(
+        produit.photo5
+      );
+
+
+    elements.urlPageDetailleeProduit.value =
+      nettoyerTexte(
+        produit.urlPageDetaillee
+      );
+
+
+    elements.visibleBoutiqueProduit.value =
+      produit.visibleBoutique === true
+        ? "OUI"
+        : "NON";
+
+
+    elements.ordreAffichageProduit.value =
+      convertirNombre(
+        produit.ordreAffichage,
+        0
+      );
+  }
+
+    function viderFormulaireProduit() {
+
+    if (
+      elements.formulaireProduit
+    ) {
+
+      elements.formulaireProduit.reset();
+    }
+
+
+    elements.produitId.value =
+      "";
+
+
+    elements.stockActuelProduit.value =
+      "";
+  }
+
+      function fermerProduit() {
+
+    if (
+      elements.fondProduit
+    ) {
+
+      elements.fondProduit.hidden =
+        true;
+    }
+
+
+    afficherMessageProduit(
+      "",
+      false
+    );
+
+
+    if (
+      elements.validerProduit
+    ) {
+
+      elements.validerProduit.disabled =
+        false;
+
+      elements.validerProduit.textContent =
+        "Enregistrer les modifications";
+    }
+
+
+    produitEdition =
+      null;
+
+
+    modeEditionProduit =
+      "";
+  }
+
+    function envoyerProduit(
+    evenement
+  ) {
+
+    evenement.preventDefault();
+
+
+    if (
+      !elements.formulaireProduit ||
+      !elements.formulaireProduit.checkValidity()
+    ) {
+
+      if (
+        elements.formulaireProduit
+      ) {
+
+        elements.formulaireProduit.reportValidity();
+      }
+
+
+      return;
+    }
+
+
+    if (
+      modeEditionProduit !== "creation" &&
+      modeEditionProduit !== "modification"
+    ) {
+
+      return;
+    }
+
+
+    const jeton =
+      lireJeton();
+
+
+    if (!jeton) {
+
+      fermerProduit();
+
+      afficherConnexion();
+
+      afficherMessage(
+        "Votre session administrateur n’est plus active. Veuillez vous reconnecter.",
+        true
+      );
+
+      return;
+    }
+
+
+    const apiUrl =
+      obtenirApiUrl();
+
+
+    if (!apiUrl) {
+
+      afficherMessageProduit(
+        "L’adresse de l’API Apps Script est absente de config.js.",
+        true
+      );
+
+      return;
+    }
+
+
+    const produitId =
+      nettoyerTexte(
+        elements.produitId.value
+      );
+
+
+    const titre =
+      nettoyerTexte(
+        elements.titreProduit.value
+      );
+
+
+    const poids =
+      convertirNombre(
+        elements.poidsProduit.value,
+        0
+      );
+
+
+    if (!produitId) {
+
+      afficherMessageProduit(
+        "L’identifiant du produit est obligatoire.",
+        true
+      );
+
+      return;
+    }
+
+
+    if (!titre) {
+
+      afficherMessageProduit(
+        "Le titre français est obligatoire.",
+        true
+      );
+
+      return;
+    }
+
+
+    if (
+      !Number.isInteger(
+        poids
+      ) ||
+      poids <= 0
+    ) {
+
+      afficherMessageProduit(
+        "Le poids doit être un nombre entier supérieur à zéro.",
+        true
+      );
+
+      return;
+    }
+
+
+    const formulaire =
+      document.createElement(
+        "form"
+      );
+
+
+    formulaire.method =
+      "POST";
+
+
+    formulaire.action =
+      apiUrl;
+
+
+    formulaire.target =
+      "admin-iframe";
+
+
+    formulaire.style.display =
+      "none";
+
+
+    ajouterChamp(
+      formulaire,
+      "type",
+      modeEditionProduit === "creation"
+        ? "admin-creer-produit"
+        : "admin-modifier-produit"
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "jeton",
+      jeton
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "produitId",
+      produitId
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "categorie",
+      elements.categorieProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "categorieBasque",
+      elements.categorieBasqueProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "sousCategorie",
+      elements.sousCategorieProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "sousCategorieBasque",
+      elements.sousCategorieBasqueProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "titre",
+      elements.titreProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "titreBasque",
+      elements.titreBasqueProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "sousTitre",
+      elements.sousTitreProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "sousTitreBasque",
+      elements.sousTitreBasqueProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "prix",
+      elements.prixProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "modeExpedition",
+      elements.modeExpeditionProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "fraisLivraison",
+      elements.fraisLivraisonProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "prixRevientUnitaire",
+      elements.prixRevientUnitaireProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "beneficiairePayPal",
+      elements.beneficiairePayPalProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "poids",
+      elements.poidsProduit.value
+    );
+
+
+    if (
+      modeEditionProduit === "creation"
+    ) {
+
+      ajouterChamp(
+        formulaire,
+        "stockInitial",
+        elements.stockInitialProduit.value
+      );
+    }
+
+
+    ajouterChamp(
+      formulaire,
+      "seuilAlerte",
+      elements.seuilAlerteProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "stockCritique",
+      elements.stockCritiqueProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "cout10",
+      elements.cout10Produit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "cout20",
+      elements.cout20Produit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "cout50",
+      elements.cout50Produit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "cout100",
+      elements.cout100Produit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "statut",
+      elements.statutProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "descriptionFrancaise",
+      elements.descriptionFrancaiseProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "descriptionBasque",
+      elements.descriptionBasqueProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "photoPrincipale",
+      elements.photoPrincipaleProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "photo2",
+      elements.photo2Produit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "photo3",
+      elements.photo3Produit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "photo4",
+      elements.photo4Produit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "photo5",
+      elements.photo5Produit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "urlPageDetaillee",
+      elements.urlPageDetailleeProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "visibleBoutique",
+      elements.visibleBoutiqueProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "ordreAffichage",
+      elements.ordreAffichageProduit.value
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "retourAdmin",
+      URL_ADMIN
+    );
+
+
+    ajouterChamp(
+      formulaire,
+      "origine",
+      window.location.origin
+    );
+
+
+    elements.validerProduit.disabled =
+      true;
+
+
+    elements.validerProduit.textContent =
+      modeEditionProduit === "creation"
+        ? "Création…"
+        : "Enregistrement…";
+
+
+    afficherMessageProduit(
+      modeEditionProduit === "creation"
+        ? "Création du produit…"
+        : "Enregistrement des modifications…",
+      false
+    );
+
+
+    document.body.appendChild(
+      formulaire
+    );
+
+
+    HTMLFormElement
+      .prototype
+      .submit
+      .call(
+        formulaire
+      );
+
+
+    window.setTimeout(
+      function () {
+
+        formulaire.remove();
+
+      },
+      1000
+    );
+  }
+
+    function afficherMessageProduit(
+    message,
+    erreur
+  ) {
+
+    if (
+      !elements.messageProduit
+    ) {
+
+      return;
+    }
+
+
+    elements.messageProduit.textContent =
+      message || "";
+
+
+    if (!message) {
+
+      elements.messageProduit.className =
+        "message";
+
+      return;
+    }
+
+
+    elements.messageProduit.className =
+      erreur
+        ? "message message-erreur"
+        : "message message-succes";
+  }
+
+
+  function reactiverBoutonProduit() {
+
+    if (
+      !elements.validerProduit
+    ) {
+
+      return;
+    }
+
+
+    elements.validerProduit.disabled =
+      false;
+
+
+    elements.validerProduit.textContent =
+      modeEditionProduit === "creation"
+        ? "Créer le produit"
+        : "Enregistrer les modifications";
+  }
+
+  
   /*
    * =========================================================
    * OUTILS
