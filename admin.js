@@ -2411,6 +2411,55 @@ function afficherDetailListeAttente(
 }
 
 
+function formaterDateAdmin(
+  valeur
+) {
+
+  if (!valeur) {
+    return "—";
+  }
+
+
+  const date =
+    new Date(
+      valeur
+    );
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return String(
+      valeur
+    );
+  }
+
+
+  return date.toLocaleDateString(
+    "fr-FR"
+  );
+}
+
+function echapperHTMLAdmin(
+  valeur
+) {
+
+  return String(
+    valeur == null
+      ? ""
+      : valeur
+  )
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
 /*
  * =========================================================
  * DEMANDE DES LISTES D'ATTENTE
