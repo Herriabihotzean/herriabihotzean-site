@@ -1177,6 +1177,155 @@ let modeEditionProduit = "";
       return;
     }
 
+    /*
+ * =========================================================
+ * ARCHIVER PRODUIT
+ * =========================================================
+ */
+
+if (
+  donnees.type ===
+  "admin-archiver-produit"
+) {
+
+  if (
+    donnees.succes !== true
+  ) {
+
+    alert(
+      donnees.message ||
+      "Le produit n’a pas pu être archivé."
+    );
+
+    return;
+  }
+
+
+  const resultat =
+    donnees.resultat || {};
+
+
+  alert(
+    "Produit archivé.\n\n" +
+    (
+      nettoyerTexte(
+        resultat.produit
+      ) ||
+      nettoyerTexte(
+        resultat.produitId
+      ) ||
+      "Produit"
+    )
+  );
+
+
+  demanderProduits();
+
+  return;
+}
+
+
+/*
+ * =========================================================
+ * RÉACTIVER PRODUIT
+ * =========================================================
+ */
+
+if (
+  donnees.type ===
+  "admin-reactiver-produit"
+) {
+
+  if (
+    donnees.succes !== true
+  ) {
+
+    alert(
+      donnees.message ||
+      "Le produit n’a pas pu être réactivé."
+    );
+
+    return;
+  }
+
+
+  const resultat =
+    donnees.resultat || {};
+
+
+  alert(
+    "Produit réactivé.\n\n" +
+    (
+      nettoyerTexte(
+        resultat.produit
+      ) ||
+      nettoyerTexte(
+        resultat.produitId
+      ) ||
+      "Produit"
+    ) +
+    "\nStatut : " +
+    (
+      nettoyerTexte(
+        resultat.statut
+      ) ||
+      "—"
+    )
+  );
+
+
+  demanderProduits();
+
+  return;
+}
+
+
+/*
+ * =========================================================
+ * SUPPRIMER PRODUIT
+ * =========================================================
+ */
+
+if (
+  donnees.type ===
+  "admin-supprimer-produit"
+) {
+
+  if (
+    donnees.succes !== true
+  ) {
+
+    alert(
+      donnees.message ||
+      "Le produit n’a pas pu être supprimé."
+    );
+
+    return;
+  }
+
+
+  const resultat =
+    donnees.resultat || {};
+
+
+  alert(
+    "Produit supprimé définitivement.\n\n" +
+    (
+      nettoyerTexte(
+        resultat.produit
+      ) ||
+      nettoyerTexte(
+        resultat.produitId
+      ) ||
+      "Produit"
+    )
+  );
+
+
+  demanderProduits();
+
+  return;
+}
     
   }
     /*
@@ -2160,13 +2309,30 @@ let modeEditionProduit = "";
 
 
         /*
-         * MODIFIER
-         */
+ * =========================================================
+ * ACTIONS DU PRODUIT
+ * =========================================================
+ */
 
-        const boutonModifier =
+const statutProduit =
+  nettoyerTexte(
+    produit.statut
+  ).toUpperCase();
+
+
+const estArchive =
+  statutProduit === "ARCHIVÉ";
+
+
+/*
+ * MODIFIER
+ */
+
+const boutonModifier =
   creerBoutonAction(
     "Modifier"
   );
+
 
 boutonModifier.addEventListener(
   "click",
@@ -2179,67 +2345,148 @@ boutonModifier.addEventListener(
 );
 
 
-        /*
-         * RÉAPPROVISIONNER
-         */
+/*
+ * PRODUIT NON ARCHIVÉ
+ */
 
-        const boutonReapprovisionner =
-          creerBoutonAction(
-            "Réapprovisionner"
-          );
+if (!estArchive) {
 
+  /*
+   * RÉAPPROVISIONNER
+   */
 
-        boutonReapprovisionner.addEventListener(
-          "click",
-          function () {
-
-            ouvrirReapprovisionnement(
-              produit
-            );
-          }
-        );
+  const boutonReapprovisionner =
+    creerBoutonAction(
+      "Réapprovisionner"
+    );
 
 
-        /*
-         * SORTIE MANUELLE
-         */
+  boutonReapprovisionner.addEventListener(
+    "click",
+    function () {
 
-        const boutonSortie =
-          creerBoutonAction(
-            "Sortie manuelle"
-          );
-
-
-        boutonSortie.addEventListener(
-          "click",
-          function () {
-
-            ouvrirSortieManuelle(
-              produit
-            );
-          }
-        );
+      ouvrirReapprovisionnement(
+        produit
+      );
+    }
+  );
 
 
-        /*
-         * Il est inutile d'autoriser une sortie
-         * lorsque le stock est déjà nul.
-         */
+  /*
+   * SORTIE MANUELLE
+   */
 
-        if (
-          stock <= 0
-        ) {
-
-          boutonSortie.disabled =
-            true;
-        }
+  const boutonSortie =
+    creerBoutonAction(
+      "Sortie manuelle"
+    );
 
 
-        actions.append(
-          boutonModifier,
-          boutonReapprovisionner,
-          boutonSortie
-        );
+  boutonSortie.addEventListener(
+    "click",
+    function () {
+
+      ouvrirSortieManuelle(
+        produit
+      );
+    }
+  );
+
+
+  if (
+    stock <= 0
+  ) {
+
+    boutonSortie.disabled =
+      true;
+  }
+
+
+  /*
+   * ARCHIVER
+   */
+
+  const boutonArchiver =
+    creerBoutonAction(
+      "Archiver"
+    );
+
+
+  boutonArchiver.addEventListener(
+    "click",
+    function () {
+
+      archiverProduit(
+        produit
+      );
+    }
+  );
+
+
+  actions.append(
+    boutonModifier,
+    boutonReapprovisionner,
+    boutonSortie,
+    boutonArchiver
+  );
+
+}
+
+
+/*
+ * PRODUIT ARCHIVÉ
+ */
+
+else {
+
+  /*
+   * RÉACTIVER
+   */
+
+  const boutonReactiver =
+    creerBoutonAction(
+      "Réactiver"
+    );
+
+
+  boutonReactiver.addEventListener(
+    "click",
+    function () {
+
+      reactiverProduit(
+        produit
+      );
+    }
+  );
+
+
+  /*
+   * SUPPRIMER DÉFINITIVEMENT
+   */
+
+  const boutonSupprimer =
+    creerBoutonAction(
+      "Supprimer définitivement"
+    );
+
+
+  boutonSupprimer.addEventListener(
+    "click",
+    function () {
+
+      supprimerProduit(
+        produit
+      );
+    }
+  );
+
+
+  actions.append(
+    boutonModifier,
+    boutonReactiver,
+    boutonSupprimer
+  );
+}
 
 
         bloc.appendChild(
@@ -4422,6 +4669,255 @@ function ouvrirNouveauProduit() {
         : "Enregistrer les modifications";
   }
 
+function envoyerActionProduit(
+  typeAction,
+  produit
+) {
+
+  const jeton =
+    lireJeton();
+
+
+  if (!jeton) {
+
+    afficherConnexion();
+
+    afficherMessage(
+      "Votre session administrateur n’est plus active. Veuillez vous reconnecter.",
+      true
+    );
+
+    return;
+  }
+
+
+  const apiUrl =
+    obtenirApiUrl();
+
+
+  if (!apiUrl) {
+
+    alert(
+      "L’adresse de l’API Apps Script est absente de config.js."
+    );
+
+    return;
+  }
+
+
+  if (
+    !elements.adminIframe
+  ) {
+
+    alert(
+      "L’iframe d’administration est absente de admin.html."
+    );
+
+    return;
+  }
+
+
+  const formulaire =
+    document.createElement(
+      "form"
+    );
+
+
+  formulaire.method =
+    "POST";
+
+
+  formulaire.action =
+    apiUrl;
+
+
+  formulaire.target =
+    "admin-iframe";
+
+
+  formulaire.style.display =
+    "none";
+
+
+  ajouterChamp(
+    formulaire,
+    "type",
+    typeAction
+  );
+
+
+  ajouterChamp(
+    formulaire,
+    "jeton",
+    jeton
+  );
+
+
+  ajouterChamp(
+    formulaire,
+    "produitId",
+    produit.id
+  );
+
+
+  ajouterChamp(
+    formulaire,
+    "retourAdmin",
+    URL_ADMIN
+  );
+
+
+  ajouterChamp(
+    formulaire,
+    "origine",
+    window.location.origin
+  );
+
+
+  document.body.appendChild(
+    formulaire
+  );
+
+
+  HTMLFormElement
+    .prototype
+    .submit
+    .call(
+      formulaire
+    );
+
+
+  window.setTimeout(
+    function () {
+
+      formulaire.remove();
+
+    },
+    1000
+  );
+}
+
+function archiverProduit(
+  produit
+) {
+
+  const titre =
+    nettoyerTexte(
+      produit.titre
+    ) ||
+    nettoyerTexte(
+      produit.id
+    ) ||
+    "ce produit";
+
+
+  const confirmation =
+    window.confirm(
+      "Archiver « " +
+      titre +
+      " » ?\n\n" +
+      "Le produit sera retiré de la boutique, mais ses données, son stock et son historique seront conservés."
+    );
+
+
+  if (!confirmation) {
+
+    return;
+  }
+
+
+  envoyerActionProduit(
+    "admin-archiver-produit",
+    produit
+  );
+}
+
+function reactiverProduit(
+  produit
+) {
+
+  const titre =
+    nettoyerTexte(
+      produit.titre
+    ) ||
+    nettoyerTexte(
+      produit.id
+    ) ||
+    "ce produit";
+
+
+  const confirmation =
+    window.confirm(
+      "Réactiver « " +
+      titre +
+      " » ?\n\n" +
+      "Le produit redeviendra visible dans la boutique."
+    );
+
+
+  if (!confirmation) {
+
+    return;
+  }
+
+
+  envoyerActionProduit(
+    "admin-reactiver-produit",
+    produit
+  );
+}
+
+function supprimerProduit(
+  produit
+) {
+
+  const titre =
+    nettoyerTexte(
+      produit.titre
+    ) ||
+    nettoyerTexte(
+      produit.id
+    ) ||
+    "ce produit";
+
+
+  const confirmation1 =
+    window.confirm(
+      "SUPPRESSION DÉFINITIVE\n\n" +
+      "Voulez-vous vraiment supprimer « " +
+      titre +
+      " » ?\n\n" +
+      "Cette action n’est autorisée que si le produit n’a aucun historique."
+    );
+
+
+  if (!confirmation1) {
+
+    return;
+  }
+
+
+  const confirmation2 =
+    window.confirm(
+      "Dernière confirmation.\n\n" +
+      "Supprimer définitivement « " +
+      titre +
+      " » de RESSOURCES ?"
+    );
+
+
+  if (!confirmation2) {
+
+    return;
+  }
+
+
+  envoyerActionProduit(
+    "admin-supprimer-produit",
+    produit
+  );
+}
+  
   
   /*
    * =========================================================
