@@ -79,7 +79,22 @@
         "Augmenter la quantité",
 
       presentation:
-        "Présentation"
+  "Présentation",
+
+listeAttenteBouton:
+  "Me prévenir lorsque le produit sera disponible",
+
+listeAttenteTexte:
+  "Indiquez votre adresse électronique et nous vous préviendrons lorsque ce produit sera de nouveau disponible.",
+
+listeAttenteEmail:
+  "Adresse électronique",
+
+listeAttenteEnvoyer:
+  "Me prévenir",
+
+listeAttenteAnnuler:
+  "Annuler"
     },
 
     eu: {
@@ -153,7 +168,22 @@
         "Kopurua handitu",
 
       presentation:
-        "Aurkezpena"
+  "Aurkezpena",
+
+listeAttenteBouton:
+  "Salgaia berriz eskuragarri izanen delarik abisatu",
+
+listeAttenteTexte:
+  "Zure posta elektronikoaren helbidea eman, eta salgai hau berriz eskuragarri izanen delarik abisatuko zaitugu.",
+
+listeAttenteEmail:
+  "Posta elektronikoaren helbidea",
+
+listeAttenteEnvoyer:
+  "Abisatu",
+
+listeAttenteAnnuler:
+  "Utzi"
     }
   };
 
@@ -371,6 +401,50 @@
       document.getElementById(
         "lien-retour"
       );
+    elements.blocListeAttente =
+  document.getElementById(
+    "bloc-liste-attente"
+  );
+
+elements.boutonListeAttente =
+  document.getElementById(
+    "bouton-liste-attente"
+  );
+
+elements.formulaireListeAttente =
+  document.getElementById(
+    "formulaire-liste-attente"
+  );
+
+elements.texteListeAttente =
+  document.getElementById(
+    "texte-liste-attente"
+  );
+
+elements.etiquetteEmailListeAttente =
+  document.getElementById(
+    "etiquette-email-liste-attente"
+  );
+
+elements.emailListeAttente =
+  document.getElementById(
+    "email-liste-attente"
+  );
+
+elements.envoyerListeAttente =
+  document.getElementById(
+    "envoyer-liste-attente"
+  );
+
+elements.annulerListeAttente =
+  document.getElementById(
+    "annuler-liste-attente"
+  );
+
+elements.messageListeAttente =
+  document.getElementById(
+    "message-liste-attente"
+  );
   }
 
   function determinerLangueInitiale() {
@@ -465,6 +539,39 @@
       ajouterAuPanier
     );
 
+    elements.boutonListeAttente.addEventListener(
+  "click",
+  function () {
+
+    elements.formulaireListeAttente.hidden =
+      false;
+
+    elements.boutonListeAttente.hidden =
+      true;
+
+    elements.emailListeAttente.focus();
+  }
+);
+
+
+elements.annulerListeAttente.addEventListener(
+  "click",
+  function () {
+
+    elements.formulaireListeAttente.hidden =
+      true;
+
+    elements.boutonListeAttente.hidden =
+      false;
+
+    elements.messageListeAttente.hidden =
+      true;
+
+    elements.messageListeAttente.textContent =
+      "";
+  }
+);
+
     window.addEventListener(
       "storage",
       function (evenement) {
@@ -541,6 +648,21 @@
 
     elements.lienRetour.textContent =
       t.retourBoutique;
+
+    elements.boutonListeAttente.textContent =
+  t.listeAttenteBouton;
+
+elements.texteListeAttente.textContent =
+  t.listeAttenteTexte;
+
+elements.etiquetteEmailListeAttente.textContent =
+  t.listeAttenteEmail;
+
+elements.envoyerListeAttente.textContent =
+  t.listeAttenteEnvoyer;
+
+elements.annulerListeAttente.textContent =
+  t.listeAttenteAnnuler;
 
     elements.lienRetour.href =
       "boutique.html";
@@ -885,6 +1007,29 @@
       disponible
         ? t.ajouter
         : t.ajouterIndisponible;
+
+    /*
+ * LISTE D'ATTENTE
+ */
+
+elements.blocListeAttente.hidden =
+  disponible;
+
+
+if (disponible) {
+
+  elements.formulaireListeAttente.hidden =
+    true;
+
+  elements.boutonListeAttente.hidden =
+    false;
+
+  elements.messageListeAttente.hidden =
+    true;
+
+  elements.messageListeAttente.textContent =
+    "";
+}
 
     definirMaximumQuantite();
     afficherGalerie();
