@@ -790,6 +790,56 @@ let modeEditionProduit = "";
       "message",
       traiterMessageAdministration
     );
+  
+      /*
+     * =========================================================
+     * CLICS CRÉER / MODIFIER PRODUIT
+     * =========================================================
+     */
+
+    document.addEventListener(
+      "click",
+      function (evenement) {
+
+        /*
+         * NOUVEAU PRODUIT
+         */
+
+        const boutonNouveau =
+          evenement.target.closest(
+            "#bouton-nouveau-produit"
+          );
+
+        if (boutonNouveau) {
+
+          evenement.preventDefault();
+
+          ouvrirNouveauProduit();
+
+          return;
+        }
+
+
+        /*
+         * ANNULER PRODUIT
+         */
+
+        const boutonAnnuler =
+          evenement.target.closest(
+            "#annuler-produit"
+          );
+
+        if (boutonAnnuler) {
+
+          evenement.preventDefault();
+
+          fermerProduit();
+
+          return;
+        }
+      }
+    );
+  
   }
 
 
