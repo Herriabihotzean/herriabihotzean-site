@@ -1507,13 +1507,7 @@ if (
    * Réactivation du bouton.
    */
 
-  if (
-    elements.boutonRecapitulatifPdf
-  ) {
 
-    elements.boutonRecapitulatifPdf.disabled =
-      false;
-  }
 
 
   /*
@@ -3616,14 +3610,6 @@ function demanderRecapitulatifAnnuel(
   /*
    * État de l'interface.
    */
-
-  if (
-    elements.boutonRecapitulatifPdf
-  ) {
-
-    elements.boutonRecapitulatifPdf.disabled =
-      true;
-  }
 
 
   if (
