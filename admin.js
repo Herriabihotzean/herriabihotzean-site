@@ -263,7 +263,12 @@ elements.finances6Mois =
 elements.finances1An =
   document.getElementById(
     "finances-1-an"
-  ); 
+  );
+
+elements.financesDepuisPremiereVente =
+  document.getElementById(
+    "finances-depuis-premiere-vente"
+  );
 
 
     /*
