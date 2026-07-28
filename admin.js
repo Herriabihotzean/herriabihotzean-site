@@ -146,6 +146,52 @@ let modeEditionProduit = "";
         "admin-iframe"
       );
 
+/*
+ * =========================================================
+ * LISTES D'ATTENTE
+ * =========================================================
+ */
+
+elements.boutonListesAttente =
+  document.getElementById(
+    "bouton-listes-attente"
+  );
+
+elements.fondListesAttente =
+  document.getElementById(
+    "fond-listes-attente"
+  );
+
+elements.chargementListesAttente =
+  document.getElementById(
+    "chargement-listes-attente"
+  );
+
+elements.resumeListesAttente =
+  document.getElementById(
+    "resume-listes-attente"
+  );
+
+elements.detailListesAttente =
+  document.getElementById(
+    "detail-listes-attente"
+  );
+
+elements.messageListesAttente =
+  document.getElementById(
+    "message-listes-attente"
+  );
+
+elements.retourListesAttente =
+  document.getElementById(
+    "retour-listes-attente"
+  );
+
+elements.fermerListesAttente =
+  document.getElementById(
+    "fermer-listes-attente"
+  );
+
 
     /*
      * =========================================================
@@ -700,6 +746,19 @@ let modeEditionProduit = "";
         return;
       }
 
+    /*
+     * LISTES D'ATTENTE
+     */
+      
+      if (
+  elements.fondListesAttente &&
+  !elements.fondListesAttente.hidden
+) {
+
+  fermerListesAttente();
+  return;
+}
+
 
       if (
         elements.fondProduit &&
@@ -744,7 +803,85 @@ let modeEditionProduit = "";
   );
 }
 
+function ouvrirListesAttente() {
 
+  if (
+    !elements.fondListesAttente
+  ) {
+    return;
+  }
+
+
+  if (
+    elements.resumeListesAttente
+  ) {
+
+    elements.resumeListesAttente.innerHTML =
+      "";
+  }
+
+
+  if (
+    elements.detailListesAttente
+  ) {
+
+    elements.detailListesAttente.innerHTML =
+      "";
+
+    elements.detailListesAttente.hidden =
+      true;
+  }
+
+
+  if (
+    elements.messageListesAttente
+  ) {
+
+    elements.messageListesAttente.textContent =
+      "";
+  }
+
+
+  if (
+    elements.chargementListesAttente
+  ) {
+
+    elements.chargementListesAttente.hidden =
+      false;
+
+    elements.chargementListesAttente.textContent =
+      "Chargement des listes d’attente…";
+  }
+
+
+  if (
+    elements.retourListesAttente
+  ) {
+
+    elements.retourListesAttente.hidden =
+      true;
+  }
+
+
+  elements.fondListesAttente.hidden =
+    false;
+}
+
+
+function fermerListesAttente() {
+
+  if (
+    !elements.fondListesAttente
+  ) {
+    return;
+  }
+
+
+  elements.fondListesAttente.hidden =
+    true;
+}
+
+  
   /*
    * =========================================================
    * RÉPONSES DE L'IFRAME APPS SCRIPT
