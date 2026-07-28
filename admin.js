@@ -1066,8 +1066,15 @@ function ouvrirFinances() {
   }
 
 
-  elements.fondFinances.hidden =
+   elements.fondFinances.hidden =
     false;
+
+
+/*
+ * Chargement des données réelles.
+ */
+
+demanderFinances();
 }
 
 
@@ -1215,7 +1222,58 @@ function fermerListesAttente() {
       return;
     }
 
+/*
+ * =========================================================
+ * FINANCES
+ * =========================================================
+ */
 
+if (
+  donnees.type ===
+  "admin-finances"
+) {
+
+  if (
+    elements.chargementFinances
+  ) {
+
+    elements.chargementFinances.hidden =
+      true;
+  }
+
+
+  if (
+    donnees.succes !== true
+  ) {
+
+    afficherErreurFinances(
+      donnees.message ||
+      "Impossible de charger les données financières."
+    );
+
+    return;
+  }
+
+
+  console.log(
+    "Données financières reçues :",
+    donnees
+  );
+
+
+  if (
+    elements.messageFinances
+  ) {
+
+    elements.messageFinances.textContent =
+      "Données financières chargées.";
+  }
+
+
+  return;
+}
+
+    
 /*
  * =========================================================
  * LISTES D'ATTENTE
@@ -2672,7 +2730,144 @@ function echapperHTMLAdmin(
     .replace(/'/g, "&#039;");
 }
 
+function afficherErreurFinances(
+  message
+) {
 
+  if (
+    elements.chargementFinances
+  ) {
+
+    elements.chargementFinances.hidden =
+      true;
+  }
+
+
+  if (
+    elements.messageFinances
+  ) {
+
+    elements.messageFinances.textContent =
+      message;
+
+    elements.messageFinances.className =
+      "message message-erreur";
+  }
+}
+  
+/*
+ * =========================================================
+ * DEMANDE DES DONNÉES FINANCIÈRES
+ * =========================================================
+ */
+
+function demanderFinances() {
+
+  const jeton =
+    lireJeton();
+
+  if (!jeton) {
+
+    fermerFinances();
+    afficherConnexion();
+
+    afficherMessage(
+      "Votre session administrateur n’est plus active. Veuillez vous reconnecter.",
+      true
+    );
+
+    return;
+  }
+
+
+  const apiUrl =
+    obtenirApiUrl();
+
+  if (!apiUrl) {
+
+    afficherErreurFinances(
+      "L’adresse de l’API Apps Script est absente de config.js."
+    );
+
+    return;
+  }
+
+
+  if (!elements.adminIframe) {
+
+    afficherErreurFinances(
+      "L’iframe d’administration est absente de admin.html."
+    );
+
+    return;
+  }
+
+
+  const formulaire =
+    document.createElement(
+      "form"
+    );
+
+  formulaire.method =
+    "POST";
+
+  formulaire.action =
+    apiUrl;
+
+  formulaire.target =
+    "admin-iframe";
+
+  formulaire.style.display =
+    "none";
+
+
+  ajouterChamp(
+    formulaire,
+    "type",
+    "admin-finances"
+  );
+
+  ajouterChamp(
+    formulaire,
+    "jeton",
+    jeton
+  );
+
+  ajouterChamp(
+    formulaire,
+    "retourAdmin",
+    URL_ADMIN
+  );
+
+  ajouterChamp(
+    formulaire,
+    "origine",
+    window.location.origin
+  );
+
+
+  document.body.appendChild(
+    formulaire
+  );
+
+
+  HTMLFormElement
+    .prototype
+    .submit
+    .call(
+      formulaire
+    );
+
+
+  window.setTimeout(
+    function () {
+      formulaire.remove();
+    },
+    1000
+  );
+}
+
+  
 /*
  * =========================================================
  * DEMANDE DES LISTES D'ATTENTE
