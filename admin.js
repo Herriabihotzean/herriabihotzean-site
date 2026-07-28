@@ -1491,6 +1491,162 @@ remplirAnneesRecapitulatif();
   return;
 }
 
+
+/*
+ * =========================================================
+ * RÉCAPITULATIF ANNUEL PDF
+ * =========================================================
+ */
+
+if (
+  donnees.type ===
+  "admin-recapitulatif-annuel"
+) {
+
+  if (
+    elements.boutonRecapitulatifPdf
+  ) {
+
+    elements.boutonRecapitulatifPdf.disabled =
+      false;
+  }
+
+
+  if (
+    donnees.succes !== true
+  ) {
+
+    if (
+      elements.messageRecapitulatif
+    ) {
+
+      elements.messageRecapitulatif.textContent =
+        donnees.message ||
+        "Le récapitulatif n’a pas pu être généré.";
+    }
+
+    return;
+  }
+
+
+  if (
+    !donnees.fichierBase64
+  ) {
+
+    if (
+      elements.messageRecapitulatif
+    ) {
+
+      elements.messageRecapitulatif.textContent =
+        "Le fichier PDF n’a pas été reçu.";
+    }
+
+    return;
+  }
+
+
+  /*
+   * Transformation Base64 -> Blob PDF.
+   */
+
+  const chaineBinaire =
+    atob(
+      donnees.fichierBase64
+    );
+
+
+  const octets =
+    new Uint8Array(
+      chaineBinaire.length
+    );
+
+
+  for (
+    let i = 0;
+    i < chaineBinaire.length;
+    i++
+  ) {
+
+    octets[i] =
+      chaineBinaire.charCodeAt(
+        i
+      );
+  }
+
+
+  const blob =
+    new Blob(
+      [octets],
+      {
+        type:
+          donnees.mimeType ||
+          "application/pdf"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+
+  const lien =
+    document.createElement(
+      "a"
+    );
+
+
+  lien.href =
+    url;
+
+
+  lien.download =
+    donnees.nomFichier ||
+    (
+      "recapitulatif-encaissements-" +
+      donnees.annee +
+      ".pdf"
+    );
+
+
+  document.body.appendChild(
+    lien
+  );
+
+
+  lien.click();
+
+
+  lien.remove();
+
+
+  URL.revokeObjectURL(
+    url
+  );
+
+
+  if (
+    elements.messageRecapitulatif
+  ) {
+
+    elements.messageRecapitulatif.textContent =
+      "Récapitulatif " +
+      donnees.annee +
+      " généré — " +
+      Number(
+        donnees.nombreCommandes || 0
+      ) +
+      " commande(s), " +
+      formaterMontantFinances(
+        donnees.total || 0
+      ) +
+      " encaissés.";
+  }
+
+
+  return;
+}
     
 /*
  * =========================================================
