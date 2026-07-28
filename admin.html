@@ -957,6 +957,14 @@
   Listes d’attente
 </button>
 
+        <button
+  id="bouton-finances"
+  class="bouton-action"
+  type="button"
+>
+  Finances
+</button>
+
 
         <p
           id="chargement-produits"
@@ -1001,6 +1009,133 @@
 
 
   </main>
+
+  <!-- =========================
+     FINANCES
+     ========================= -->
+
+<div
+  id="fond-finances"
+  class="fond-modal"
+  hidden
+>
+
+  <section
+    class="modal modal-produit"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titre-finances"
+  >
+
+    <h2 id="titre-finances">
+      Finances
+    </h2>
+
+    <div class="filtres-finances">
+
+      <button
+        id="finances-1-mois"
+        class="bouton-secondaire"
+        type="button"
+      >
+        1 mois
+      </button>
+
+      <button
+        id="finances-6-mois"
+        class="bouton-secondaire"
+        type="button"
+      >
+        6 mois
+      </button>
+
+      <button
+        id="finances-1-an"
+        class="bouton-secondaire"
+        type="button"
+      >
+        1 an
+      </button>
+
+    </div>
+
+    <div class="filtre-produit-finances">
+
+      <label for="finances-produit">
+        Produit
+      </label>
+
+      <select id="finances-produit">
+
+        <option value="">
+          Tous les produits
+        </option>
+
+      </select>
+
+    </div>
+
+    <p
+      id="chargement-finances"
+      class="message"
+      hidden
+    >
+      Chargement des données financières…
+    </p>
+
+    <div id="resume-finances">
+
+      <div class="bloc-finance">
+        <strong>Recettes</strong>
+        <span id="total-recettes-finances">
+          — €
+        </span>
+      </div>
+
+      <div class="bloc-finance">
+        <strong>Dépenses</strong>
+        <span id="total-depenses-finances">
+          — €
+        </span>
+      </div>
+
+      <div class="bloc-finance">
+        <strong>Résultat</strong>
+        <span id="resultat-finances">
+          — €
+        </span>
+      </div>
+
+    </div>
+
+    <div
+      id="graphique-finances"
+      class="graphique-finances"
+    >
+      Le graphique apparaîtra ici.
+    </div>
+
+    <p
+      id="message-finances"
+      class="message"
+      aria-live="polite"
+    ></p>
+
+    <div class="actions-modal">
+
+      <button
+        id="fermer-finances"
+        class="bouton-secondaire"
+        type="button"
+      >
+        Fermer
+      </button>
+
+    </div>
+
+  </section>
+
+</div>
 
 <!-- =========================
      LISTES D'ATTENTE
