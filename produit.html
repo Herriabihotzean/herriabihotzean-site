@@ -871,50 +871,95 @@
   </button>
 
   <form
-    id="formulaire-liste-attente"
-    class="formulaire-liste-attente"
-    hidden
+  id="formulaire-liste-attente"
+  class="formulaire-liste-attente"
+  hidden
+>
+  <p id="texte-liste-attente">
+    Indiquez vos coordonnées et la quantité souhaitée. Nous vous préviendrons lorsque ce produit sera de nouveau disponible.
+  </p>
+
+  <label for="prenom-liste-attente">
+    <span id="etiquette-prenom-liste-attente">
+      Prénom
+    </span>
+
+    <input
+      id="prenom-liste-attente"
+      name="prenom"
+      type="text"
+      autocomplete="given-name"
+      required
+    >
+  </label>
+
+  <label for="nom-liste-attente">
+    <span id="etiquette-nom-liste-attente">
+      Nom
+    </span>
+
+    <input
+      id="nom-liste-attente"
+      name="nom"
+      type="text"
+      autocomplete="family-name"
+      required
+    >
+  </label>
+
+  <label for="email-liste-attente">
+    <span id="etiquette-email-liste-attente">
+      Adresse électronique
+    </span>
+
+    <input
+      id="email-liste-attente"
+      name="email"
+      type="email"
+      autocomplete="email"
+      required
+    >
+  </label>
+
+  <label for="quantite-liste-attente">
+    <span id="etiquette-quantite-liste-attente">
+      Quantité souhaitée
+    </span>
+
+    <input
+      id="quantite-liste-attente"
+      name="quantite"
+      type="number"
+      min="1"
+      step="1"
+      value="1"
+      inputmode="numeric"
+      required
+    >
+  </label>
+
+  <button
+    id="envoyer-liste-attente"
+    class="bouton-principal"
+    type="submit"
   >
-    <p id="texte-liste-attente">
-      Indiquez votre adresse électronique et nous vous préviendrons lorsque ce produit sera de nouveau disponible.
-    </p>
+    Me prévenir
+  </button>
 
-    <label for="email-liste-attente">
-      <span id="etiquette-email-liste-attente">
-        Adresse électronique
-      </span>
+  <button
+    id="annuler-liste-attente"
+    type="button"
+  >
+    Annuler
+  </button>
 
-      <input
-        id="email-liste-attente"
-        name="email"
-        type="email"
-        autocomplete="email"
-        required
-      >
-    </label>
-
-    <button
-      id="envoyer-liste-attente"
-      class="bouton-principal"
-      type="submit"
-    >
-      Me prévenir
-    </button>
-
-    <button
-      id="annuler-liste-attente"
-      type="button"
-    >
-      Annuler
-    </button>
-
-    <p
-      id="message-liste-attente"
-      role="status"
-      aria-live="polite"
-      hidden
-    ></p>
-  </form>
+  <p
+    id="message-liste-attente"
+    role="status"
+    aria-live="polite"
+    hidden
+  ></p>
+</form>
 </section>
 
         </div>
