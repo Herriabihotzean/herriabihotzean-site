@@ -193,6 +193,9 @@ elements.fermerListesAttente =
   );
 
 
+  
+
+
     /*
      * =========================================================
      * RÉAPPROVISIONNEMENT
@@ -612,6 +615,26 @@ if (
 
         fermerListesAttente();
       }
+    }
+  );
+}
+
+if (
+  elements.retourListesAttente
+) {
+
+  elements.retourListesAttente.addEventListener(
+    "click",
+    function () {
+
+      elements.detailListesAttente.hidden =
+        true;
+
+      elements.resumeListesAttente.hidden =
+        false;
+
+      elements.retourListesAttente.hidden =
+        true;
     }
   );
 }
@@ -2135,7 +2158,258 @@ function afficherListesAttente(
     }
   );
 }
-  
+
+function afficherDetailListeAttente(
+  produit,
+  inscriptions
+) {
+
+  if (
+    !elements.resumeListesAttente ||
+    !elements.detailListesAttente
+  ) {
+    return;
+  }
+
+
+  const produitId =
+    nettoyerTexte(
+      produit.produitId
+    );
+
+
+  const personnes =
+    Array.isArray(inscriptions)
+      ? inscriptions.filter(
+          function (inscription) {
+
+            return (
+              nettoyerTexte(
+                inscription.produitId
+              ) === produitId
+            );
+          }
+        )
+      : [];
+
+
+  elements.resumeListesAttente.hidden =
+    true;
+
+
+  elements.detailListesAttente.hidden =
+    false;
+
+
+  elements.detailListesAttente.innerHTML =
+    "";
+
+
+  if (
+    elements.retourListesAttente
+  ) {
+
+    elements.retourListesAttente.hidden =
+      false;
+  }
+
+
+  const titre =
+    document.createElement(
+      "h3"
+    );
+
+  titre.textContent =
+    produit.produit ||
+    produit.produitId ||
+    "Produit";
+
+
+  elements.detailListesAttente.appendChild(
+    titre
+  );
+
+
+  const total =
+    document.createElement(
+      "div"
+    );
+
+  total.className =
+    "total-attente";
+
+
+  total.textContent =
+    personnes.length +
+    " personne" +
+    (
+      personnes.length > 1
+        ? "s"
+        : ""
+    ) +
+    " — " +
+    personnes.reduce(
+      function (
+        somme,
+        inscription
+      ) {
+
+        return (
+          somme +
+          Number(
+            inscription.quantite || 0
+          )
+        );
+      },
+      0
+    ) +
+    " exemplaire(s) demandé(s)";
+
+
+  elements.detailListesAttente.appendChild(
+    total
+  );
+
+
+  if (
+    personnes.length === 0
+  ) {
+
+    const vide =
+      document.createElement(
+        "p"
+      );
+
+    vide.textContent =
+      "Aucune inscription pour ce produit.";
+
+
+    elements.detailListesAttente.appendChild(
+      vide
+    );
+
+
+    return;
+  }
+
+
+  personnes.forEach(
+    function (
+      inscription
+    ) {
+
+      const bloc =
+        document.createElement(
+          "div"
+        );
+
+      bloc.className =
+        "client-attente";
+
+
+      const nom =
+        document.createElement(
+          "p"
+        );
+
+      nom.innerHTML =
+        "<strong>" +
+        echapperHTMLAdmin(
+          (
+            nettoyerTexte(
+              inscription.prenom
+            ) +
+            " " +
+            nettoyerTexte(
+              inscription.nom
+            )
+          ).trim() ||
+          "Client"
+        ) +
+        "</strong>";
+
+
+      const email =
+        document.createElement(
+          "p"
+        );
+
+      email.className =
+        "email-attente";
+
+      email.textContent =
+        "Email : " +
+        (
+          inscription.email ||
+          "—"
+        );
+
+
+      const quantite =
+        document.createElement(
+          "p"
+        );
+
+      quantite.textContent =
+        "Quantité : " +
+        Number(
+          inscription.quantite || 0
+        );
+
+
+      const statut =
+        document.createElement(
+          "p"
+        );
+
+      statut.textContent =
+        "Statut : " +
+        (
+          inscription.statut ||
+          "—"
+        );
+
+
+      const date =
+        document.createElement(
+          "p"
+        );
+
+      date.textContent =
+        "Inscription : " +
+        formaterDateAdmin(
+          inscription.dateInscription
+        );
+
+
+      bloc.appendChild(
+        nom
+      );
+
+      bloc.appendChild(
+        email
+      );
+
+      bloc.appendChild(
+        quantite
+      );
+
+      bloc.appendChild(
+        statut
+      );
+
+      bloc.appendChild(
+        date
+      );
+
+
+      elements.detailListesAttente.appendChild(
+        bloc
+      );
+    }
+  );
+}
+
 
 /*
  * =========================================================
