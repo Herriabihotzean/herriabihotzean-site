@@ -1503,6 +1503,10 @@ if (
   "admin-recapitulatif-annuel"
 ) {
 
+  /*
+   * Réactivation du bouton.
+   */
+
   if (
     elements.boutonRecapitulatifPdf
   ) {
@@ -1511,6 +1515,10 @@ if (
       false;
   }
 
+
+  /*
+   * Erreur renvoyée par Apps Script.
+   */
 
   if (
     donnees.succes !== true
@@ -1529,8 +1537,12 @@ if (
   }
 
 
+  /*
+   * Vérification de l'URL du PDF.
+   */
+
   if (
-    !donnees.fichierBase64
+    !donnees.urlTelechargement
   ) {
 
     if (
@@ -1538,7 +1550,7 @@ if (
     ) {
 
       elements.messageRecapitulatif.textContent =
-        "Le fichier PDF n’a pas été reçu.";
+        "Le lien de téléchargement du PDF n’a pas été reçu.";
     }
 
     return;
@@ -1546,50 +1558,8 @@ if (
 
 
   /*
-   * Transformation Base64 -> Blob PDF.
+   * Ouverture du PDF.
    */
-
-  const chaineBinaire =
-    atob(
-      donnees.fichierBase64
-    );
-
-
-  const octets =
-    new Uint8Array(
-      chaineBinaire.length
-    );
-
-
-  for (
-    let i = 0;
-    i < chaineBinaire.length;
-    i++
-  ) {
-
-    octets[i] =
-      chaineBinaire.charCodeAt(
-        i
-      );
-  }
-
-
-  const blob =
-    new Blob(
-      [octets],
-      {
-        type:
-          donnees.mimeType ||
-          "application/pdf"
-      }
-    );
-
-
-  const url =
-    URL.createObjectURL(
-      blob
-    );
-
 
   const lien =
     document.createElement(
@@ -1598,16 +1568,15 @@ if (
 
 
   lien.href =
-    url;
+    donnees.urlTelechargement;
 
 
-  lien.download =
-    donnees.nomFichier ||
-    (
-      "recapitulatif-encaissements-" +
-      donnees.annee +
-      ".pdf"
-    );
+  lien.target =
+    "_blank";
+
+
+  lien.rel =
+    "noopener";
 
 
   document.body.appendChild(
@@ -1621,10 +1590,9 @@ if (
   lien.remove();
 
 
-  URL.revokeObjectURL(
-    url
-  );
-
+  /*
+   * Confirmation.
+   */
 
   if (
     elements.messageRecapitulatif
