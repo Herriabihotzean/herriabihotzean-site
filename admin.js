@@ -1551,39 +1551,38 @@ if (
   }
 
 
-  /*
-   * Ouverture du PDF.
-   */
+/*
+ * Téléchargement du PDF.
+ */
 
-  const lien =
-    document.createElement(
-      "a"
-    );
-
-
-  lien.href =
-    donnees.urlTelechargement;
-
-
-  lien.target =
-    "_blank";
-
-
-  lien.rel =
-    "noopener";
-
-
-  document.body.appendChild(
-    lien
+const lien =
+  document.createElement(
+    "a"
   );
 
 
-  lien.click();
+lien.href =
+  donnees.urlTelechargement;
 
 
-  lien.remove();
+lien.download =
+  donnees.nomFichier ||
+  (
+    "recapitulatif-encaissements-" +
+    donnees.annee +
+    ".pdf"
+  );
 
 
+document.body.appendChild(
+  lien
+);
+
+
+lien.click();
+
+
+lien.remove();
   /*
    * Confirmation.
    */
