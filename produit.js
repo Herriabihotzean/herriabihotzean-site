@@ -421,6 +421,26 @@ elements.texteListeAttente =
     "texte-liste-attente"
   );
 
+elements.etiquettePrenomListeAttente =
+  document.getElementById(
+    "etiquette-prenom-liste-attente"
+  );
+
+elements.prenomListeAttente =
+  document.getElementById(
+    "prenom-liste-attente"
+  );
+
+elements.etiquetteNomListeAttente =
+  document.getElementById(
+    "etiquette-nom-liste-attente"
+  );
+
+elements.nomListeAttente =
+  document.getElementById(
+    "nom-liste-attente"
+  );
+    
 elements.etiquetteEmailListeAttente =
   document.getElementById(
     "etiquette-email-liste-attente"
@@ -429,6 +449,16 @@ elements.etiquetteEmailListeAttente =
 elements.emailListeAttente =
   document.getElementById(
     "email-liste-attente"
+  );
+
+elements.etiquetteQuantiteListeAttente =
+  document.getElementById(
+    "etiquette-quantite-liste-attente"
+  );
+
+elements.quantiteListeAttente =
+  document.getElementById(
+    "quantite-liste-attente"
   );
 
 elements.envoyerListeAttente =
