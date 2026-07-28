@@ -1241,6 +1241,67 @@ if (
       true;
   }
 
+  /*
+ * Remplissage de la liste des produits.
+ */
+
+if (
+  elements.produitFinances
+) {
+
+  elements.produitFinances.innerHTML =
+    "";
+
+
+  const optionTous =
+    document.createElement(
+      "option"
+    );
+
+  optionTous.value =
+    "";
+
+  optionTous.textContent =
+    "Tous les produits";
+
+
+  elements.produitFinances.appendChild(
+    optionTous
+  );
+
+
+  const produits =
+    Array.isArray(
+      donnees.produits
+    )
+      ? donnees.produits
+      : [];
+
+
+  produits.forEach(
+    function (produit) {
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        produit.produitId || "";
+
+      option.textContent =
+        produit.produit ||
+        produit.produitId ||
+        "Produit";
+
+
+      elements.produitFinances.appendChild(
+        option
+      );
+    }
+  );
+}
+
 
   if (
     donnees.succes !== true
