@@ -3523,7 +3523,114 @@ boutonModifier.addEventListener(
    * =========================================================
    */
 
-  function ouvrirNouveauProdu
+function ouvrirNouveauProduit() {
+
+  modeEditionProduit =
+    "creation";
+
+
+  produitEdition =
+    null;
+
+
+  if (
+    elements.formulaireProduit
+  ) {
+
+    elements.formulaireProduit.reset();
+  }
+
+
+  elements.titreModalProduit.textContent =
+    "Nouveau produit";
+
+
+  elements.produitId.readOnly =
+    false;
+
+  elements.produitId.value =
+    "";
+
+
+  elements.blocStockActuelProduit.hidden =
+    true;
+
+
+  elements.blocStockInitialProduit.hidden =
+    false;
+
+
+  elements.stockInitialProduit.required =
+    true;
+
+  elements.stockInitialProduit.value =
+    "0";
+
+
+  elements.visibleBoutiqueProduit.value =
+    "OUI";
+
+
+  elements.statutProduit.value =
+    "EN VENTE";
+
+
+  elements.ordreAffichageProduit.value =
+    "0";
+
+
+  elements.fraisLivraisonProduit.value =
+    "0";
+
+
+  elements.prixRevientUnitaireProduit.value =
+    "0";
+
+
+  elements.seuilAlerteProduit.value =
+    "0";
+
+
+  elements.stockCritiqueProduit.value =
+    "0";
+
+
+  elements.cout10Produit.value =
+    "0";
+
+
+  elements.cout20Produit.value =
+    "0";
+
+
+  elements.cout50Produit.value =
+    "0";
+
+
+  elements.cout100Produit.value =
+    "0";
+
+
+  elements.validerProduit.disabled =
+    false;
+
+
+  elements.validerProduit.textContent =
+    "Créer le produit";
+
+
+  afficherMessageProduit(
+    "",
+    false
+  );
+
+
+  elements.fondProduit.hidden =
+    false;
+
+
+  elements.produitId.focus();
+}
 
 
   /*
