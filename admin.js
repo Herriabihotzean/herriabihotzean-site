@@ -888,7 +888,7 @@ if (
       }
 
 
-      demanderRecapitulatifAnnuel(
+      del(
         annee
       );
     }
@@ -3523,8 +3523,140 @@ function demanderRecapitulatifAnnuel(
 
 
   /*
-   * Message pendant la préparation.
+   * Session administrateur.
    */
+
+  const jeton =
+    lireJeton();
+
+
+  if (!jeton) {
+
+    if (
+      elements.messageRecapitulatif
+    ) {
+
+      elements.messageRecapitulatif.textContent =
+        "Votre session administrateur a expiré.";
+    }
+
+    return;
+  }
+
+
+  /*
+   * Adresse Apps Script.
+   */
+
+  const apiUrl =
+    obtenirApiUrl();
+
+
+  if (!apiUrl) {
+
+    if (
+      elements.messageRecapitulatif
+    ) {
+
+      elements.messageRecapitulatif.textContent =
+        "L’adresse de l’API Apps Script est absente.";
+    }
+
+    return;
+  }
+
+
+  /*
+   * Formulaire temporaire envoyé
+   * dans l'iframe invisible.
+   */
+
+  const formulaire =
+    document.createElement(
+      "form"
+    );
+
+
+  formulaire.method =
+    "POST";
+
+
+  formulaire.action =
+    apiUrl;
+
+
+  formulaire.target =
+    "admin-iframe";
+
+
+  formulaire.style.display =
+    "none";
+
+
+  /*
+   * Type de demande.
+   */
+
+  ajouterChamp(
+    formulaire,
+    "type",
+    "admin-recapitulatif-annuel"
+  );
+
+
+  /*
+   * Session.
+   */
+
+  ajouterChamp(
+    formulaire,
+    "jeton",
+    jeton
+  );
+
+
+  /*
+   * Année demandée.
+   */
+
+  ajouterChamp(
+    formulaire,
+    "annee",
+    anneeChoisie
+  );
+
+
+  /*
+   * Informations utilisées par
+   * le système de retour admin.
+   */
+
+  ajouterChamp(
+    formulaire,
+    "retourAdmin",
+    URL_ADMIN
+  );
+
+
+  ajouterChamp(
+    formulaire,
+    "origine",
+    window.location.origin
+  );
+
+
+  /*
+   * État de l'interface.
+   */
+
+  if (
+    elements.boutonRecapitulatifPdf
+  ) {
+
+    elements.boutonRecapitulatifPdf.disabled =
+      true;
+  }
+
 
   if (
     elements.messageRecapitulatif
@@ -3538,32 +3670,34 @@ function demanderRecapitulatifAnnuel(
 
 
   /*
-   * On empêche un double clic
-   * pendant la génération.
+   * Envoi.
    */
 
-  if (
-    elements.boutonRecapitulatifPdf
-  ) {
+  document.body.appendChild(
+    formulaire
+  );
 
-    elements.boutonRecapitulatifPdf.disabled =
-      true;
-  }
+
+  HTMLFormElement
+    .prototype
+    .submit
+    .call(
+      formulaire
+    );
 
 
   /*
-   * Demande envoyée à Code.gs.
+   * Nettoyage du formulaire.
    */
 
-  envoyerRequeteAdmin({
-    type:
-      "admin-recapitulatif-annuel",
+  window.setTimeout(
+    function () {
 
-    annee:
-      anneeChoisie
-  });
+      formulaire.remove();
+    },
+    1000
+  );
 }
-
 
 function remplirAnneesRecapitulatif() {
 
