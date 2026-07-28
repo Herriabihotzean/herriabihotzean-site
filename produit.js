@@ -665,17 +665,14 @@ elements.messageListeAttente =
    */
 
   if (
-    elements.formulaireListeAttente
-  ) {
+  elements.formulaireListeAttente
+) {
 
-    elements.formulaireListeAttente.addEventListener(
-      "submit",
-      function (evenement) {
-
-        evenement.preventDefault();
-      }
-    );
-  }
+  elements.formulaireListeAttente.addEventListener(
+    "submit",
+    envoyerListeAttente
+  );
+}
 
 
   /*
@@ -696,6 +693,178 @@ elements.messageListeAttente =
     }
   );
 }
+
+function envoyerListeAttente(
+  evenement
+) {
+
+  evenement.preventDefault();
+
+
+  if (!produit) {
+    return;
+  }
+
+
+  const prenom =
+    nettoyerTexte(
+      elements.prenomListeAttente.value
+    );
+
+  const nom =
+    nettoyerTexte(
+      elements.nomListeAttente.value
+    );
+
+  const email =
+    nettoyerTexte(
+      elements.emailListeAttente.value
+    );
+
+  const quantite =
+    parseInt(
+      elements.quantiteListeAttente.value,
+      10
+    );
+
+
+  if (
+    !prenom ||
+    !nom ||
+    !email ||
+    !Number.isFinite(quantite) ||
+    quantite < 1 ||
+    quantite > 20
+  ) {
+
+    elements.messageListeAttente.textContent =
+      langue === "eu"
+        ? "Eremu guziak bete behar dira."
+        : "Veuillez remplir correctement tous les champs.";
+
+    elements.messageListeAttente.hidden =
+      false;
+
+    return;
+  }
+
+
+  const apiUrl =
+    window.HB_CONFIG &&
+    window.HB_CONFIG.API_URL
+      ? nettoyerTexte(
+          window.HB_CONFIG.API_URL
+        )
+      : "";
+
+
+  if (!apiUrl) {
+
+    elements.messageListeAttente.textContent =
+      langue === "eu"
+        ? "Ezin izan da eskaera bidali."
+        : "Impossible d’envoyer la demande.";
+
+    elements.messageListeAttente.hidden =
+      false;
+
+    return;
+  }
+
+
+  const formulaire =
+    document.createElement(
+      "form"
+    );
+
+
+  formulaire.method =
+    "POST";
+
+  formulaire.action =
+    apiUrl;
+
+  formulaire.target =
+    "_self";
+
+  formulaire.style.display =
+    "none";
+
+
+  ajouterChampListeAttente(
+    formulaire,
+    "type",
+    "liste-attente"
+  );
+
+  ajouterChampListeAttente(
+    formulaire,
+    "produitId",
+    produit.produitId
+  );
+
+  ajouterChampListeAttente(
+    formulaire,
+    "prenom",
+    prenom
+  );
+
+  ajouterChampListeAttente(
+    formulaire,
+    "nom",
+    nom
+  );
+
+  ajouterChampListeAttente(
+    formulaire,
+    "email",
+    email
+  );
+
+  ajouterChampListeAttente(
+    formulaire,
+    "quantite",
+    quantite
+  );
+
+
+  document.body.appendChild(
+    formulaire
+  );
+
+
+  formulaire.submit();
+}
+
+function ajouterChampListeAttente(
+  formulaire,
+  nom,
+  valeur
+) {
+
+  const champ =
+    document.createElement(
+      "input"
+    );
+
+  champ.type =
+    "hidden";
+
+  champ.name =
+    nom;
+
+  champ.value =
+    String(
+      valeur == null
+        ? ""
+        : valeur
+    );
+
+  formulaire.appendChild(
+    champ
+  );
+}
+
 
   function mettreAJourAdresseLangue() {
     const url =
