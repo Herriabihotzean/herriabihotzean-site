@@ -570,6 +570,54 @@ elements.fermerListesAttente =
 
 
   /*
+ * ========================================
+ * LISTES D'ATTENTE
+ * ========================================
+ */
+
+if (
+  elements.boutonListesAttente
+) {
+
+  elements.boutonListesAttente.addEventListener(
+    "click",
+    ouvrirListesAttente
+  );
+}
+
+
+if (
+  elements.fermerListesAttente
+) {
+
+  elements.fermerListesAttente.addEventListener(
+    "click",
+    fermerListesAttente
+  );
+}
+
+
+if (
+  elements.fondListesAttente
+) {
+
+  elements.fondListesAttente.addEventListener(
+    "click",
+    function (evenement) {
+
+      if (
+        evenement.target ===
+        elements.fondListesAttente
+      ) {
+
+        fermerListesAttente();
+      }
+    }
+  );
+}
+
+
+  /*
    * ========================================
    * RÉAPPROVISIONNEMENT
    * ========================================
