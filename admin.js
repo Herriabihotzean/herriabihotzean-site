@@ -514,6 +514,45 @@ let modeEditionProduit = "";
       );
     }
 
+        /*
+     * =========================================================
+     * CRÉER / MODIFIER UN PRODUIT
+     * =========================================================
+     */
+
+    const boutonNouveauProduit =
+      document.getElementById(
+        "bouton-nouveau-produit"
+      );
+
+    if (boutonNouveauProduit) {
+
+      boutonNouveauProduit.addEventListener(
+        "click",
+        function () {
+
+          ouvrirNouveauProduit();
+        }
+      );
+    }
+
+
+    const boutonAnnulerProduit =
+      document.getElementById(
+        "annuler-produit"
+      );
+
+    if (boutonAnnulerProduit) {
+
+      boutonAnnulerProduit.addEventListener(
+        "click",
+        function () {
+
+          fermerProduit();
+        }
+      );
+    }
+
 
     /*
      * RÉAPPROVISIONNEMENT
@@ -3475,116 +3514,7 @@ boutonModifier.addEventListener(
    * =========================================================
    */
 
-  function ouvrirNouveauProduit() {
-
-    modeEditionProduit =
-      "creation";
-
-
-    produitEdition =
-      null;
-
-
-    viderFormulaireProduit();
-
-
-    elements.titreModalProduit.textContent =
-      "Nouveau produit";
-
-
-    /*
-     * En création, produitId est modifiable.
-     */
-
-    elements.produitId.readOnly =
-      false;
-
-
-    /*
-     * Pas de stock actuel.
-     * On affiche stock initial.
-     */
-
-    elements.blocStockActuelProduit.hidden =
-      true;
-
-
-    elements.blocStockInitialProduit.hidden =
-      false;
-
-
-    elements.stockInitialProduit.required =
-      true;
-
-
-    /*
-     * Valeurs par défaut.
-     */
-
-    elements.visibleBoutiqueProduit.value =
-      "OUI";
-
-
-    elements.statutProduit.value =
-      "EN VENTE";
-
-
-    elements.ordreAffichageProduit.value =
-      "0";
-
-
-    elements.fraisLivraisonProduit.value =
-      "0";
-
-
-    elements.prixRevientUnitaireProduit.value =
-      "0";
-
-
-    elements.seuilAlerteProduit.value =
-      "0";
-
-
-    elements.stockCritiqueProduit.value =
-      "0";
-
-
-    elements.cout10Produit.value =
-      "0";
-
-
-    elements.cout20Produit.value =
-      "0";
-
-
-    elements.cout50Produit.value =
-      "0";
-
-
-    elements.cout100Produit.value =
-      "0";
-
-
-    elements.stockInitialProduit.value =
-      "0";
-
-
-    elements.validerProduit.textContent =
-      "Créer le produit";
-
-
-    afficherMessageProduit(
-      "",
-      false
-    );
-
-
-    elements.fondProduit.hidden =
-      false;
-
-
-    elements.produitId.focus();
-  }
+  function ouvrirNouveauProdu
 
 
   /*
@@ -3886,40 +3816,46 @@ boutonModifier.addEventListener(
 
       function fermerProduit() {
 
-    if (
-      elements.fondProduit
-    ) {
+  if (
+    elements.fondProduit
+  ) {
 
-      elements.fondProduit.hidden =
-        true;
-    }
-
-
-    afficherMessageProduit(
-      "",
-      false
-    );
-
-
-    if (
-      elements.validerProduit
-    ) {
-
-      elements.validerProduit.disabled =
-        false;
-
-      elements.validerProduit.textContent =
-        "Enregistrer les modifications";
-    }
-
-
-    produitEdition =
-      null;
-
-
-    modeEditionProduit =
-      "";
+    elements.fondProduit.hidden =
+      true;
   }
+
+
+  if (
+    elements.messageProduit
+  ) {
+
+    elements.messageProduit.textContent =
+      "";
+
+    elements.messageProduit.className =
+      "message";
+  }
+
+
+  if (
+    elements.validerProduit
+  ) {
+
+    elements.validerProduit.disabled =
+      false;
+
+    elements.validerProduit.textContent =
+      "Enregistrer les modifications";
+  }
+
+
+  produitEdition =
+    null;
+
+
+  modeEditionProduit =
+    "";
+}
 
     function envoyerProduit(
     evenement
