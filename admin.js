@@ -853,7 +853,47 @@ if (
     }
   );
 }
-    
+
+/*
+ * ========================================
+ * RÉCAPITULATIF ANNUEL PDF
+ * ========================================
+ */
+
+if (
+  elements.boutonRecapitulatifPdf
+) {
+
+  elements.boutonRecapitulatifPdf.addEventListener(
+    "click",
+    function () {
+
+      const annee =
+        elements.anneeRecapitulatif
+          ? elements.anneeRecapitulatif.value
+          : "";
+
+
+      if (!annee) {
+
+        if (
+          elements.messageRecapitulatif
+        ) {
+
+          elements.messageRecapitulatif.textContent =
+            "Veuillez choisir une année.";
+        }
+
+        return;
+      }
+
+
+      demanderRecapitulatifAnnuel(
+        annee
+      );
+    }
+  );
+}
 
   /*
    * ========================================
@@ -3289,6 +3329,85 @@ function formaterMontantFinances(
     }
   ) + " €";
 }
+
+/*
+ * =========================================================
+ * RÉCAPITULATIF ANNUEL DES ENCAISSEMENTS
+ * =========================================================
+ */
+
+function demanderRecapitulatifAnnuel(
+  annee
+) {
+
+  const anneeChoisie =
+    Number(
+      annee
+    );
+
+
+  if (
+    !Number.isInteger(
+      anneeChoisie
+    ) ||
+    anneeChoisie < 2000 ||
+    anneeChoisie > 2100
+  ) {
+
+    if (
+      elements.messageRecapitulatif
+    ) {
+
+      elements.messageRecapitulatif.textContent =
+        "Année invalide.";
+    }
+
+    return;
+  }
+
+
+  /*
+   * Message pendant la préparation.
+   */
+
+  if (
+    elements.messageRecapitulatif
+  ) {
+
+    elements.messageRecapitulatif.textContent =
+      "Préparation du récapitulatif " +
+      anneeChoisie +
+      "…";
+  }
+
+
+  /*
+   * On empêche un double clic
+   * pendant la génération.
+   */
+
+  if (
+    elements.boutonRecapitulatifPdf
+  ) {
+
+    elements.boutonRecapitulatifPdf.disabled =
+      true;
+  }
+
+
+  /*
+   * Demande envoyée à Code.gs.
+   */
+
+  envoyerRequeteAdmin({
+    type:
+      "admin-recapitulatif-annuel",
+
+    annee:
+      anneeChoisie
+  });
+}
+
 
 function remplirAnneesRecapitulatif() {
 
