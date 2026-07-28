@@ -487,119 +487,185 @@ elements.messageListeAttente =
   }
 
   function installerEvenements() {
-    /*
-     * Langues.js émet cet événement lorsqu'on
-     * clique sur l'un de ses deux boutons.
-     */
-    document.addEventListener(
-      "herria-language-change",
-      function (evenement) {
-        const nouvelleLangue =
-          evenement.detail &&
-          evenement.detail.lang === "eu"
-            ? "eu"
-            : "fr";
 
-        langue =
-          nouvelleLangue;
+  /*
+   * CHANGEMENT DE LANGUE
+   */
 
-        try {
-          localStorage.setItem(
-            CLE_LANGUE,
-            langue
-          );
-        } catch (_) {}
+  document.addEventListener(
+    "herria-language-change",
+    function (evenement) {
 
-        mettreAJourAdresseLangue();
-        appliquerLangue();
-      }
-    );
+      const nouvelleLangue =
+        evenement.detail &&
+        evenement.detail.lang === "eu"
+          ? "eu"
+          : "fr";
 
-    elements.diminuer.addEventListener(
-      "click",
-      function () {
-        modifierQuantite(-1);
-      }
-    );
 
-    elements.augmenter.addEventListener(
-      "click",
-      function () {
-        modifierQuantite(1);
-      }
-    );
+      langue =
+        nouvelleLangue;
 
-    elements.quantite.addEventListener(
-      "change",
-      normaliserQuantite
-    );
 
-    elements.boutonAjouter.addEventListener(
-      "click",
-      ajouterAuPanier
-    );
+      try {
+
+        localStorage.setItem(
+          CLE_LANGUE,
+          langue
+        );
+
+      } catch (_) {}
+
+
+      mettreAJourAdresseLangue();
+
+      appliquerLangue();
+    }
+  );
+
+
+  /*
+   * QUANTITÉ
+   */
+
+  elements.diminuer.addEventListener(
+    "click",
+    function () {
+
+      modifierQuantite(
+        -1
+      );
+    }
+  );
+
+
+  elements.augmenter.addEventListener(
+    "click",
+    function () {
+
+      modifierQuantite(
+        1
+      );
+    }
+  );
+
+
+  elements.quantite.addEventListener(
+    "change",
+    normaliserQuantite
+  );
+
+
+  /*
+   * AJOUT AU PANIER
+   */
+
+  elements.boutonAjouter.addEventListener(
+    "click",
+    ajouterAuPanier
+  );
+
+
+  /*
+   * ========================================
+   * LISTE D'ATTENTE
+   * ========================================
+   */
+
+  if (
+    elements.boutonListeAttente
+  ) {
 
     elements.boutonListeAttente.addEventListener(
-  "click",
-  function () {
+      "click",
+      function () {
 
-    elements.formulaireListeAttente.hidden =
-      false;
-
-    elements.boutonListeAttente.hidden =
-      true;
-
-    elements.emailListeAttente.focus();
-  }
-);
+        elements.formulaireListeAttente.hidden =
+          false;
 
 
-elements.annulerListeAttente.addEventListener(
-  "click",
-  function () {
+        elements.boutonListeAttente.hidden =
+          true;
 
-    elements.formulaireListeAttente.hidden =
-      true;
 
-    elements.boutonListeAttente.hidden =
-      false;
-
-    elements.messageListeAttente.hidden =
-      true;
-
-    elements.messageListeAttente.textContent =
-      "";
-  }
-
-  elements.formulaireListeAttente.addEventListener(
-  "submit",
-  function (evenement) {
-
-    /*
-     * Empêche le navigateur de transformer
-     * l'adresse en produit.html?email=...
-     *
-     * L'envoi réel vers Apps Script sera
-     * branché ensuite.
-     */
-
-    evenement.preventDefault();
-  }
-);
-);
-
-    window.addEventListener(
-      "storage",
-      function (evenement) {
-        if (
-          evenement.key ===
-          CLE_PANIER
-        ) {
-          mettreAJourNombrePanier();
-        }
+        elements.emailListeAttente.focus();
       }
     );
   }
+
+
+  if (
+    elements.annulerListeAttente
+  ) {
+
+    elements.annulerListeAttente.addEventListener(
+      "click",
+      function () {
+
+        elements.formulaireListeAttente.hidden =
+          true;
+
+
+        elements.boutonListeAttente.hidden =
+          false;
+
+
+        elements.messageListeAttente.hidden =
+          true;
+
+
+        elements.messageListeAttente.textContent =
+          "";
+      }
+    );
+  }
+
+
+  /*
+   * Pour l'instant, on empêche seulement
+   * l'envoi normal du formulaire.
+   *
+   * Sinon le navigateur remplacerait :
+   *
+   * ?id=manuel-conversation&lang=fr
+   *
+   * par :
+   *
+   * ?email=...
+   */
+
+  if (
+    elements.formulaireListeAttente
+  ) {
+
+    elements.formulaireListeAttente.addEventListener(
+      "submit",
+      function (evenement) {
+
+        evenement.preventDefault();
+      }
+    );
+  }
+
+
+  /*
+   * MISE À JOUR DU PANIER ENTRE ONGLETS
+   */
+
+  window.addEventListener(
+    "storage",
+    function (evenement) {
+
+      if (
+        evenement.key ===
+        CLE_PANIER
+      ) {
+
+        mettreAJourNombrePanier();
+      }
+    }
+  );
+}
 
   function mettreAJourAdresseLangue() {
     const url =
