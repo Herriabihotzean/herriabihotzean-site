@@ -686,16 +686,24 @@ elements.annulerListeAttente.textContent =
   }
 
   function chargerProduit() {
-    const parametres =
-      new URLSearchParams(
-        window.location.search
-      );
 
-    const produitId =
-      nettoyerTexte(
-        parametres.get("id") ||
-        parametres.get("produitId")
-      );
+  /*
+   * On lit directement l'adresse complète de la page.
+   * Cela évite de dépendre uniquement de
+   * window.location.search.
+   */
+
+  const url =
+    new URL(
+      window.location.href
+    );
+
+
+  const produitId =
+    nettoyerTexte(
+      url.searchParams.get("id") ||
+      url.searchParams.get("produitId")
+    );
 
     if (!produitId) {
       afficherErreur(
