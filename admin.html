@@ -839,6 +839,40 @@
   background: #2457a6;
 }
 
+/* =========================
+   RÉCAPITULATIF ANNUEL
+   ========================= */
+
+.bloc-recapitulatif-annuel {
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255,255,255,.35);
+  text-align: center;
+}
+
+.bloc-recapitulatif-annuel h3 {
+  margin-top: 0;
+}
+
+.ligne-recapitulatif-annuel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.ligne-recapitulatif-annuel select {
+  min-height: 44px;
+  padding: 8px 12px;
+  font: inherit;
+}
+
+#message-recapitulatif {
+  margin-top: 12px;
+}
+    
   </style>
 
 </head>
@@ -1176,6 +1210,45 @@
     >
       Le graphique apparaîtra ici.
     </div>
+
+    <div
+  id="bloc-recapitulatif-annuel"
+  class="bloc-recapitulatif-annuel"
+>
+  <h3>
+    Récapitulatif annuel des encaissements
+  </h3>
+
+  <p>
+    Générer le récapitulatif des sommes encaissées
+    pour une année civile.
+  </p>
+
+  <div class="ligne-recapitulatif-annuel">
+
+    <label for="annee-recapitulatif">
+      Année
+    </label>
+
+    <select
+      id="annee-recapitulatif"
+    ></select>
+
+    <button
+      id="bouton-recapitulatif-pdf"
+      class="bouton-action"
+      type="button"
+    >
+      Télécharger le PDF
+    </button>
+
+  </div>
+
+  <p
+    id="message-recapitulatif"
+    class="message"
+  ></p>
+</div>
 
     <p
       id="message-finances"
