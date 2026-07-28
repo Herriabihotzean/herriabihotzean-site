@@ -193,7 +193,76 @@ elements.fermerListesAttente =
   );
 
 
-  
+ /*
+ * =========================================================
+ * FINANCES
+ * =========================================================
+ */
+
+elements.boutonFinances =
+  document.getElementById(
+    "bouton-finances"
+  );
+
+elements.fondFinances =
+  document.getElementById(
+    "fond-finances"
+  );
+
+elements.fermerFinances =
+  document.getElementById(
+    "fermer-finances"
+  );
+
+elements.chargementFinances =
+  document.getElementById(
+    "chargement-finances"
+  );
+
+elements.messageFinances =
+  document.getElementById(
+    "message-finances"
+  );
+
+elements.totalRecettesFinances =
+  document.getElementById(
+    "total-recettes-finances"
+  );
+
+elements.totalDepensesFinances =
+  document.getElementById(
+    "total-depenses-finances"
+  );
+
+elements.resultatFinances =
+  document.getElementById(
+    "resultat-finances"
+  );
+
+elements.graphiqueFinances =
+  document.getElementById(
+    "graphique-finances"
+  );
+
+elements.produitFinances =
+  document.getElementById(
+    "finances-produit"
+  );
+
+elements.finances1Mois =
+  document.getElementById(
+    "finances-1-mois"
+  );
+
+elements.finances6Mois =
+  document.getElementById(
+    "finances-6-mois"
+  );
+
+elements.finances1An =
+  document.getElementById(
+    "finances-1-an"
+  ); 
 
 
     /*
@@ -640,6 +709,54 @@ if (
 }
 
 
+/*
+ * ========================================
+ * FINANCES
+ * ========================================
+ */
+
+if (
+  elements.boutonFinances
+) {
+
+  elements.boutonFinances.addEventListener(
+    "click",
+    ouvrirFinances
+  );
+}
+
+
+if (
+  elements.fermerFinances
+) {
+
+  elements.fermerFinances.addEventListener(
+    "click",
+    fermerFinances
+  );
+}
+
+
+if (
+  elements.fondFinances
+) {
+
+  elements.fondFinances.addEventListener(
+    "click",
+    function (evenement) {
+
+      if (
+        evenement.target ===
+        elements.fondFinances
+      ) {
+
+        fermerFinances();
+      }
+    }
+  );
+}
+    
+
   /*
    * ========================================
    * RÉAPPROVISIONNEMENT
@@ -817,6 +934,15 @@ if (
         return;
       }
 
+  if (
+  elements.fondFinances &&
+  !elements.fondFinances.hidden
+) {
+
+  fermerFinances();
+  return;
+}
+
     /*
      * LISTES D'ATTENTE
      */
@@ -873,6 +999,93 @@ if (
     traiterMessageAdministration
   );
 }
+
+function ouvrirFinances() {
+
+  if (
+    !elements.fondFinances
+  ) {
+    return;
+  }
+
+
+  if (
+    elements.chargementFinances
+  ) {
+
+    elements.chargementFinances.hidden =
+      false;
+
+    elements.chargementFinances.textContent =
+      "Chargement des données financières…";
+  }
+
+
+  if (
+    elements.messageFinances
+  ) {
+
+    elements.messageFinances.textContent =
+      "";
+  }
+
+
+  if (
+    elements.totalRecettesFinances
+  ) {
+
+    elements.totalRecettesFinances.textContent =
+      "— €";
+  }
+
+
+  if (
+    elements.totalDepensesFinances
+  ) {
+
+    elements.totalDepensesFinances.textContent =
+      "— €";
+  }
+
+
+  if (
+    elements.resultatFinances
+  ) {
+
+    elements.resultatFinances.textContent =
+      "— €";
+  }
+
+
+  if (
+    elements.graphiqueFinances
+  ) {
+
+    elements.graphiqueFinances.textContent =
+      "Le graphique apparaîtra ici.";
+  }
+
+
+  elements.fondFinances.hidden =
+    false;
+}
+
+
+function fermerFinances() {
+
+  if (
+    !elements.fondFinances
+  ) {
+    return;
+  }
+
+
+  elements.fondFinances.hidden =
+    true;
+}
+
+
+
 
 function ouvrirListesAttente() {
 
