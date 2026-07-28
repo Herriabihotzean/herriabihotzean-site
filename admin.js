@@ -864,35 +864,35 @@ if (
   elements.boutonRecapitulatifPdf
 ) {
 
-  elements.boutonRecapitulatifPdf.addEventListener(
-    "click",
-    function () {
+elements.boutonRecapitulatifPdf.addEventListener(
+  "click",
+  function () {
 
-      const annee =
-        elements.anneeRecapitulatif
-          ? elements.anneeRecapitulatif.value
-          : "";
+    const annee =
+      elements.anneeRecapitulatif
+        ? elements.anneeRecapitulatif.value
+        : "";
 
 
-      if (!annee) {
+    if (!annee) {
 
-        if (
-          elements.messageRecapitulatif
-        ) {
+      if (
+        elements.messageRecapitulatif
+      ) {
 
-          elements.messageRecapitulatif.textContent =
-            "Veuillez choisir une année.";
-        }
-
-        return;
+        elements.messageRecapitulatif.textContent =
+          "Veuillez choisir une année.";
       }
 
-
-      del(
-        annee
-      );
+      return;
     }
-  );
+
+
+    demanderRecapitulatifAnnuel(
+      annee
+    );
+  }
+);
 }
 
   /*
