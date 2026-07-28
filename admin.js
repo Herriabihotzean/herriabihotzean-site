@@ -3286,15 +3286,207 @@ function afficherGraphiqueFinances(
 
 
   /*
-   * Regroupement des mouvements
-   * par jour.
+   * ========================================
+   * TYPE DE REGROUPEMENT
+   * ========================================
    */
 
-  const jours = {};
+  let regroupement =
+    "jour";
+
+
+  if (
+    periodeFinances ===
+    "6-mois"
+  ) {
+
+    regroupement =
+      "semaine";
+  }
+
+
+  if (
+    periodeFinances ===
+      "1-an" ||
+    periodeFinances ===
+      "depuis-premiere-vente"
+  ) {
+
+    regroupement =
+      "mois";
+  }
+
+
+  /*
+   * ========================================
+   * CLÉ DE REGROUPEMENT
+   * ========================================
+   */
+
+  function obtenirClePeriode(
+    date
+  ) {
+
+    const annee =
+      date.getFullYear();
+
+
+    const mois =
+      date.getMonth();
+
+
+    const jour =
+      date.getDate();
+
+
+    /*
+     * JOUR
+     */
+
+    if (
+      regroupement ===
+      "jour"
+    ) {
+
+      return {
+        cle:
+          annee +
+          "-" +
+          String(
+            mois + 1
+          ).padStart(
+            2,
+            "0"
+          ) +
+          "-" +
+          String(
+            jour
+          ).padStart(
+            2,
+            "0"
+          ),
+
+        date:
+          new Date(
+            annee,
+            mois,
+            jour
+          )
+      };
+    }
+
+
+    /*
+     * MOIS
+     */
+
+    if (
+      regroupement ===
+      "mois"
+    ) {
+
+      return {
+        cle:
+          annee +
+          "-" +
+          String(
+            mois + 1
+          ).padStart(
+            2,
+            "0"
+          ),
+
+        date:
+          new Date(
+            annee,
+            mois,
+            1
+          )
+      };
+    }
+
+
+    /*
+     * SEMAINE
+     *
+     * On prend le lundi
+     * comme début de semaine.
+     */
+
+    const dateSemaine =
+      new Date(
+        annee,
+        mois,
+        jour
+      );
+
+
+    const numeroJour =
+      dateSemaine.getDay();
+
+
+    const decalage =
+      numeroJour === 0
+        ? -6
+        : 1 -
+          numeroJour;
+
+
+    dateSemaine.setDate(
+      dateSemaine.getDate() +
+      decalage
+    );
+
+
+    dateSemaine.setHours(
+      0,
+      0,
+      0,
+      0
+    );
+
+
+    return {
+      cle:
+        dateSemaine
+          .getFullYear() +
+        "-" +
+        String(
+          dateSemaine
+            .getMonth() +
+            1
+        ).padStart(
+          2,
+          "0"
+        ) +
+        "-" +
+        String(
+          dateSemaine
+            .getDate()
+        ).padStart(
+          2,
+          "0"
+        ),
+
+      date:
+        dateSemaine
+    };
+  }
+
+
+  /*
+   * ========================================
+   * REGROUPEMENT
+   * ========================================
+   */
+
+  const periodes = {};
 
 
   mouvementsFiltres.forEach(
-    function (mouvement) {
+    function (
+      mouvement
+    ) {
 
       const date =
         new Date(
@@ -3311,24 +3503,29 @@ function afficherGraphiqueFinances(
       }
 
 
-      const cle =
-        date.getFullYear() +
-        "-" +
-        String(
-          date.getMonth() + 1
-        ).padStart(2, "0") +
-        "-" +
-        String(
-          date.getDate()
-        ).padStart(2, "0");
+      const periode =
+        obtenirClePeriode(
+          date
+        );
 
 
-      if (!jours[cle]) {
+      if (
+        !periodes[
+          periode.cle
+        ]
+      ) {
 
-        jours[cle] = {
-          date: date,
-          recettes: 0,
-          depenses: 0
+        periodes[
+          periode.cle
+        ] = {
+          date:
+            periode.date,
+
+          recettes:
+            0,
+
+          depenses:
+            0
         };
       }
 
@@ -3339,16 +3536,24 @@ function afficherGraphiqueFinances(
         ) || 0;
 
 
-      if (montant > 0) {
+      if (
+        montant > 0
+      ) {
 
-        jours[cle].recettes +=
+        periodes[
+          periode.cle
+        ].recettes +=
           montant;
       }
 
 
-      if (montant < 0) {
+      if (
+        montant < 0
+      ) {
 
-        jours[cle].depenses +=
+        periodes[
+          periode.cle
+        ].depenses +=
           Math.abs(
             montant
           );
@@ -3359,16 +3564,23 @@ function afficherGraphiqueFinances(
 
   const donnees =
     Object.keys(
-      jours
+      periodes
     )
       .map(
-        function (cle) {
+        function (
+          cle
+        ) {
 
-          return jours[cle];
+          return periodes[
+            cle
+          ];
         }
       )
       .sort(
-        function (a, b) {
+        function (
+          a,
+          b
+        ) {
 
           return (
             a.date.getTime() -
@@ -3379,7 +3591,7 @@ function afficherGraphiqueFinances(
 
 
   /*
-   * Pas encore de mouvements.
+   * Aucun mouvement.
    */
 
   if (
@@ -3394,7 +3606,9 @@ function afficherGraphiqueFinances(
 
 
   /*
-   * Résultat cumulé.
+   * ========================================
+   * RÉSULTAT CUMULÉ
+   * ========================================
    */
 
   let resultatCumule =
@@ -3402,39 +3616,44 @@ function afficherGraphiqueFinances(
 
 
   donnees.forEach(
-    function (jour) {
+    function (
+      periode
+    ) {
 
       resultatCumule +=
-        jour.recettes -
-        jour.depenses;
+        periode.recettes -
+        periode.depenses;
 
-      jour.resultat =
+
+      periode.resultat =
         resultatCumule;
     }
   );
 
 
   /*
-   * Dimensions SVG.
+   * ========================================
+   * DIMENSIONS
+   * ========================================
    */
 
   const largeur =
     900;
 
   const hauteur =
-    380;
+    430;
 
   const margeGauche =
-    75;
+    90;
 
   const margeDroite =
-    25;
-
-  const margeHaut =
     30;
 
+  const margeHaut =
+    35;
+
   const margeBas =
-    60;
+    85;
 
 
   const largeurGraphique =
@@ -3450,8 +3669,9 @@ function afficherGraphiqueFinances(
 
 
   /*
-   * Valeur maximale nécessaire
-   * pour l'échelle verticale.
+   * ========================================
+   * ÉCHELLE VERTICALE
+   * ========================================
    */
 
   let valeurMax =
@@ -3459,22 +3679,26 @@ function afficherGraphiqueFinances(
 
 
   donnees.forEach(
-    function (jour) {
+    function (
+      periode
+    ) {
 
       valeurMax =
         Math.max(
           valeurMax,
-          jour.recettes,
-          jour.depenses,
+          periode.recettes,
+          periode.depenses,
           Math.abs(
-            jour.resultat
+            periode.resultat
           )
         );
     }
   );
 
 
-  if (valeurMax <= 0) {
+  if (
+    valeurMax <= 0
+  ) {
 
     valeurMax =
       1;
@@ -3482,18 +3706,23 @@ function afficherGraphiqueFinances(
 
 
   /*
-   * Le résultat peut être négatif :
-   * l'axe horizontal 0 € est donc
-   * placé au milieu du graphique.
+   * Petite marge visuelle
+   * en haut et en bas.
    */
+
+  valeurMax *=
+    1.15;
+
 
   const zeroY =
     margeHaut +
-    hauteurGraphique / 2;
+    hauteurGraphique /
+    2;
 
 
   const demiHauteur =
-    hauteurGraphique / 2;
+    hauteurGraphique /
+    2;
 
 
   function xPourIndex(
@@ -3506,7 +3735,8 @@ function afficherGraphiqueFinances(
 
       return (
         margeGauche +
-        largeurGraphique / 2
+        largeurGraphique /
+        2
       );
     }
 
@@ -3515,7 +3745,10 @@ function afficherGraphiqueFinances(
       margeGauche +
       (
         index /
-        (donnees.length - 1)
+        (
+          donnees.length -
+          1
+        )
       ) *
       largeurGraphique
     );
@@ -3537,32 +3770,10 @@ function afficherGraphiqueFinances(
   }
 
 
-  function creerPoints(
-    champ
-  ) {
-
-    return donnees
-      .map(
-        function (
-          jour,
-          index
-        ) {
-
-          return (
-            xPourIndex(index) +
-            "," +
-            yPourValeur(
-              jour[champ]
-            )
-          );
-        }
-      )
-      .join(" ");
-  }
-
-
   /*
-   * SVG.
+   * ========================================
+   * SVG
+   * ========================================
    */
 
   const espaceSVG =
@@ -3598,56 +3809,313 @@ function afficherGraphiqueFinances(
 
 
   /*
-   * Axe 0 €.
+   * ========================================
+   * LIGNES HORIZONTALES
+   * ========================================
    */
 
-  const axeZero =
-    document.createElementNS(
-      espaceSVG,
-      "line"
-    );
+  const niveaux =
+    [
+      valeurMax,
+      valeurMax / 2,
+      0,
+      -valeurMax / 2,
+      -valeurMax
+    ];
 
 
-  axeZero.setAttribute(
-    "x1",
-    margeGauche
-  );
+  niveaux.forEach(
+    function (
+      valeur
+    ) {
 
-  axeZero.setAttribute(
-    "x2",
-    largeur -
-    margeDroite
-  );
-
-  axeZero.setAttribute(
-    "y1",
-    zeroY
-  );
-
-  axeZero.setAttribute(
-    "y2",
-    zeroY
-  );
-
-  axeZero.setAttribute(
-    "stroke",
-    "#777"
-  );
-
-  axeZero.setAttribute(
-    "stroke-width",
-    "1"
-  );
+      const y =
+        yPourValeur(
+          valeur
+        );
 
 
-  svg.appendChild(
-    axeZero
+      const ligne =
+        document.createElementNS(
+          espaceSVG,
+          "line"
+        );
+
+
+      ligne.setAttribute(
+        "x1",
+        margeGauche
+      );
+
+      ligne.setAttribute(
+        "x2",
+        largeur -
+        margeDroite
+      );
+
+      ligne.setAttribute(
+        "y1",
+        y
+      );
+
+      ligne.setAttribute(
+        "y2",
+        y
+      );
+
+      ligne.setAttribute(
+        "stroke",
+        valeur === 0
+          ? "#777"
+          : "#d6d6d6"
+      );
+
+      ligne.setAttribute(
+        "stroke-width",
+        valeur === 0
+          ? "1.5"
+          : "1"
+      );
+
+
+      svg.appendChild(
+        ligne
+      );
+
+
+      const texte =
+        document.createElementNS(
+          espaceSVG,
+          "text"
+        );
+
+
+      texte.setAttribute(
+        "x",
+        margeGauche -
+        10
+      );
+
+      texte.setAttribute(
+        "y",
+        y + 5
+      );
+
+      texte.setAttribute(
+        "text-anchor",
+        "end"
+      );
+
+      texte.setAttribute(
+        "font-size",
+        "13"
+      );
+
+
+      texte.textContent =
+        Math.round(
+          valeur
+        ).toLocaleString(
+          "fr-FR"
+        ) +
+        " €";
+
+
+      svg.appendChild(
+        texte
+      );
+    }
   );
 
 
   /*
-   * Courbes.
+   * ========================================
+   * DATES DE L'AXE HORIZONTAL
+   * ========================================
    */
+
+  function formaterDateAxe(
+    date
+  ) {
+
+    if (
+      regroupement ===
+      "jour"
+    ) {
+
+      return date.toLocaleDateString(
+        "fr-FR",
+        {
+          day:
+            "2-digit",
+          month:
+            "2-digit"
+        }
+      );
+    }
+
+
+    if (
+      regroupement ===
+      "semaine"
+    ) {
+
+      return (
+        "sem. " +
+        date.toLocaleDateString(
+          "fr-FR",
+          {
+            day:
+              "2-digit",
+            month:
+              "2-digit"
+          }
+        )
+      );
+    }
+
+
+    return date.toLocaleDateString(
+      "fr-FR",
+      {
+        month:
+          "short",
+        year:
+          "numeric"
+      }
+    );
+  }
+
+
+  /*
+   * Maximum six repères
+   * sur l'axe horizontal.
+   */
+
+  const nombreReperes =
+    Math.min(
+      6,
+      donnees.length
+    );
+
+
+  const indexReperes =
+    new Set();
+
+
+  for (
+    let i = 0;
+    i < nombreReperes;
+    i++
+  ) {
+
+    indexReperes.add(
+      Math.round(
+        i *
+        (
+          donnees.length -
+          1
+        ) /
+        Math.max(
+          1,
+          nombreReperes -
+          1
+        )
+      )
+    );
+  }
+
+
+  indexReperes.forEach(
+    function (
+      index
+    ) {
+
+      const x =
+        xPourIndex(
+          index
+        );
+
+
+      const texte =
+        document.createElementNS(
+          espaceSVG,
+          "text"
+        );
+
+
+      texte.setAttribute(
+        "x",
+        x
+      );
+
+      texte.setAttribute(
+        "y",
+        hauteur -
+        35
+      );
+
+      texte.setAttribute(
+        "text-anchor",
+        "middle"
+      );
+
+      texte.setAttribute(
+        "font-size",
+        "12"
+      );
+
+
+      texte.textContent =
+        formaterDateAxe(
+          donnees[
+            index
+          ].date
+        );
+
+
+      svg.appendChild(
+        texte
+      );
+    }
+  );
+
+
+  /*
+   * ========================================
+   * COURBES
+   * ========================================
+   */
+
+  function creerPoints(
+    champ
+  ) {
+
+    return donnees
+      .map(
+        function (
+          periode,
+          index
+        ) {
+
+          return (
+            xPourIndex(
+              index
+            ) +
+            "," +
+            yPourValeur(
+              periode[
+                champ
+              ]
+            )
+          );
+        }
+      )
+      .join(
+        " "
+      );
+  }
+
 
   function ajouterCourbe(
     champ,
@@ -3716,13 +4184,240 @@ function afficherGraphiqueFinances(
   );
 
 
+  /*
+   * ========================================
+   * POINTS + INFO-BULLE
+   * ========================================
+   */
+
+  const info =
+    document.createElement(
+      "div"
+    );
+
+
+  info.style.position =
+    "absolute";
+
+  info.style.display =
+    "none";
+
+  info.style.padding =
+    "8px 10px";
+
+  info.style.background =
+    "rgba(0,0,0,.85)";
+
+  info.style.color =
+    "white";
+
+  info.style.borderRadius =
+    "5px";
+
+  info.style.fontSize =
+    "0.9rem";
+
+  info.style.pointerEvents =
+    "none";
+
+  info.style.zIndex =
+    "20";
+
+
+  elements.graphiqueFinances.style.position =
+    "relative";
+
+
   elements.graphiqueFinances.appendChild(
-    svg
+    info
+  );
+
+
+  donnees.forEach(
+    function (
+      periode,
+      index
+    ) {
+
+      const x =
+        xPourIndex(
+          index
+        );
+
+
+      const valeurs =
+        [
+          {
+            champ:
+              "recettes",
+
+            couleur:
+              "#2f7d32"
+          },
+
+          {
+            champ:
+              "depenses",
+
+            couleur:
+              "#c62828"
+          },
+
+          {
+            champ:
+              "resultat",
+
+            couleur:
+              "#2457a6"
+          }
+        ];
+
+
+      valeurs.forEach(
+        function (
+          serie
+        ) {
+
+          const cercle =
+            document.createElementNS(
+              espaceSVG,
+              "circle"
+            );
+
+
+          cercle.setAttribute(
+            "cx",
+            x
+          );
+
+          cercle.setAttribute(
+            "cy",
+            yPourValeur(
+              periode[
+                serie.champ
+              ]
+            )
+          );
+
+          cercle.setAttribute(
+            "r",
+            "5"
+          );
+
+          cercle.setAttribute(
+            "fill",
+            serie.couleur
+          );
+
+          cercle.style.cursor =
+            "pointer";
+
+
+          cercle.addEventListener(
+            "mouseenter",
+            function () {
+
+              const etiquette =
+                formaterDateAxe(
+                  periode.date
+                );
+
+
+              info.innerHTML =
+                "<strong>" +
+                etiquette +
+                "</strong><br>" +
+
+                "Recettes : " +
+                formaterMontantFinances(
+                  periode.recettes
+                ) +
+                "<br>" +
+
+                "Dépenses : " +
+                formaterMontantFinances(
+                  periode.depenses
+                ) +
+                "<br>" +
+
+                "Résultat cumulé : " +
+                formaterMontantFinances(
+                  periode.resultat
+                );
+
+
+              info.style.display =
+                "block";
+            }
+          );
+
+
+          cercle.addEventListener(
+            "mousemove",
+            function (
+              evenement
+            ) {
+
+              const cadre =
+                elements
+                  .graphiqueFinances
+                  .getBoundingClientRect();
+
+
+              info.style.left =
+                (
+                  evenement.clientX -
+                  cadre.left +
+                  12
+                ) +
+                "px";
+
+
+              info.style.top =
+                (
+                  evenement.clientY -
+                  cadre.top +
+                  12
+                ) +
+                "px";
+            }
+          );
+
+
+          cercle.addEventListener(
+            "mouseleave",
+            function () {
+
+              info.style.display =
+                "none";
+            }
+          );
+
+
+          svg.appendChild(
+            cercle
+          );
+        }
+      );
+    }
   );
 
 
   /*
-   * Légende.
+   * On ajoute le SVG après avoir
+   * créé toutes les courbes.
+   */
+
+  elements.graphiqueFinances.insertBefore(
+    svg,
+    info
+  );
+
+
+  /*
+   * ========================================
+   * LÉGENDE
+   * ========================================
    */
 
   const legende =
