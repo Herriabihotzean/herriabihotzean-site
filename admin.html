@@ -509,6 +509,57 @@
       margin-top: 25px;
     }
 
+        /* =========================
+       CRÉATION / MODIFICATION PRODUIT
+       ========================= */
+
+    .modal-produit {
+      width: min(760px, 100%);
+    }
+
+    .section-produit {
+      margin: 28px 0 0;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255,255,255,0.28);
+    }
+
+    .section-produit h3 {
+      margin: 0 0 18px;
+      text-align: left;
+    }
+
+    .grille-produit {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 16px;
+    }
+
+    .champ-large {
+      grid-column: 1 / -1;
+    }
+
+    .note-produit {
+      margin: 8px 0 18px;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+
+    #bouton-nouveau-produit {
+      display: block;
+      margin: 0 auto 22px;
+    }
+
+    @media (max-width: 700px) {
+      .grille-produit {
+        grid-template-columns: 1fr;
+      }
+
+      .champ-large {
+        grid-column: auto;
+      }
+    }
+
 
     /* =========================
        OUTILS
@@ -788,6 +839,14 @@
           Produits et stocks
         </h2>
 
+        <button
+  id="bouton-nouveau-produit"
+  class="bouton-secondaire"
+  type="button"
+>
+  + Nouveau produit
+</button>
+
 
         <p
           id="chargement-produits"
@@ -1062,6 +1121,714 @@
 
   </div>
 
+    <!-- =========================
+       CRÉER / MODIFIER UN PRODUIT
+       ========================= -->
+
+  <div
+    id="fond-produit"
+    class="fond-modal"
+    hidden
+  >
+
+    <section
+      class="modal modal-produit"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titre-modal-produit"
+    >
+
+      <h2 id="titre-modal-produit">
+        Modifier le produit
+      </h2>
+
+      <form id="formulaire-produit">
+
+
+        <!-- =========================
+             IDENTIFICATION
+             ========================= -->
+
+        <div class="section-produit">
+
+          <h3>
+            Identification et classement
+          </h3>
+
+          <div class="grille-produit">
+
+            <div class="champ champ-large">
+
+              <label for="produit-id">
+                Identifiant du produit *
+              </label>
+
+              <input
+                id="produit-id"
+                type="text"
+                required
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="categorie-produit">
+                Catégorie
+              </label>
+
+              <input
+                id="categorie-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="categorie-basque-produit">
+                Catégorie basque
+              </label>
+
+              <input
+                id="categorie-basque-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="sous-categorie-produit">
+                Sous-catégorie
+              </label>
+
+              <input
+                id="sous-categorie-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="sous-categorie-basque-produit">
+                Sous-catégorie basque
+              </label>
+
+              <input
+                id="sous-categorie-basque-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="ordre-affichage-produit">
+                Ordre d'affichage
+              </label>
+
+              <input
+                id="ordre-affichage-produit"
+                type="number"
+                min="0"
+                step="1"
+                value="0"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="visible-boutique-produit">
+                Visible dans la boutique
+              </label>
+
+              <select id="visible-boutique-produit">
+
+                <option value="OUI">
+                  OUI
+                </option>
+
+                <option value="NON">
+                  NON
+                </option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             TEXTES
+             ========================= -->
+
+        <div class="section-produit">
+
+          <h3>
+            Présentation française et basque
+          </h3>
+
+          <div class="grille-produit">
+
+            <div class="champ">
+
+              <label for="titre-produit">
+                Titre français *
+              </label>
+
+              <input
+                id="titre-produit"
+                type="text"
+                required
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="titre-basque-produit">
+                Titre basque
+              </label>
+
+              <input
+                id="titre-basque-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="sous-titre-produit">
+                Sous-titre français
+              </label>
+
+              <input
+                id="sous-titre-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="sous-titre-basque-produit">
+                Sous-titre basque
+              </label>
+
+              <input
+                id="sous-titre-basque-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ champ-large">
+
+              <label for="description-francaise-produit">
+                Description française
+              </label>
+
+              <textarea
+                id="description-francaise-produit"
+              ></textarea>
+
+            </div>
+
+
+            <div class="champ champ-large">
+
+              <label for="description-basque-produit">
+                Description basque
+              </label>
+
+              <textarea
+                id="description-basque-produit"
+              ></textarea>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             VENTE
+             ========================= -->
+
+        <div class="section-produit">
+
+          <h3>
+            Vente et expédition
+          </h3>
+
+          <div class="grille-produit">
+
+            <div class="champ">
+
+              <label for="prix-produit">
+                Prix de vente (€) *
+              </label>
+
+              <input
+                id="prix-produit"
+                type="number"
+                min="0"
+                step="0.01"
+                required
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="beneficiaire-paypal-produit">
+                Bénéficiaire PayPal *
+              </label>
+
+              <select
+                id="beneficiaire-paypal-produit"
+                required
+              >
+
+                <option value="">
+                  — Choisir —
+                </option>
+
+                <option value="A">
+                  A
+                </option>
+
+                <option value="B">
+                  B
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="poids-produit">
+                Poids (grammes) *
+              </label>
+
+              <input
+                id="poids-produit"
+                type="number"
+                min="1"
+                step="1"
+                required
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="statut-produit">
+                Statut du produit *
+              </label>
+
+              <select
+                id="statut-produit"
+                required
+              >
+
+                <option value="EN VENTE">
+                  EN VENTE
+                </option>
+
+                <option value="RÉAPPROVISIONNEMENT">
+                  RÉAPPROVISIONNEMENT
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="mode-expedition-produit">
+                Mode d'expédition
+              </label>
+
+              <input
+                id="mode-expedition-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="frais-livraison-produit">
+                Frais de livraison (€)
+              </label>
+
+              <input
+                id="frais-livraison-produit"
+                type="number"
+                min="0"
+                step="0.01"
+                value="0"
+              >
+
+            </div>
+
+          </div>
+
+
+          <p class="note-produit">
+            Le poids est utilisé pour déterminer automatiquement
+            la tranche tarifaire Mondial Relay applicable à la
+            commande.
+          </p>
+
+
+          <div
+            id="bloc-stock-actuel-produit"
+            class="champ"
+          >
+
+            <label>
+              Stock actuel
+            </label>
+
+            <input
+              id="stock-actuel-produit"
+              type="number"
+              readonly
+            >
+
+          </div>
+
+
+          <div
+            id="bloc-stock-initial-produit"
+            class="champ"
+            hidden
+          >
+
+            <label for="stock-initial-produit">
+              Stock initial *
+            </label>
+
+            <input
+              id="stock-initial-produit"
+              type="number"
+              min="0"
+              step="1"
+              value="0"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             GESTION
+             ========================= -->
+
+        <div class="section-produit">
+
+          <h3>
+            Gestion et coûts
+          </h3>
+
+          <div class="grille-produit">
+
+            <div class="champ">
+
+              <label for="prix-revient-unitaire-produit">
+                Prix de revient unitaire (€)
+              </label>
+
+              <input
+                id="prix-revient-unitaire-produit"
+                type="number"
+                min="0"
+                step="0.01"
+                value="0"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="seuil-alerte-produit">
+                Seuil d'alerte
+              </label>
+
+              <input
+                id="seuil-alerte-produit"
+                type="number"
+                min="0"
+                step="1"
+                value="0"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="stock-critique-produit">
+                Stock critique
+              </label>
+
+              <input
+                id="stock-critique-produit"
+                type="number"
+                min="0"
+                step="1"
+                value="0"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="cout10-produit">
+                Coût pour 10 exemplaires (€)
+              </label>
+
+              <input
+                id="cout10-produit"
+                type="number"
+                min="0"
+                step="0.01"
+                value="0"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="cout20-produit">
+                Coût pour 20 exemplaires (€)
+              </label>
+
+              <input
+                id="cout20-produit"
+                type="number"
+                min="0"
+                step="0.01"
+                value="0"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="cout50-produit">
+                Coût pour 50 exemplaires (€)
+              </label>
+
+              <input
+                id="cout50-produit"
+                type="number"
+                min="0"
+                step="0.01"
+                value="0"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="cout100-produit">
+                Coût pour 100 exemplaires (€)
+              </label>
+
+              <input
+                id="cout100-produit"
+                type="number"
+                min="0"
+                step="0.01"
+                value="0"
+              >
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             PHOTOS
+             ========================= -->
+
+        <div class="section-produit">
+
+          <h3>
+            Photos
+          </h3>
+
+          <div class="grille-produit">
+
+            <div class="champ champ-large">
+
+              <label for="photo-principale-produit">
+                Photo principale
+              </label>
+
+              <input
+                id="photo-principale-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="photo2-produit">
+                Photo 2
+              </label>
+
+              <input
+                id="photo2-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="photo3-produit">
+                Photo 3
+              </label>
+
+              <input
+                id="photo3-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="photo4-produit">
+                Photo 4
+              </label>
+
+              <input
+                id="photo4-produit"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="champ">
+
+              <label for="photo5-produit">
+                Photo 5
+              </label>
+
+              <input
+                id="photo5-produit"
+                type="text"
+              >
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             PAGE DÉTAILLÉE
+             ========================= -->
+
+        <div class="section-produit">
+
+          <h3>
+            Page détaillée
+          </h3>
+
+          <div class="champ">
+
+            <label for="url-page-detaillee-produit">
+              URL de la page détaillée
+            </label>
+
+            <input
+              id="url-page-detaillee-produit"
+              type="text"
+            >
+
+          </div>
+
+        </div>
+
+
+        <p
+          id="message-produit"
+          class="message"
+          aria-live="polite"
+        ></p>
+
+
+        <div class="actions-modal">
+
+          <button
+            id="annuler-produit"
+            class="bouton-secondaire"
+            type="button"
+          >
+            Annuler
+          </button>
+
+
+          <button
+            id="valider-produit"
+            class="bouton-principal"
+            type="submit"
+          >
+            Enregistrer les modifications
+          </button>
+
+        </div>
+
+
+      </form>
+
+    </section>
+
+  </div>
 
   <footer>
     © Herria Bihotzean
