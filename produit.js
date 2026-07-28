@@ -731,20 +731,30 @@ elements.messageListeAttente =
     elements.lienRetour.textContent =
       t.retourBoutique;
 
-    elements.boutonListeAttente.textContent =
-  t.listeAttenteBouton;
+    if (elements.boutonListeAttente) {
+  elements.boutonListeAttente.textContent =
+    t.listeAttenteBouton;
+}
 
-elements.texteListeAttente.textContent =
-  t.listeAttenteTexte;
+if (elements.texteListeAttente) {
+  elements.texteListeAttente.textContent =
+    t.listeAttenteTexte;
+}
 
-elements.etiquetteEmailListeAttente.textContent =
-  t.listeAttenteEmail;
+if (elements.etiquetteEmailListeAttente) {
+  elements.etiquetteEmailListeAttente.textContent =
+    t.listeAttenteEmail;
+}
 
-elements.envoyerListeAttente.textContent =
-  t.listeAttenteEnvoyer;
+if (elements.envoyerListeAttente) {
+  elements.envoyerListeAttente.textContent =
+    t.listeAttenteEnvoyer;
+}
 
-elements.annulerListeAttente.textContent =
-  t.listeAttenteAnnuler;
+if (elements.annulerListeAttente) {
+  elements.annulerListeAttente.textContent =
+    t.listeAttenteAnnuler;
+}
 
     elements.lienRetour.href =
       "boutique.html";
@@ -1102,23 +1112,37 @@ elements.annulerListeAttente.textContent =
  * LISTE D'ATTENTE
  */
 
-elements.blocListeAttente.hidden =
-  disponible;
+/*
+ * LISTE D'ATTENTE
+ */
+
+if (elements.blocListeAttente) {
+
+  elements.blocListeAttente.hidden =
+    disponible;
 
 
-if (disponible) {
+  if (disponible) {
 
-  elements.formulaireListeAttente.hidden =
-    true;
+    if (elements.formulaireListeAttente) {
+      elements.formulaireListeAttente.hidden =
+        true;
+    }
 
-  elements.boutonListeAttente.hidden =
-    false;
+    if (elements.boutonListeAttente) {
+      elements.boutonListeAttente.hidden =
+        false;
+    }
 
-  elements.messageListeAttente.hidden =
-    true;
+    if (elements.messageListeAttente) {
 
-  elements.messageListeAttente.textContent =
-    "";
+      elements.messageListeAttente.hidden =
+        true;
+
+      elements.messageListeAttente.textContent =
+        "";
+    }
+  }
 }
 
     definirMaximumQuantite();
