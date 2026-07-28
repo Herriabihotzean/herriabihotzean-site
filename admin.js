@@ -3072,6 +3072,9 @@ function afficherFinances(
   let depenses =
     0;
 
+  const mouvementsFiltres =
+  [];
+
 
   mouvementsFinances.forEach(
     function (
@@ -3125,6 +3128,10 @@ function afficherFinances(
       }
 
 
+      mouvementsFiltres.push(
+        mouvement
+      );
+      
       const montant =
         Number(
           mouvement.montant
@@ -3238,6 +3245,12 @@ function afficherFinances(
     elements.messageFinances.textContent =
       textePeriode;
   }
+
+  afficherGraphiqueFinances(
+    mouvementsFiltres,
+    debut,
+    maintenant
+  );
 }
 
 function formaterMontantFinances(
@@ -3253,6 +3266,495 @@ function formaterMontantFinances(
       maximumFractionDigits: 2
     }
   ) + " €";
+}
+
+function afficherGraphiqueFinances(
+  mouvementsFiltres,
+  debut,
+  maintenant
+) {
+
+  if (
+    !elements.graphiqueFinances
+  ) {
+    return;
+  }
+
+
+  elements.graphiqueFinances.innerHTML =
+    "";
+
+
+  /*
+   * Regroupement des mouvements
+   * par jour.
+   */
+
+  const jours = {};
+
+
+  mouvementsFiltres.forEach(
+    function (mouvement) {
+
+      const date =
+        new Date(
+          mouvement.date
+        );
+
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return;
+      }
+
+
+      const cle =
+        date.getFullYear() +
+        "-" +
+        String(
+          date.getMonth() + 1
+        ).padStart(2, "0") +
+        "-" +
+        String(
+          date.getDate()
+        ).padStart(2, "0");
+
+
+      if (!jours[cle]) {
+
+        jours[cle] = {
+          date: date,
+          recettes: 0,
+          depenses: 0
+        };
+      }
+
+
+      const montant =
+        Number(
+          mouvement.montant
+        ) || 0;
+
+
+      if (montant > 0) {
+
+        jours[cle].recettes +=
+          montant;
+      }
+
+
+      if (montant < 0) {
+
+        jours[cle].depenses +=
+          Math.abs(
+            montant
+          );
+      }
+    }
+  );
+
+
+  const donnees =
+    Object.keys(
+      jours
+    )
+      .map(
+        function (cle) {
+
+          return jours[cle];
+        }
+      )
+      .sort(
+        function (a, b) {
+
+          return (
+            a.date.getTime() -
+            b.date.getTime()
+          );
+        }
+      );
+
+
+  /*
+   * Pas encore de mouvements.
+   */
+
+  if (
+    donnees.length === 0
+  ) {
+
+    elements.graphiqueFinances.textContent =
+      "Aucun mouvement financier sur cette période.";
+
+    return;
+  }
+
+
+  /*
+   * Résultat cumulé.
+   */
+
+  let resultatCumule =
+    0;
+
+
+  donnees.forEach(
+    function (jour) {
+
+      resultatCumule +=
+        jour.recettes -
+        jour.depenses;
+
+      jour.resultat =
+        resultatCumule;
+    }
+  );
+
+
+  /*
+   * Dimensions SVG.
+   */
+
+  const largeur =
+    900;
+
+  const hauteur =
+    380;
+
+  const margeGauche =
+    75;
+
+  const margeDroite =
+    25;
+
+  const margeHaut =
+    30;
+
+  const margeBas =
+    60;
+
+
+  const largeurGraphique =
+    largeur -
+    margeGauche -
+    margeDroite;
+
+
+  const hauteurGraphique =
+    hauteur -
+    margeHaut -
+    margeBas;
+
+
+  /*
+   * Valeur maximale nécessaire
+   * pour l'échelle verticale.
+   */
+
+  let valeurMax =
+    0;
+
+
+  donnees.forEach(
+    function (jour) {
+
+      valeurMax =
+        Math.max(
+          valeurMax,
+          jour.recettes,
+          jour.depenses,
+          Math.abs(
+            jour.resultat
+          )
+        );
+    }
+  );
+
+
+  if (valeurMax <= 0) {
+
+    valeurMax =
+      1;
+  }
+
+
+  /*
+   * Le résultat peut être négatif :
+   * l'axe horizontal 0 € est donc
+   * placé au milieu du graphique.
+   */
+
+  const zeroY =
+    margeHaut +
+    hauteurGraphique / 2;
+
+
+  const demiHauteur =
+    hauteurGraphique / 2;
+
+
+  function xPourIndex(
+    index
+  ) {
+
+    if (
+      donnees.length === 1
+    ) {
+
+      return (
+        margeGauche +
+        largeurGraphique / 2
+      );
+    }
+
+
+    return (
+      margeGauche +
+      (
+        index /
+        (donnees.length - 1)
+      ) *
+      largeurGraphique
+    );
+  }
+
+
+  function yPourValeur(
+    valeur
+  ) {
+
+    return (
+      zeroY -
+      (
+        valeur /
+        valeurMax
+      ) *
+      demiHauteur
+    );
+  }
+
+
+  function creerPoints(
+    champ
+  ) {
+
+    return donnees
+      .map(
+        function (
+          jour,
+          index
+        ) {
+
+          return (
+            xPourIndex(index) +
+            "," +
+            yPourValeur(
+              jour[champ]
+            )
+          );
+        }
+      )
+      .join(" ");
+  }
+
+
+  /*
+   * SVG.
+   */
+
+  const espaceSVG =
+    "http://www.w3.org/2000/svg";
+
+
+  const svg =
+    document.createElementNS(
+      espaceSVG,
+      "svg"
+    );
+
+
+  svg.setAttribute(
+    "viewBox",
+    "0 0 " +
+    largeur +
+    " " +
+    hauteur
+  );
+
+
+  svg.setAttribute(
+    "role",
+    "img"
+  );
+
+
+  svg.setAttribute(
+    "aria-label",
+    "Évolution des recettes, dépenses et du résultat"
+  );
+
+
+  /*
+   * Axe 0 €.
+   */
+
+  const axeZero =
+    document.createElementNS(
+      espaceSVG,
+      "line"
+    );
+
+
+  axeZero.setAttribute(
+    "x1",
+    margeGauche
+  );
+
+  axeZero.setAttribute(
+    "x2",
+    largeur -
+    margeDroite
+  );
+
+  axeZero.setAttribute(
+    "y1",
+    zeroY
+  );
+
+  axeZero.setAttribute(
+    "y2",
+    zeroY
+  );
+
+  axeZero.setAttribute(
+    "stroke",
+    "#777"
+  );
+
+  axeZero.setAttribute(
+    "stroke-width",
+    "1"
+  );
+
+
+  svg.appendChild(
+    axeZero
+  );
+
+
+  /*
+   * Courbes.
+   */
+
+  function ajouterCourbe(
+    champ,
+    couleur
+  ) {
+
+    const ligne =
+      document.createElementNS(
+        espaceSVG,
+        "polyline"
+      );
+
+
+    ligne.setAttribute(
+      "points",
+      creerPoints(
+        champ
+      )
+    );
+
+    ligne.setAttribute(
+      "fill",
+      "none"
+    );
+
+    ligne.setAttribute(
+      "stroke",
+      couleur
+    );
+
+    ligne.setAttribute(
+      "stroke-width",
+      "3"
+    );
+
+    ligne.setAttribute(
+      "stroke-linejoin",
+      "round"
+    );
+
+    ligne.setAttribute(
+      "stroke-linecap",
+      "round"
+    );
+
+
+    svg.appendChild(
+      ligne
+    );
+  }
+
+
+  ajouterCourbe(
+    "recettes",
+    "#2f7d32"
+  );
+
+  ajouterCourbe(
+    "depenses",
+    "#c62828"
+  );
+
+  ajouterCourbe(
+    "resultat",
+    "#2457a6"
+  );
+
+
+  elements.graphiqueFinances.appendChild(
+    svg
+  );
+
+
+  /*
+   * Légende.
+   */
+
+  const legende =
+    document.createElement(
+      "div"
+    );
+
+
+  legende.className =
+    "legende-finances";
+
+
+  legende.innerHTML =
+    '<span>' +
+      '<i class="puce-finances puce-recettes"></i>' +
+      'Recettes' +
+    '</span>' +
+
+    '<span>' +
+      '<i class="puce-finances puce-depenses"></i>' +
+      'Dépenses' +
+    '</span>' +
+
+    '<span>' +
+      '<i class="puce-finances puce-resultat"></i>' +
+      'Résultat cumulé' +
+    '</span>';
+
+
+  elements.graphiqueFinances.appendChild(
+    legende
+  );
 }
   
 /*
