@@ -852,6 +852,71 @@
             Le produit a été ajouté au panier.
           </p>
 
+          <!-- ======================================================
+     LISTE D'ATTENTE — PRODUIT INDISPONIBLE
+     Affichée uniquement par produit.js lorsque nécessaire.
+     ====================================================== -->
+
+<section
+  id="bloc-liste-attente"
+  class="bloc-liste-attente"
+  hidden
+>
+  <button
+    id="bouton-liste-attente"
+    class="bouton-principal"
+    type="button"
+  >
+    Me prévenir lorsque le produit sera disponible
+  </button>
+
+  <form
+    id="formulaire-liste-attente"
+    class="formulaire-liste-attente"
+    hidden
+  >
+    <p id="texte-liste-attente">
+      Indiquez votre adresse électronique et nous vous préviendrons lorsque ce produit sera de nouveau disponible.
+    </p>
+
+    <label for="email-liste-attente">
+      <span id="etiquette-email-liste-attente">
+        Adresse électronique
+      </span>
+
+      <input
+        id="email-liste-attente"
+        name="email"
+        type="email"
+        autocomplete="email"
+        required
+      >
+    </label>
+
+    <button
+      id="envoyer-liste-attente"
+      class="bouton-principal"
+      type="submit"
+    >
+      Me prévenir
+    </button>
+
+    <button
+      id="annuler-liste-attente"
+      type="button"
+    >
+      Annuler
+    </button>
+
+    <p
+      id="message-liste-attente"
+      role="status"
+      aria-live="polite"
+      hidden
+    ></p>
+  </form>
+</section>
+
         </div>
 
       </section>
