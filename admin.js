@@ -912,9 +912,16 @@ function ouvrirListesAttente() {
 
 
   elements.fondListesAttente.hidden =
-    false;
-}
+  false;
 
+
+/*
+ * On demande maintenant les données
+ * à Apps Script.
+ */
+
+demanderListesAttente();
+}
 
 function fermerListesAttente() {
 
@@ -973,6 +980,48 @@ function fermerListesAttente() {
     }
 
 
+/*
+ * =========================================================
+ * LISTES D'ATTENTE
+ * =========================================================
+ */
+
+if (
+  donnees.type ===
+  "admin-listes-attente"
+) {
+
+  if (
+    elements.chargementListesAttente
+  ) {
+
+    elements.chargementListesAttente.hidden =
+      true;
+  }
+
+
+  if (
+    donnees.succes !== true
+  ) {
+
+    afficherErreurListesAttente(
+      donnees.message ||
+      "Impossible de charger les listes d’attente."
+    );
+
+    return;
+  }
+
+
+  afficherListesAttente(
+    donnees.produits || [],
+    donnees.inscriptions || []
+  );
+
+
+  return;
+}
+    
     /*
      * =========================================================
      * LISTE DES PRODUITS
@@ -1896,6 +1945,320 @@ if (
     }
   }
 
+function afficherErreurListesAttente(
+  message
+) {
+
+  if (
+    elements.chargementListesAttente
+  ) {
+
+    elements.chargementListesAttente.hidden =
+      true;
+  }
+
+
+  if (
+    elements.messageListesAttente
+  ) {
+
+    elements.messageListesAttente.textContent =
+      message;
+
+    elements.messageListesAttente.className =
+      "message message-erreur";
+  }
+}
+
+function afficherListesAttente(
+  produits,
+  inscriptions
+) {
+
+  if (
+    elements.chargementListesAttente
+  ) {
+
+    elements.chargementListesAttente.hidden =
+      true;
+  }
+
+
+  if (
+    elements.messageListesAttente
+  ) {
+
+    elements.messageListesAttente.textContent =
+      "";
+
+    elements.messageListesAttente.className =
+      "message";
+  }
+
+
+  if (
+    !elements.resumeListesAttente
+  ) {
+
+    return;
+  }
+
+
+  elements.resumeListesAttente.innerHTML =
+    "";
+
+
+  if (
+    !Array.isArray(produits) ||
+    produits.length === 0
+  ) {
+
+    elements.resumeListesAttente.innerHTML =
+      '<p class="total-attente">' +
+      "Aucune inscription sur une liste d’attente." +
+      "</p>";
+
+    return;
+  }
+
+
+  produits.forEach(
+    function (produit) {
+
+      const bloc =
+        document.createElement(
+          "div"
+        );
+
+      bloc.className =
+        "produit-attente";
+
+
+      const titre =
+        document.createElement(
+          "h3"
+        );
+
+      titre.textContent =
+        produit.produit ||
+        produit.produitId ||
+        "Produit";
+
+
+      const personnes =
+        document.createElement(
+          "p"
+        );
+
+      personnes.textContent =
+        "Personnes en attente : " +
+        Number(
+          produit.personnesEnAttente || 0
+        );
+
+
+      const quantite =
+        document.createElement(
+          "p"
+        );
+
+      quantite.textContent =
+        "Exemplaires demandés : " +
+        Number(
+          produit.quantiteEnAttente || 0
+        );
+
+
+      const prevenus =
+        document.createElement(
+          "p"
+        );
+
+      prevenus.textContent =
+        "Personnes déjà prévenues : " +
+        Number(
+          produit.personnesPrevenues || 0
+        );
+
+
+      const bouton =
+        document.createElement(
+          "button"
+        );
+
+      bouton.type =
+        "button";
+
+      bouton.className =
+        "bouton-action";
+
+      bouton.textContent =
+        "Voir les personnes";
+
+
+      bouton.addEventListener(
+        "click",
+        function () {
+
+          afficherDetailListeAttente(
+            produit,
+            inscriptions
+          );
+        }
+      );
+
+
+      bloc.appendChild(
+        titre
+      );
+
+      bloc.appendChild(
+        personnes
+      );
+
+      bloc.appendChild(
+        quantite
+      );
+
+      bloc.appendChild(
+        prevenus
+      );
+
+      bloc.appendChild(
+        bouton
+      );
+
+
+      elements.resumeListesAttente.appendChild(
+        bloc
+      );
+    }
+  );
+}
+  
+
+/*
+ * =========================================================
+ * DEMANDE DES LISTES D'ATTENTE
+ * =========================================================
+ */
+
+function demanderListesAttente() {
+
+  const jeton =
+    lireJeton();
+
+
+  if (!jeton) {
+
+    fermerListesAttente();
+
+    afficherConnexion();
+
+    afficherMessage(
+      "Votre session administrateur n’est plus active. Veuillez vous reconnecter.",
+      true
+    );
+
+    return;
+  }
+
+
+  const apiUrl =
+    obtenirApiUrl();
+
+
+  if (!apiUrl) {
+
+    afficherErreurListesAttente(
+      "L’adresse de l’API Apps Script est absente de config.js."
+    );
+
+    return;
+  }
+
+
+  if (
+    !elements.adminIframe
+  ) {
+
+    afficherErreurListesAttente(
+      "L’iframe d’administration est absente de admin.html."
+    );
+
+    return;
+  }
+
+
+  const formulaire =
+    document.createElement(
+      "form"
+    );
+
+
+  formulaire.method =
+    "POST";
+
+  formulaire.action =
+    apiUrl;
+
+  formulaire.target =
+    "admin-iframe";
+
+  formulaire.style.display =
+    "none";
+
+
+  ajouterChamp(
+    formulaire,
+    "type",
+    "admin-listes-attente"
+  );
+
+
+  ajouterChamp(
+    formulaire,
+    "jeton",
+    jeton
+  );
+
+
+  ajouterChamp(
+    formulaire,
+    "retourAdmin",
+    URL_ADMIN
+  );
+
+
+  ajouterChamp(
+    formulaire,
+    "origine",
+    window.location.origin
+  );
+
+
+  document.body.appendChild(
+    formulaire
+  );
+
+
+  HTMLFormElement
+    .prototype
+    .submit
+    .call(
+      formulaire
+    );
+
+
+  window.setTimeout(
+    function () {
+
+      formulaire.remove();
+
+    },
+    1000
+  );
+}
 
   /*
    * =========================================================
