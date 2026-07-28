@@ -646,6 +646,83 @@ elements.financesDepuisPremiereVente =
     );
   }
 
+  if (
+    elements.finances1Mois
+  ) {
+
+    elements.finances1Mois.addEventListener(
+      "click",
+      function () {
+
+        afficherFinances(
+          "1-mois"
+        );
+      }
+    );
+  }
+
+
+  if (
+    elements.finances6Mois
+  ) {
+
+    elements.finances6Mois.addEventListener(
+      "click",
+      function () {
+
+        afficherFinances(
+          "6-mois"
+        );
+      }
+    );
+  }
+
+
+  if (
+    elements.finances1An
+  ) {
+
+    elements.finances1An.addEventListener(
+      "click",
+      function () {
+
+        afficherFinances(
+          "1-an"
+        );
+      }
+    );
+  }
+
+
+  if (
+    elements.financesDepuisPremiereVente
+  ) {
+
+    elements.financesDepuisPremiereVente.addEventListener(
+      "click",
+      function () {
+
+        afficherFinances(
+          "depuis-premiere-vente"
+        );
+      }
+    );
+  }
+
+  if (
+    elements.produitFinances
+  ) {
+
+    elements.produitFinances.addEventListener(
+      "change",
+      function () {
+
+        afficherFinances(
+          periodeFinances
+        );
+      }
+    );
+  }
 
   /*
  * ========================================
@@ -1344,7 +1421,9 @@ if (
    * dernier mois, tous les produits.
    */
 
-  afficherFinancesUnMois();
+  afficherFinances(
+    "1-mois"
+  );
 
 
   return;
@@ -2832,28 +2911,172 @@ function afficherErreurFinances(
   }
 }
 
-function afficherFinancesUnMois() {
+let periodeFinances =
+  "1-mois";
+
+
+function afficherFinances(
+  periode
+) {
+
+  periodeFinances =
+    periode ||
+    periodeFinances;
+
 
   const maintenant =
     new Date();
 
 
-  const debut =
-    new Date(
-      maintenant
+  let debut =
+    null;
+
+
+  /*
+   * Détermination de la période.
+   */
+
+  if (
+    periodeFinances ===
+    "1-mois"
+  ) {
+
+    debut =
+      new Date(
+        maintenant
+      );
+
+    debut.setMonth(
+      debut.getMonth() - 1
     );
-
-  debut.setMonth(
-    debut.getMonth() - 1
-  );
+  }
 
 
-  let recettes = 0;
-  let depenses = 0;
+  if (
+    periodeFinances ===
+    "6-mois"
+  ) {
+
+    debut =
+      new Date(
+        maintenant
+      );
+
+    debut.setMonth(
+      debut.getMonth() - 6
+    );
+  }
+
+
+  if (
+    periodeFinances ===
+    "1-an"
+  ) {
+
+    debut =
+      new Date(
+        maintenant
+      );
+
+    debut.setFullYear(
+      debut.getFullYear() - 1
+    );
+  }
+
+
+  /*
+   * Depuis la première vente :
+   * recherche de la première
+   * VENTE PAYÉE.
+   */
+
+  if (
+    periodeFinances ===
+    "depuis-premiere-vente"
+  ) {
+
+    const datesVentes =
+      mouvementsFinances
+        .filter(
+          function (
+            mouvement
+          ) {
+
+            return (
+              String(
+                mouvement.type || ""
+              ).toUpperCase() ===
+              "VENTE PAYÉE"
+            );
+          }
+        )
+        .map(
+          function (
+            mouvement
+          ) {
+
+            return new Date(
+              mouvement.date
+            );
+          }
+        )
+        .filter(
+          function (
+            date
+          ) {
+
+            return !Number.isNaN(
+              date.getTime()
+            );
+          }
+        );
+
+
+    if (
+      datesVentes.length > 0
+    ) {
+
+      debut =
+        new Date(
+          Math.min(
+            ...datesVentes.map(
+              function (
+                date
+              ) {
+
+                return date.getTime();
+              }
+            )
+          )
+        );
+    }
+  }
+
+
+  /*
+   * Produit sélectionné.
+   *
+   * Une valeur vide signifie :
+   * Tous les produits.
+   */
+
+  const produitId =
+    elements.produitFinances
+      ? elements.produitFinances.value
+      : "";
+
+
+  let recettes =
+    0;
+
+  let depenses =
+    0;
 
 
   mouvementsFinances.forEach(
-    function (mouvement) {
+    function (
+      mouvement
+    ) {
 
       const date =
         new Date(
@@ -2864,9 +3087,38 @@ function afficherFinancesUnMois() {
       if (
         Number.isNaN(
           date.getTime()
-        ) ||
-        date < debut ||
+        )
+      ) {
+
+        return;
+      }
+
+
+      if (
+        debut &&
+        date < debut
+      ) {
+
+        return;
+      }
+
+
+      if (
         date > maintenant
+      ) {
+
+        return;
+      }
+
+
+      /*
+       * Filtre produit.
+       */
+
+      if (
+        produitId &&
+        mouvement.produitId !==
+          produitId
       ) {
 
         return;
@@ -2879,12 +3131,18 @@ function afficherFinancesUnMois() {
         ) || 0;
 
 
-      if (montant > 0) {
+      if (
+        montant > 0
+      ) {
 
         recettes +=
           montant;
+      }
 
-      } else if (montant < 0) {
+
+      if (
+        montant < 0
+      ) {
 
         depenses +=
           Math.abs(
@@ -2933,12 +3191,43 @@ function afficherFinancesUnMois() {
   }
 
 
+  /*
+   * Texte indiquant la période.
+   */
+
+  let textePeriode =
+    "Dernier mois";
+
+
   if (
-    elements.chargementFinances
+    periodeFinances ===
+    "6-mois"
   ) {
 
-    elements.chargementFinances.hidden =
-      true;
+    textePeriode =
+      "6 derniers mois";
+  }
+
+
+  if (
+    periodeFinances ===
+    "1-an"
+  ) {
+
+    textePeriode =
+      "12 derniers mois";
+  }
+
+
+  if (
+    periodeFinances ===
+    "depuis-premiere-vente"
+  ) {
+
+    textePeriode =
+      debut
+        ? "Depuis la première vente"
+        : "Aucune vente enregistrée";
   }
 
 
@@ -2947,7 +3236,7 @@ function afficherFinancesUnMois() {
   ) {
 
     elements.messageFinances.textContent =
-      "Période : dernier mois — tous les produits.";
+      textePeriode;
   }
 }
 
