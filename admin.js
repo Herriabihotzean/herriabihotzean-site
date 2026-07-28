@@ -40,6 +40,7 @@ let modeEditionProduit = "";
 
   const elements = {};
 
+  let mouvementsFinances = [];
 
   document.addEventListener(
     "DOMContentLoaded",
@@ -1241,67 +1242,10 @@ if (
       true;
   }
 
+
   /*
- * Remplissage de la liste des produits.
- */
-
-if (
-  elements.produitFinances
-) {
-
-  elements.produitFinances.innerHTML =
-    "";
-
-
-  const optionTous =
-    document.createElement(
-      "option"
-    );
-
-  optionTous.value =
-    "";
-
-  optionTous.textContent =
-    "Tous les produits";
-
-
-  elements.produitFinances.appendChild(
-    optionTous
-  );
-
-
-  const produits =
-    Array.isArray(
-      donnees.produits
-    )
-      ? donnees.produits
-      : [];
-
-
-  produits.forEach(
-    function (produit) {
-
-      const option =
-        document.createElement(
-          "option"
-        );
-
-      option.value =
-        produit.produitId || "";
-
-      option.textContent =
-        produit.produit ||
-        produit.produitId ||
-        "Produit";
-
-
-      elements.produitFinances.appendChild(
-        option
-      );
-    }
-  );
-}
-
+   * Vérification de la réponse.
+   */
 
   if (
     donnees.succes !== true
@@ -1316,19 +1260,86 @@ if (
   }
 
 
-  console.log(
-    "Données financières reçues :",
-    donnees
-  );
+  /*
+   * Conservation des mouvements.
+   */
 
+  mouvementsFinances =
+    Array.isArray(
+      donnees.mouvements
+    )
+      ? donnees.mouvements
+      : [];
+
+
+  /*
+   * Remplissage de la liste des produits.
+   */
 
   if (
-    elements.messageFinances
+    elements.produitFinances
   ) {
 
-    elements.messageFinances.textContent =
-      "Données financières chargées.";
+    elements.produitFinances.innerHTML =
+      "";
+
+
+    const optionTous =
+      document.createElement(
+        "option"
+      );
+
+    optionTous.value =
+      "";
+
+    optionTous.textContent =
+      "Tous les produits";
+
+
+    elements.produitFinances.appendChild(
+      optionTous
+    );
+
+
+    const produits =
+      Array.isArray(
+        donnees.produits
+      )
+        ? donnees.produits
+        : [];
+
+
+    produits.forEach(
+      function (produit) {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+        option.value =
+          produit.produitId || "";
+
+        option.textContent =
+          produit.produit ||
+          produit.produitId ||
+          "Produit";
+
+
+        elements.produitFinances.appendChild(
+          option
+        );
+      }
+    );
   }
+
+
+  /*
+   * Calcul initial :
+   * dernier mois, tous les produits.
+   */
+
+  afficherFinancesUnMois();
 
 
   return;
@@ -2814,6 +2825,140 @@ function afficherErreurFinances(
     elements.messageFinances.className =
       "message message-erreur";
   }
+}
+
+function afficherFinancesUnMois() {
+
+  const maintenant =
+    new Date();
+
+
+  const debut =
+    new Date(
+      maintenant
+    );
+
+  debut.setMonth(
+    debut.getMonth() - 1
+  );
+
+
+  let recettes = 0;
+  let depenses = 0;
+
+
+  mouvementsFinances.forEach(
+    function (mouvement) {
+
+      const date =
+        new Date(
+          mouvement.date
+        );
+
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        ) ||
+        date < debut ||
+        date > maintenant
+      ) {
+
+        return;
+      }
+
+
+      const montant =
+        Number(
+          mouvement.montant
+        ) || 0;
+
+
+      if (montant > 0) {
+
+        recettes +=
+          montant;
+
+      } else if (montant < 0) {
+
+        depenses +=
+          Math.abs(
+            montant
+          );
+      }
+    }
+  );
+
+
+  const resultat =
+    recettes -
+    depenses;
+
+
+  if (
+    elements.totalRecettesFinances
+  ) {
+
+    elements.totalRecettesFinances.textContent =
+      formaterMontantFinances(
+        recettes
+      );
+  }
+
+
+  if (
+    elements.totalDepensesFinances
+  ) {
+
+    elements.totalDepensesFinances.textContent =
+      formaterMontantFinances(
+        depenses
+      );
+  }
+
+
+  if (
+    elements.resultatFinances
+  ) {
+
+    elements.resultatFinances.textContent =
+      formaterMontantFinances(
+        resultat
+      );
+  }
+
+
+  if (
+    elements.chargementFinances
+  ) {
+
+    elements.chargementFinances.hidden =
+      true;
+  }
+
+
+  if (
+    elements.messageFinances
+  ) {
+
+    elements.messageFinances.textContent =
+      "Période : dernier mois — tous les produits.";
+  }
+}
+
+function formaterMontantFinances(
+  montant
+) {
+
+  return Number(
+    montant || 0
+  ).toLocaleString(
+    "fr-FR",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }
+  ) + " €";
 }
   
 /*
