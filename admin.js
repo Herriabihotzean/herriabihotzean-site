@@ -270,6 +270,21 @@ elements.financesDepuisPremiereVente =
     "finances-depuis-premiere-vente"
   );
 
+elements.anneeRecapitulatif =
+  document.getElementById(
+    "annee-recapitulatif"
+  );
+
+elements.boutonRecapitulatifPdf =
+  document.getElementById(
+    "bouton-recapitulatif-pdf"
+  );
+
+elements.messageRecapitulatif =
+  document.getElementById(
+    "message-recapitulatif"
+  );
+
 
     /*
      * =========================================================
@@ -1352,6 +1367,13 @@ if (
     )
       ? donnees.mouvements
       : [];
+
+/*
+ * Remplissage du menu des années
+ * du récapitulatif annuel.
+ */
+
+remplirAnneesRecapitulatif();
 
 
   /*
@@ -3268,6 +3290,109 @@ function formaterMontantFinances(
   ) + " €";
 }
 
+function remplirAnneesRecapitulatif() {
+
+  if (
+    !elements.anneeRecapitulatif
+  ) {
+    return;
+  }
+
+
+  const annees =
+    new Set();
+
+
+  mouvementsFinances.forEach(
+    function (
+      mouvement
+    ) {
+
+      const date =
+        new Date(
+          mouvement.date
+        );
+
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return;
+      }
+
+
+      annees.add(
+        date.getFullYear()
+      );
+    }
+  );
+
+
+  /*
+   * S'il n'y a encore aucune année,
+   * on propose l'année actuelle.
+   */
+
+  if (
+    annees.size === 0
+  ) {
+
+    annees.add(
+      new Date().getFullYear()
+    );
+  }
+
+
+  const listeAnnees =
+    Array.from(
+      annees
+    ).sort(
+      function (
+        a,
+        b
+      ) {
+
+        return b - a;
+      }
+    );
+
+
+  elements.anneeRecapitulatif.innerHTML =
+    "";
+
+
+  listeAnnees.forEach(
+    function (
+      annee
+    ) {
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+
+      option.value =
+        String(
+          annee
+        );
+
+
+      option.textContent =
+        String(
+          annee
+        );
+
+
+      elements.anneeRecapitulatif.appendChild(
+        option
+      );
+    }
+  );
+}
+  
 function afficherGraphiqueFinances(
   mouvementsFiltres,
   debut,
