@@ -570,6 +570,22 @@ elements.annulerListeAttente.addEventListener(
     elements.messageListeAttente.textContent =
       "";
   }
+
+  elements.formulaireListeAttente.addEventListener(
+  "submit",
+  function (evenement) {
+
+    /*
+     * Empêche le navigateur de transformer
+     * l'adresse en produit.html?email=...
+     *
+     * L'envoi réel vers Apps Script sera
+     * branché ensuite.
+     */
+
+    evenement.preventDefault();
+  }
+);
 );
 
     window.addEventListener(
