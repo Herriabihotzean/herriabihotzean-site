@@ -103,7 +103,7 @@ listeAttenteEnvoyer:
   "Me prévenir",
 
 listeAttenteAnnuler:
-  "Annuler"
+  "Annuler"},
 
     eu: {
       titreDocument:
@@ -457,7 +457,7 @@ elements.nomListeAttente =
   document.getElementById(
     "nom-liste-attente"
   );
-    
+
 elements.etiquetteEmailListeAttente =
   document.getElementById(
     "etiquette-email-liste-attente"
@@ -947,27 +947,73 @@ function ajouterChampListeAttente(
     elements.lienRetour.textContent =
       t.retourBoutique;
 
-    if (elements.boutonListeAttente) {
+    if (
+  elements.boutonListeAttente
+) {
+
   elements.boutonListeAttente.textContent =
     t.listeAttenteBouton;
 }
 
-if (elements.texteListeAttente) {
+
+if (
+  elements.texteListeAttente
+) {
+
   elements.texteListeAttente.textContent =
     t.listeAttenteTexte;
 }
 
-if (elements.etiquetteEmailListeAttente) {
+
+if (
+  elements.etiquettePrenomListeAttente
+) {
+
+  elements.etiquettePrenomListeAttente.textContent =
+    t.listeAttentePrenom;
+}
+
+
+if (
+  elements.etiquetteNomListeAttente
+) {
+
+  elements.etiquetteNomListeAttente.textContent =
+    t.listeAttenteNom;
+}
+
+
+if (
+  elements.etiquetteEmailListeAttente
+) {
+
   elements.etiquetteEmailListeAttente.textContent =
     t.listeAttenteEmail;
 }
 
-if (elements.envoyerListeAttente) {
+
+if (
+  elements.etiquetteQuantiteListeAttente
+) {
+
+  elements.etiquetteQuantiteListeAttente.textContent =
+    t.listeAttenteQuantite;
+}
+
+
+if (
+  elements.envoyerListeAttente
+) {
+
   elements.envoyerListeAttente.textContent =
     t.listeAttenteEnvoyer;
 }
 
-if (elements.annulerListeAttente) {
+
+if (
+  elements.annulerListeAttente
+) {
+
   elements.annulerListeAttente.textContent =
     t.listeAttenteAnnuler;
 }
