@@ -85,17 +85,25 @@ listeAttenteBouton:
   "Me prévenir lorsque le produit sera disponible",
 
 listeAttenteTexte:
-  "Indiquez votre adresse électronique et nous vous préviendrons lorsque ce produit sera de nouveau disponible.",
+  "Indiquez vos coordonnées et la quantité souhaitée. Nous vous préviendrons lorsque ce produit sera de nouveau disponible.",
+
+listeAttentePrenom:
+  "Prénom",
+
+listeAttenteNom:
+  "Nom",
 
 listeAttenteEmail:
   "Adresse électronique",
+
+listeAttenteQuantite:
+  "Quantité souhaitée",
 
 listeAttenteEnvoyer:
   "Me prévenir",
 
 listeAttenteAnnuler:
   "Annuler"
-    },
 
     eu: {
       titreDocument:
@@ -174,10 +182,19 @@ listeAttenteBouton:
   "Salgaia berriz eskuragarri izanen delarik abisatu",
 
 listeAttenteTexte:
-  "Zure posta elektronikoaren helbidea eman, eta salgai hau berriz eskuragarri izanen delarik abisatuko zaitugu.",
+  "Adieraz itzazu zure harremanetarako datuak eta nahi duzun kopurua. Salgai hau berriz eskuragarri izanen delarik abisatuko zaitugu.",
+
+listeAttentePrenom:
+  "Izena",
+
+listeAttenteNom:
+  "Deitura",
 
 listeAttenteEmail:
-  "Posta elektronikoaren helbidea",
+  "Helbide elektronikoa",
+
+listeAttenteQuantite:
+  "Nahi den kopurua",
 
 listeAttenteEnvoyer:
   "Abisatu",
