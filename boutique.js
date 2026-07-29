@@ -626,14 +626,14 @@ function trierProduitsBoutique(
 ) {
 
   const ordreDrapeaux = [
-    "navarre 150 x 150",
-    "navarre 100 x 100",
-    "labourd 130 x 130",
-    "labourd 100 x 100",
-    "soule 130 x 130",
-    "soule 100 x 100",
-    "bearn 150 x 150",
-    "bearn 100 x 100"
+    "drapeau-navarre-150",
+    "drapeau-navarre-100",
+    "drapeau-labourd-130",
+    "drapeau-labourd-100",
+    "drapeau-soule-130",
+    "drapeau-soule-100",
+    "drapeau-bearn-150",
+    "drapeau-bearn-100"
   ];
 
 
@@ -670,38 +670,25 @@ function trierProduitsBoutique(
 
 
   function positionDrapeau(
-    produit
-  ) {
+  produit
+) {
 
-    const texte =
-      normaliserCle(
-        [
-          produit.titre,
-          produit.sousTitre,
-          produit.produitId
-        ].join(" ")
-      );
+  const produitId =
+    nettoyerTexte(
+      produit.produitId
+    );
 
 
-    for (
-      let i = 0;
-      i < ordreDrapeaux.length;
-      i++
-    ) {
-
-      if (
-        texte.includes(
-          ordreDrapeaux[i]
-        )
-      ) {
-
-        return i;
-      }
-    }
+  const position =
+    ordreDrapeaux.indexOf(
+      produitId
+    );
 
 
-    return 999;
-  }
+  return position >= 0
+    ? position
+    : 999;
+}
 
 
   return listeProduits
