@@ -60,7 +60,7 @@
         "Saltokia",
 
       introduction:
-        "Herria Bihotzeanek eskaintzen dituen liburuak, grabaketak eta beste baliabideak ezagutu.",
+        "Herria Bihotzeanek eskaintzen dituen liburuak, grabaketak eta beste baliabideak ezagut-zkiztu.",
 
       chargement:
         "Salgaiak kargatzen…",
