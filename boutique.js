@@ -511,9 +511,15 @@
         listeProduits.length > 0;
     }
 
+    const produitsTries =
+      trierProduitsBoutique(
+        listeProduits
+      );
+
+
     const categories =
       regrouperParCategorie(
-        listeProduits
+        produitsTries
       );
 
     categories.forEach(
@@ -615,6 +621,170 @@
     );
   }
 
+function trierProduitsBoutique(
+  listeProduits
+) {
+
+  const ordreDrapeaux = [
+    "navarre 150 x 150",
+    "navarre 100 x 100",
+    "labourd 130 x 130",
+    "labourd 100 x 100",
+    "soule 130 x 130",
+    "soule 100 x 100",
+    "bearn 150 x 150",
+    "bearn 100 x 100"
+  ];
+
+
+  function groupeProduit(
+    produit
+  ) {
+
+    const categorie =
+      normaliserCle(
+        produit.categorie
+      );
+
+
+    if (
+      categorie.includes(
+        "livre"
+      )
+    ) {
+      return 1;
+    }
+
+
+    if (
+      categorie.includes(
+        "drapeau"
+      )
+    ) {
+      return 2;
+    }
+
+
+    return 3;
+  }
+
+
+  function positionDrapeau(
+    produit
+  ) {
+
+    const texte =
+      normaliserCle(
+        [
+          produit.titre,
+          produit.sousTitre,
+          produit.produitId
+        ].join(" ")
+      );
+
+
+    for (
+      let i = 0;
+      i < ordreDrapeaux.length;
+      i++
+    ) {
+
+      if (
+        texte.includes(
+          ordreDrapeaux[i]
+        )
+      ) {
+
+        return i;
+      }
+    }
+
+
+    return 999;
+  }
+
+
+  return listeProduits
+    .slice()
+    .sort(
+      function (a, b) {
+
+        const groupeA =
+          groupeProduit(a);
+
+        const groupeB =
+          groupeProduit(b);
+
+
+        /*
+         * Livres, puis drapeaux,
+         * puis divers.
+         */
+
+        if (
+          groupeA !==
+          groupeB
+        ) {
+
+          return (
+            groupeA -
+            groupeB
+          );
+        }
+
+
+        /*
+         * Drapeaux :
+         * ordre imposé.
+         */
+
+        if (
+          groupeA === 2
+        ) {
+
+          const positionA =
+            positionDrapeau(a);
+
+          const positionB =
+            positionDrapeau(b);
+
+
+          if (
+            positionA !==
+            positionB
+          ) {
+
+            return (
+              positionA -
+              positionB
+            );
+          }
+        }
+
+
+        /*
+         * Livres et divers :
+         * ordre alphabétique.
+         *
+         * Sert également de solution
+         * de repli pour un drapeau
+         * non reconnu.
+         */
+
+        return obtenirTitreProduit(a)
+          .localeCompare(
+            obtenirTitreProduit(b),
+            langue === "eu"
+              ? "eu"
+              : "fr",
+            {
+              sensitivity: "base"
+            }
+          );
+      }
+    );
+}
+  
   function regrouperParCategorie(
     listeProduits
   ) {
