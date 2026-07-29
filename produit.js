@@ -843,7 +843,12 @@ function envoyerListeAttente(
     quantite
   );
 
-
+  ajouterChampListeAttente(
+  formulaire,
+  "langue",
+  langue
+);
+  
   document.body.appendChild(
     formulaire
   );
