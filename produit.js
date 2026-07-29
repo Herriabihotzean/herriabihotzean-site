@@ -201,7 +201,7 @@ listeAttenteEnvoyer:
 
 listeAttenteAnnuler:
   "Utzi"
-  };
+  }};
 
   let langue = "fr";
   let produit = null;
