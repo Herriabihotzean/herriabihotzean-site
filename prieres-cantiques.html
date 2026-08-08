@@ -132,7 +132,9 @@ footer{
     Basque
    </h2>
    <nav class="liens">
-    <a class="carte" href="https://herriabihotzean.github.io/herriabihotzean-prieresbasques/">
+    <a class="carte"
+   id="prieres-usuelles-link"
+   href="https://herriabihotzean.github.io/herriabihotzean-prieresbasques/">
  Prières usuelles
 </a>
     <a class="carte" href="cantiques-basques.html">
@@ -159,7 +161,31 @@ footer{
   <footer>
    © Herria Bihotzean
   </footer>
-  <script src="langues.js">
-  </script>
- </body>
+ <script src="langues.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const lien = document.getElementById("prieres-usuelles-link");
+  if (!lien) return;
+
+  lien.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let lang = "fr";
+
+    if (window.HerriaLanguages) {
+      lang = HerriaLanguages.getGeneralLanguage();
+    } else {
+      try {
+        lang = localStorage.getItem("herria_langue") === "eu" ? "eu" : "fr";
+      } catch (_) {}
+    }
+
+    window.location.href =
+      "https://herriabihotzean.github.io/herriabihotzean-prieresbasques/?lang=" + lang;
+  });
+});
+</script>
+
+</body>
 </html>
