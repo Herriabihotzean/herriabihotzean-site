@@ -25,7 +25,7 @@ const HB_TRANSLATIONS={"eu":
    "En béarnais": "Biarnesez",
    "Langue basque": "Eskualdunen hizkuntza",
    "Cette rubrique rassemble les principaux ouvrages et méthodes destinés à l’apprentissage et au perfectionnement de la langue basque.": "Atal honek eskuara ikasteko eta hobetzeko liburu eta metodo nagusiak biltzen ditu.",
-   "Méthode active — 1er cours": "Metodo aktiboa — lehen ikaspena",
+   "Méthode active — 1<sup>er</sup>&nbsp;cours": "Metodo aktiboa — lehen ikaspena",
    "Méthode active — 2e cours": "Metodo aktiboa — bigarren ikaspena",
    "Voulez-vous parler basque ?": "Euskaraz mintzatu nahi duzu?",
    "Manuel de la conversation": "Esku-liburua mintzatzen ikasteko",
