@@ -9,7 +9,7 @@
    */
 
   const URL_ADMIN =
-    "https://herriabihotzean.github.io/herriabihotzean-site/admin.html";
+    "https://herriabihotzean.fr/admin.html";
 
   const CLE_SESSION_ADMIN =
     "herria_admin_session";
