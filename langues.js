@@ -46,6 +46,9 @@ const HB_TRANSLATIONS={"eu":
    "Bienvenue sur le site herriabihotzean.fr, destiné à tous ceux qui aiment le Pays Basque et souhaitent approfondir leur connaissance de notre belle petite patrie.": "Ongi etorri herriabihotzean.fr webgunean ! Webgune hau, Eskual Herria maite dutenentzat eta gure herri ederrako jakintza sakondu nahi dutenentzat xedatua izan da.",
    "Nous contacter": "Gurekin harremanetan jarri",
    "← Retour à l’accueil": "← Harrera-horrirat itzuli",
+   "Histoire": "Istoria",
+   "Vous pouvez découvrir ici l'histoire des Basques et les vies de saints basques.": "Hemen Eskualdunen istoria eta Eskual sainduen bizitzeak ezagut detzakezu.",
+   "Les saints du Pays Basque": "Eskual Herriko sainduak",
    "© Herria Bihotzean": "© Herria Bihotzean"}};
 const HB_LABELS={"fr": {"fr": "français", "eu": "basque", "be": "béarnais"}, "eu": {"fr": "frantsesez", "eu": "eskuaraz", "be": "biarnesez"}, "be": {"fr": "francés", "eu": "bascou", "be": "biarnés"}};
 
