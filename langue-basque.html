@@ -100,6 +100,43 @@ footer{
     background:rgba(0,0,0,.58);
     text-align:center
 }
+.hb-home{
+    position:absolute;
+    top:14px;
+    left:16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:white;
+    text-decoration:none;
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:12px;
+    font-weight:bold;
+    line-height:1.05;
+    letter-spacing:.06em;
+    z-index:1000;
+}
+
+.hb-home-name{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+}
+
+.hb-home-name span{
+    display:block;
+}
+
+.hb-home img{
+    width:27px;
+    height:27px;
+    object-fit:contain;
+}
+
+.hb-home:hover{
+    opacity:.8;
+}
+   
 @media(max-width:700px){
     body{background-attachment:scroll}
     .entete{padding:28px 8px 18px}
@@ -112,6 +149,15 @@ footer{
   <link href="langues.css" rel="stylesheet"/>
  </head>
  <body>
+  <a class="hb-home"
+     href="https://herriabihotzean.fr/"
+     aria-label="Herria Bihotzean — Accueil">
+    <span class="hb-home-name">
+      <span>HERRIA</span>
+      <span>BIHOTZEAN</span>
+    </span>
+    <img src="lauburu-blanc.svg" alt="">
+  </a>
   <header class="entete">
    <div class="bloc-titre">
     <h1>
