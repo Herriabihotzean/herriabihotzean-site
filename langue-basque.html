@@ -120,8 +120,13 @@ footer{
     line-height:1.02;
     letter-spacing:.04em;
 }
-.hb-home-herria{align-self:center;font-size:12px}
-.hb-home-bihotzean{font-size:12px}
+.hb-home-herria{
+    align-self:center;
+    font-size:12px;
+}
+.hb-home-bihotzean{
+    font-size:12px;
+}
 .hb-home-lauburu{
     align-self:center;
     width:20px;
@@ -129,23 +134,34 @@ footer{
     margin-top:5px;
     object-fit:contain;
 }
-.hb-home:hover,.hb-home:focus-visible{opacity:.8}
+.hb-home:hover,.hb-home:focus-visible{
+    opacity:.8;
+}
 
 @media(max-width:700px){
+    .hb-home{top:8px;left:6px}
+    .hb-home-herria,.hb-home-bihotzean{font-size:10px}
+    .hb-home-lauburu{width:18px;height:18px;margin-top:4px}
+
     body{background-attachment:scroll}
     .entete{padding:28px 8px 18px}
     .bloc-titre{padding:24px 14px}
     .blasons{gap:14px}
     .blasons img{width:72px;height:72px}
     .liens{column-count:1}
-    .hb-home{top:8px;left:6px}
-    .hb-home-herria,.hb-home-bihotzean{font-size:10px}
-    .hb-home-lauburu{width:18px;height:18px;margin-top:4px}
 }
   </style>
   <link href="langues.css" rel="stylesheet"/>
  </head>
  <body>
+
+  <a class="hb-home" href="https://herriabihotzean.fr/" aria-label="Herria Bihotzean — Accueil">
+   <span class="hb-home-name">
+    <span class="hb-home-herria">HERRIA</span>
+    <span class="hb-home-bihotzean">BIHOTZEAN</span>
+    <img class="hb-home-lauburu" src="lauburu-blanc.svg" alt=""/>
+   </span>
+  </a>
   <header class="entete">
    <div class="bloc-titre">
     <h1>
