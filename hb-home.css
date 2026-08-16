@@ -1,13 +1,20 @@
-/* Logo commun Herria Bihotzean */
+/* ==================================================
+   Logo commun HERRIA BIHOTZEAN
+   ================================================== */
+
 .hb-home{
     position:absolute;
     top:12px;
     left:8px;
+
     display:inline-block;
+
     color:white;
     text-decoration:none;
+
     font-family:Georgia,"Times New Roman",serif;
     font-weight:bold;
+
     z-index:7000;
 }
 
@@ -15,6 +22,7 @@
     display:flex;
     flex-direction:column;
     align-items:flex-start;
+
     line-height:1.02;
     letter-spacing:.04em;
 }
@@ -30,9 +38,12 @@
 
 .hb-home-lauburu{
     align-self:center;
+
     width:20px;
     height:20px;
+
     margin-top:5px;
+
     object-fit:contain;
 }
 
@@ -41,20 +52,75 @@
     opacity:.8;
 }
 
+
+/* ==================================================
+   Quand le logo appartient au bandeau vert
+   ================================================== */
+
+.sticky-language-audio{
+    position:relative;
+}
+
+.hb-home.hb-home-in-bar{
+    position:absolute;
+
+    top:6px;
+    left:10px;
+
+    margin:0;
+
+    z-index:7000;
+}
+
+.hb-home-in-bar .hb-home-herria,
+.hb-home-in-bar .hb-home-bihotzean{
+    font-size:10px;
+}
+
+.hb-home-in-bar .hb-home-lauburu{
+    width:18px;
+    height:18px;
+
+    margin-top:3px;
+}
+
+
+/* ==================================================
+   Téléphone
+   ================================================== */
+
 @media(max-width:700px){
-    .hb-home{
+
+    .hb-home:not(.hb-home-in-bar){
         top:8px;
         left:6px;
     }
 
-    .hb-home-herria,
-    .hb-home-bihotzean{
+    .hb-home:not(.hb-home-in-bar) .hb-home-herria,
+    .hb-home:not(.hb-home-in-bar) .hb-home-bihotzean{
         font-size:10px;
     }
 
-    .hb-home-lauburu{
+    .hb-home:not(.hb-home-in-bar) .hb-home-lauburu{
         width:18px;
         height:18px;
         margin-top:4px;
+    }
+
+
+    .hb-home.hb-home-in-bar{
+        top:4px;
+        left:6px;
+    }
+
+    .hb-home-in-bar .hb-home-herria,
+    .hb-home-in-bar .hb-home-bihotzean{
+        font-size:9px;
+    }
+
+    .hb-home-in-bar .hb-home-lauburu{
+        width:16px;
+        height:16px;
+        margin-top:2px;
     }
 }
