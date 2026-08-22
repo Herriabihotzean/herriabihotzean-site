@@ -147,7 +147,9 @@ footer{
     Béarnais
    </h2>
    <nav class="liens">
-    <a class="carte" href="prieres-bearnaises.html">
+    <a class="carte"
+   id="prieres-bearnaises-link"
+   href="https://herriabihotzean.github.io/herriabihotzean-prieresbearnaises/">
      Prières usuelles
     </a>
     <a class="carte" href="cantiques-bearnais.html">
@@ -185,6 +187,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.location.href =
       "https://herriabihotzean.github.io/herriabihotzean-prieresbasques/?lang=" + lang;
+  });
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const lien = document.getElementById("prieres-bearnaises-link");
+  if (!lien) return;
+
+  lien.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let lang = "fr";
+
+    if (window.HerriaLanguages) {
+      lang = HerriaLanguages.getGeneralLanguage();
+    } else {
+      try {
+        lang = localStorage.getItem("herria_langue") === "eu" ? "eu" : "fr";
+      } catch (_) {}
+    }
+
+    window.location.href =
+      "https://herriabihotzean.github.io/herriabihotzean-prieresbearnaises/?lang=" + lang;
   });
 });
 </script>
