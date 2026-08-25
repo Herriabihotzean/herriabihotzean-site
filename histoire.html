@@ -1,29 +1,40 @@
 <!DOCTYPE html>
 <html data-title-eu="Istoria — Herria Bihotzean" data-title-fr="Histoire — Herria Bihotzean" lang="fr">
+
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
   <title>Histoire — Herria Bihotzean</title>
 
   <style>
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+    *{
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
 
     body{
       margin:0;
       min-height:100vh;
       font-family:Georgia,"Times New Roman",serif;
       color:white;
+
       background-image:
         linear-gradient(rgba(0,0,0,.52),rgba(0,0,0,.70)),
         url("fond-herriabihotzean.jpg");
+
       background-position:center;
       background-size:cover;
       background-attachment:fixed;
       background-repeat:no-repeat;
     }
 
-    a{color:inherit}
+    a{
+      color:inherit;
+    }
 
     .page{
       width:min(1000px,calc(100% - 28px));
@@ -63,7 +74,9 @@
       object-fit:contain;
     }
 
-    main{padding-bottom:40px}
+    main{
+      padding-bottom:40px;
+    }
 
     .intro{
       margin:0 auto 24px;
@@ -71,7 +84,15 @@
       border-radius:8px;
       background:rgba(0,0,0,.58);
       line-height:1.65;
+
+      /* Par défaut : centré */
       text-align:center;
+    }
+
+    /* Si le texte dépasse une ligne :
+       tout le bloc devient justifié */
+    .intro.justifie{
+      text-align:justify;
     }
 
     .liens{
@@ -100,7 +121,8 @@
       transition:.16s;
     }
 
-    .carte:hover,.carte:focus-visible{
+    .carte:hover,
+    .carte:focus-visible{
       background:white;
       color:rgb(20,55,32);
       transform:translateY(-2px);
@@ -135,12 +157,30 @@
     }
 
     @media(max-width:700px){
-      body{background-attachment:scroll}
-      .entete{padding:28px 8px 18px}
-      .bloc-titre{padding:24px 14px}
-      .blasons{gap:14px}
-      .blasons img{width:72px;height:72px}
-      .liens{column-count:1}
+      body{
+        background-attachment:scroll;
+      }
+
+      .entete{
+        padding:28px 8px 18px;
+      }
+
+      .bloc-titre{
+        padding:24px 14px;
+      }
+
+      .blasons{
+        gap:14px;
+      }
+
+      .blasons img{
+        width:72px;
+        height:72px;
+      }
+
+      .liens{
+        column-count:1;
+      }
     }
   </style>
 
@@ -148,12 +188,14 @@
   <link rel="stylesheet" href="https://herriabihotzean.fr/hb-home.css">
 
   <!--
-    Si on arrive avec ?lang=eu ou ?lang=fr, on synchronise
-    la langue générale AVANT le chargement de langues.js.
+    Si on arrive avec ?lang=eu ou ?lang=fr,
+    on synchronise la langue générale avant
+    le chargement de langues.js.
   -->
   <script>
     (function () {
       const p = new URLSearchParams(location.search).get("lang");
+
       if (p === "fr" || p === "eu") {
         try {
           localStorage.setItem("herria_langue", p);
@@ -162,66 +204,187 @@
     })();
   </script>
 
-  <script src="https://herriabihotzean.fr/hb-home.js" defer></script>
+  <script
+    src="https://herriabihotzean.fr/hb-home.js"
+    defer>
+  </script>
 </head>
 
 <body>
+
   <header class="entete">
+
     <div class="bloc-titre">
+
       <h1>Histoire</h1>
 
-      <div aria-label="Blasons du Labourd, de la Navarre et de la Soule" class="blasons">
-        <img alt="Blason du Labourd" src="blason-labourd.svg"/>
-        <img alt="Blason de la Navarre" src="blason-navarre.svg"/>
-        <img alt="Blason de la Soule" src="blason-soule.svg"/>
+      <div
+        aria-label="Blasons du Labourd, de la Navarre et de la Soule"
+        class="blasons">
+
+        <img
+          alt="Blason du Labourd"
+          src="blason-labourd.svg"/>
+
+        <img
+          alt="Blason de la Navarre"
+          src="blason-navarre.svg"/>
+
+        <img
+          alt="Blason de la Soule"
+          src="blason-soule.svg"/>
+
       </div>
+
     </div>
+
   </header>
 
   <main class="page">
+
     <section class="intro">
       Vous pouvez découvrir ici l'histoire des Basques et les vies de saints basques.
     </section>
 
     <nav class="liens">
-      <a class="carte"
-         href="https://herriabihotzean.github.io/histoire-des-basques/"
-         onclick="this.href='https://herriabihotzean.github.io/histoire-des-basques/?lang='+(localStorage.getItem('herria_langue')==='eu'?'eu':'fr')">
+
+      <a
+        class="carte"
+        href="https://herriabihotzean.github.io/histoire-des-basques/"
+        onclick="this.href='https://herriabihotzean.github.io/histoire-des-basques/?lang='+(localStorage.getItem('herria_langue')==='eu'?'eu':'fr')">
+
         Histoire des Basques
+
       </a>
 
-      <a class="carte"
-         href="https://herriabihotzean.github.io/herriabihotzean-saints-pays-basque/"
-         onclick="this.href='https://herriabihotzean.github.io/herriabihotzean-saints-pays-basque/?lang='+(localStorage.getItem('herria_langue')==='eu'?'eu':'fr')">
+      <a
+        class="carte"
+        href="https://herriabihotzean.github.io/herriabihotzean-saints-pays-basque/"
+        onclick="this.href='https://herriabihotzean.github.io/herriabihotzean-saints-pays-basque/?lang='+(localStorage.getItem('herria_langue')==='eu'?'eu':'fr')">
+
         Les saints du Pays Basque
+
       </a>
+
     </nav>
 
     <div class="retour">
-      <a href="index.html">← Retour à l’accueil</a>
+      <a href="index.html">
+        ← Retour à l’accueil
+      </a>
     </div>
+
   </main>
 
-  <footer>© Herria Bihotzean</footer>
+  <footer>
+    © Herria Bihotzean
+  </footer>
 
   <script src="langues.js"></script>
 
-<script>
-function alignerIntro() {
-  const intro = document.querySelector('.intro');
-  if (!intro) return;
+  <script>
+    function alignerIntro() {
 
-  intro.classList.remove('justifie');
+      const intro = document.querySelector('.intro');
 
-  const style = getComputedStyle(intro);
-  const lineHeight = parseFloat(style.lineHeight);
+      if (!intro) {
+        return;
+      }
 
-  if (intro.scrollHeight > lineHeight * 1.5) {
-    intro.classList.add('justifie');
-  }
-}
+      /*
+        On commence toujours par remettre
+        le texte en mode centré.
+      */
+      intro.classList.remove('justifie');
 
-window.addEventListener('load', alignerIntro);
-window.addEventListener('resize', alignerIntro);
-</script>
+      const style = getComputedStyle(intro);
+
+      /*
+        Création d'une copie invisible du contenu
+        afin de mesurer sa hauteur réelle,
+        sans compter le padding du bloc .intro.
+      */
+      const mesure = document.createElement('div');
+
+      mesure.style.position = 'absolute';
+      mesure.style.visibility = 'hidden';
+      mesure.style.pointerEvents = 'none';
+      mesure.style.left = '-99999px';
+      mesure.style.top = '0';
+
+      /*
+        Même largeur disponible que le texte
+        dans le bloc .intro.
+      */
+      const largeurTexte =
+        intro.clientWidth
+        - parseFloat(style.paddingLeft)
+        - parseFloat(style.paddingRight);
+
+      mesure.style.width = largeurTexte + 'px';
+
+      /*
+        On reprend exactement les propriétés
+        typographiques du bloc original.
+      */
+      mesure.style.fontFamily = style.fontFamily;
+      mesure.style.fontSize = style.fontSize;
+      mesure.style.fontWeight = style.fontWeight;
+      mesure.style.fontStyle = style.fontStyle;
+      mesure.style.letterSpacing = style.letterSpacing;
+      mesure.style.lineHeight = style.lineHeight;
+
+      mesure.innerHTML = intro.innerHTML;
+
+      document.body.appendChild(mesure);
+
+      const lineHeight = parseFloat(style.lineHeight);
+
+      /*
+        Si la hauteur du texte dépasse environ
+        la hauteur d'une seule ligne,
+        le bloc devient justifié.
+      */
+      if (mesure.scrollHeight > lineHeight * 1.4) {
+        intro.classList.add('justifie');
+      }
+
+      mesure.remove();
+    }
+
+
+    /*
+      Premier calcul après chargement complet.
+    */
+    window.addEventListener('load', function () {
+      alignerIntro();
+
+      /*
+        Deuxième contrôle légèrement différé,
+        au cas où langues.js modifie le contenu
+        juste après le chargement.
+      */
+      setTimeout(alignerIntro, 100);
+    });
+
+
+    /*
+      Si la largeur de la fenêtre change,
+      on recalcule automatiquement.
+    */
+    window.addEventListener('resize', alignerIntro);
+
+
+    /*
+      Si l'utilisateur change de langue,
+      langues.js peut remplacer le texte.
+      On recalcule juste après le clic.
+    */
+    document.addEventListener('click', function () {
+      setTimeout(alignerIntro, 50);
+    });
+
+  </script>
+
 </body>
+</html>
