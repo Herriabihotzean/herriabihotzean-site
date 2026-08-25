@@ -114,7 +114,12 @@ footer{
 .bloc-titre h1{font-size:clamp(2.3rem,8vw,5rem)}
 .blasons img{width:120px;height:120px}
 .mission{width:min(850px,100%);margin:0 auto 38px;padding:26px 30px;border-radius:8px;background:rgba(0,0,0,.58);font-size:clamp(1.03rem,2.5vw,1.24rem);line-height:1.7;text-align:center}
-.mission p{margin:0}.mission p+p{margin-top:24px}.texte-francais{font-style:italic}
+.mission p{
+    margin:0;
+    text-align:justify;
+    hyphens:auto;
+ }
+.mission p+p{margin-top:24px}.texte-francais{font-style:italic}
 .contact{text-align:center;margin:0 auto 42px}.contact a{font-weight:bold;text-decoration:underline;text-underline-offset:4px}
 @media(max-width:700px){.entete{min-height:52vh;padding-top:40px}.blasons img{width:82px;height:82px}}
   </style>
