@@ -205,5 +205,23 @@
   <footer>© Herria Bihotzean</footer>
 
   <script src="langues.js"></script>
+
+<script>
+function alignerIntro() {
+  const intro = document.querySelector('.intro');
+  if (!intro) return;
+
+  intro.classList.remove('justifie');
+
+  const style = getComputedStyle(intro);
+  const lineHeight = parseFloat(style.lineHeight);
+
+  if (intro.scrollHeight > lineHeight * 1.5) {
+    intro.classList.add('justifie');
+  }
+}
+
+window.addEventListener('load', alignerIntro);
+window.addEventListener('resize', alignerIntro);
+</script>
 </body>
-</html>
