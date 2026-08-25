@@ -42,6 +42,7 @@ main{padding-bottom:40px}
     line-height:1.65
 }
 .intro{text-align:center}
+.intro.justifie{text-align:justify}
 
 /*
  * Sur ordinateur, les liens sont répartis en deux colonnes
@@ -158,5 +159,59 @@ footer{
   </footer>
   <script src="langues.js">
   </script>
- </body>
+ 
+  <script>
+  function alignerIntro() {
+    const intro = document.querySelector('.intro');
+    if (!intro) return;
+
+    intro.classList.remove('justifie');
+
+    const style = getComputedStyle(intro);
+    const mesure = document.createElement('div');
+
+    mesure.style.position = 'absolute';
+    mesure.style.visibility = 'hidden';
+    mesure.style.pointerEvents = 'none';
+    mesure.style.left = '-99999px';
+    mesure.style.top = '0';
+
+    const largeurTexte =
+      intro.clientWidth
+      - parseFloat(style.paddingLeft)
+      - parseFloat(style.paddingRight);
+
+    mesure.style.width = largeurTexte + 'px';
+    mesure.style.fontFamily = style.fontFamily;
+    mesure.style.fontSize = style.fontSize;
+    mesure.style.fontWeight = style.fontWeight;
+    mesure.style.fontStyle = style.fontStyle;
+    mesure.style.letterSpacing = style.letterSpacing;
+    mesure.style.lineHeight = style.lineHeight;
+    mesure.innerHTML = intro.innerHTML;
+
+    document.body.appendChild(mesure);
+
+    const lineHeight = parseFloat(style.lineHeight);
+
+    if (mesure.scrollHeight > lineHeight * 1.4) {
+      intro.classList.add('justifie');
+    }
+
+    mesure.remove();
+  }
+
+  window.addEventListener('load', function () {
+    alignerIntro();
+    setTimeout(alignerIntro, 100);
+  });
+
+  window.addEventListener('resize', alignerIntro);
+
+  document.addEventListener('click', function () {
+    setTimeout(alignerIntro, 50);
+  });
+  </script>
+
+</body>
 </html>
