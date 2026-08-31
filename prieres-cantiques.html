@@ -168,25 +168,38 @@ footer{
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const lien = document.getElementById("prieres-usuelles-link");
-  if (!lien) return;
 
-  lien.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    let lang = "fr";
-
+  function langueGenerale() {
     if (window.HerriaLanguages) {
-      lang = HerriaLanguages.getGeneralLanguage();
-    } else {
-      try {
-        lang = localStorage.getItem("herria_langue") === "eu" ? "eu" : "fr";
-      } catch (_) {}
+      return HerriaLanguages.getGeneralLanguage();
     }
 
-    window.location.href =
-      "https://herriabihotzean.github.io/herriabihotzean-prieresbasques/?lang=" + lang;
-  });
+    const param = new URLSearchParams(window.location.search).get("lang");
+    if (param === "eu" || param === "fr") {
+      return param;
+    }
+
+    try {
+      return localStorage.getItem("herria_langue") === "eu" ? "eu" : "fr";
+    } catch (_) {
+      return "fr";
+    }
+  }
+
+  const lang = langueGenerale();
+
+  const lienBasque = document.getElementById("prieres-usuelles-link");
+  if (lienBasque) {
+    lienBasque.href =
+      "https://prieresbasques.herriabihotzean.fr/?lang=" + lang;
+  }
+
+  const lienBearnais = document.getElementById("prieres-bearnaises-link");
+  if (lienBearnais) {
+    lienBearnais.href =
+      "https://prieresbearnaises.herriabihotzean.fr/?lang=" + lang;
+  }
+
 });
 </script>
 
