@@ -171,36 +171,45 @@ footer{
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  function langueGenerale() {
-    if (window.HerriaLanguages) {
-      return HerriaLanguages.getGeneralLanguage();
-    }
-
-    const param = new URLSearchParams(window.location.search).get("lang");
-    if (param === "eu" || param === "fr") {
-      return param;
-    }
-
-    try {
-      return localStorage.getItem("herria_langue") === "eu" ? "eu" : "fr";
-    } catch (_) {
-      return "fr";
-    }
-  }
-
-  const lang = langueGenerale();
-
   const lienBasque = document.getElementById("prieres-usuelles-link");
-  if (lienBasque) {
-    lienBasque.href =
-      "https://prieresbasques.herriabihotzean.fr/?lang=" + lang;
+  const lienBearnais = document.getElementById("prieres-bearnaises-link");
+
+  function mettreAJourLiens(lang) {
+    lang = lang === "eu" ? "eu" : "fr";
+
+    if (lienBasque) {
+      lienBasque.href =
+        "https://prieresbasques.herriabihotzean.fr/?lang=" + lang;
+    }
+
+    if (lienBearnais) {
+      lienBearnais.href =
+        "https://prieresbearnaises.herriabihotzean.fr/?lang=" + lang;
+    }
   }
 
-  const lienBearnais = document.getElementById("prieres-bearnaises-link");
-  if (lienBearnais) {
-    lienBearnais.href =
-      "https://prieresbearnaises.herriabihotzean.fr/?lang=" + lang;
+  /* Langue réellement active à l'ouverture */
+  if (window.HerriaLanguages) {
+    mettreAJourLiens(HerriaLanguages.getLanguage());
+  } else {
+    try {
+      mettreAJourLiens(
+        localStorage.getItem("herria_langue") === "eu" ? "eu" : "fr"
+      );
+    } catch (_) {
+      mettreAJourLiens("fr");
+    }
   }
+
+  /*
+   * Si le lecteur change de langue sur cette page,
+   * les liens vers les dépôts sont immédiatement mis à jour.
+   */
+  document.addEventListener("herria-language-change", (event) => {
+    if (event.detail && event.detail.lang) {
+      mettreAJourLiens(event.detail.lang);
+    }
+  });
 
 });
 </script>
