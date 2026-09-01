@@ -207,6 +207,25 @@ const HB_LABELS={"fr": {"fr": "français", "eu": "basque", "be": "béarnais"}, "
     document.body.insertBefore(nav, document.body.firstChild);
   }
 
+
+  /*
+   * Le dernier choix explicite FR/EU devient la langue de référence
+   * de cette page. On synchronise donc le paramètre ?lang= avec
+   * localStorage, sans recharger la page.
+   */
+  function updateReferenceLanguageInUrl(language) {
+    if (language !== "fr" && language !== "eu") return;
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", language);
+
+    window.history.replaceState(
+      window.history.state,
+      "",
+      url.pathname + url.search + url.hash
+    );
+  }
+
   function setLanguage(requestedLanguage, options = {}) {
     let language = VALID_LANGUAGES.has(requestedLanguage) ? requestedLanguage : "fr";
     if (!HB_HISTORY && language === "be") language = "fr";
@@ -218,6 +237,11 @@ const HB_LABELS={"fr": {"fr": "français", "eu": "basque", "be": "béarnais"}, "
       }
     } else {
       try { localStorage.setItem(HB_KEY, language); } catch (_error) {}
+    }
+
+    /* Seul un choix explicite du lecteur modifie la référence de l’URL. */
+    if (!options.silent) {
+      updateReferenceLanguageInUrl(language);
     }
 
     currentLanguage = language;
